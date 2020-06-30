@@ -13,7 +13,7 @@ stirnflaeche = 8.8
 c_w = 0.3  # Luftwiderstandsbeiwert
 
 # Input: Ist-Geschwindigkeit in m/s, gewählte Beschleunigung in m/s² aus Fahrermodell
-v_ist = 10.0
+v_ist = Fahrer.v_ist
 beschleunigung = Fahrer.gewählte_beschleunigung
 steigung_prozent = 5
 alpha = np.arctan(steigung_prozent / 100)

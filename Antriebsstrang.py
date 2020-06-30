@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import constants
+import Fahrer
 
 # physikalische Konstanten
 g = constants.g
@@ -13,7 +14,7 @@ c_w = 0.3  # Luftwiderstandsbeiwert
 
 # Input: Ist-Geschwindigkeit in m/s, gewählte Beschleunigung in m/s² aus Fahrermodell
 v_ist = 10.0
-a_gewaehlt = 1.0
+beschleunigung = Fahrer.gewählte_beschleunigung
 steigung_prozent = 5
 alpha = np.arctan(steigung_prozent / 100)
 
@@ -24,7 +25,7 @@ def rollwiderstand():
 
 
 def beschleunigungswiderstand():
-    return masse * a_gewaehlt
+    return masse * beschleunigung
 
 
 def luftwiderstand():

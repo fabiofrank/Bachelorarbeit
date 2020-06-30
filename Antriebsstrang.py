@@ -14,7 +14,7 @@ c_w = 0.3  # Luftwiderstandsbeiwert
 
 # Input: Ist-Geschwindigkeit in m/s, gewählte Beschleunigung in m/s² aus Fahrermodell
 v_ist = Fahrer.v_ist
-beschleunigung = Fahrer.gewählte_beschleunigung
+beschleunigung = Fahrer.gewaehlte_beschleunigung
 steigung_prozent = 5
 alpha = np.arctan(steigung_prozent / 100)
 
@@ -44,3 +44,4 @@ effizienz_elektromotor = 0.95
 benoetigte_leistung = (fahrwiderstaende * v_ist) / effizienz_elektromotor # in Watt
 
 print("Leistung, die vom Antriebsstrang benötigt wird: ", benoetigte_leistung, " Watt")
+

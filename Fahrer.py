@@ -8,10 +8,10 @@ from scipy.interpolate import interp1d
 # innerhalb von 170 m von 0 auf 50 km/h
 # innerhalb von 300 m von 0 auf 60 km/h
 
-#Berechnung der jeweiligen Beschleunigungen
+# Berechnung der jeweiligen Beschleunigungen
 distanz_SORT = np.array([15, 45, 100, 170, 300])  # in m
 geschwindigkeit_SORT = np.array([20, 30, 40, 50, 60]) / 3.6  # in m/s
-beschleunigung_SORT = geschwindigkeit_SORT ** 2 / (2 * distanz_SORT) # in m/s²
+beschleunigung_SORT = geschwindigkeit_SORT ** 2 / (2 * distanz_SORT)  # in m/s²
 
 # lineare Interpolation der Beschleunigungswerte (in Abhängigkeit der Geschwindgkeit)
 beschleunigung_interpoliert = interp1d(geschwindigkeit_SORT, beschleunigung_SORT)

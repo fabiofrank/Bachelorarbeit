@@ -41,7 +41,6 @@ fahrwiderstaende = rollwiderstand() + beschleunigungswiderstand() + luftwidersta
 
 # Berechnung der Leistung, die der Antriebsstrang benötigt unter Berücksichtigung von Verlusten im E-Motor
 effizienz_elektromotor = 0.95
-benoetigte_leistung = (fahrwiderstaende * v_ist) / effizienz_elektromotor # in Watt
+benoetigte_leistung = (fahrwiderstaende * v_ist) / effizienz_elektromotor  # in Watt
 
 print("Leistung, die vom Antriebsstrang benötigt wird: ", benoetigte_leistung, " Watt")
-

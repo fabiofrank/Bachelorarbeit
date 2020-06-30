@@ -3,7 +3,7 @@ from scipy import constants
 
 # physikalische Konstanten
 g = constants.g
-luftdichte = 1.225 # in kg/m³
+luftdichte = 1.225  # in kg/m³
 
 # feste Parameter
 masse = 12000  # in kg
@@ -18,6 +18,7 @@ steigung_prozent = 5
 alpha = np.arctan(steigung_prozent / 100)
 
 
+# Formeln der auftretenden Fahrwiderstände
 def rollwiderstand():
     return masse * g * np.cos(alpha) * f_roll
 
@@ -34,10 +35,11 @@ def steigungswiderstand():
     return masse * g * np.sin(alpha)
 
 
-print("Rollwiderstand: ", rollwiderstand())
-print("Beschleunigungswiderstand: ", beschleunigungswiderstand())
-print("Luftwiderstand: ", luftwiderstand())
-print("Steigungswiderstand: ", steigungswiderstand())
-
+# Berechnung der zu überwindenden Fahrwiderstände
 fahrwiderstaende = rollwiderstand() + beschleunigungswiderstand() + luftwiderstand() + steigungswiderstand()
-benoetigte_leistung = fahrwiderstaende * v_ist
+
+# Berechnung der Leistung, die der Antriebsstrang benötigt unter Berücksichtigung von Verlusten im E-Motor
+effizienz_elektromotor = 0.95
+benoetigte_leistung = (fahrwiderstaende * v_ist) / effizienz_elektromotor # in Watt
+
+print("Leistung, die vom Antriebsstrang benötigt wird: ", benoetigte_leistung, " Watt")

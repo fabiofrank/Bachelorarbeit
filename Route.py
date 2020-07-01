@@ -1,6 +1,6 @@
 from numpy import genfromtxt
 
-
+# TODO: Einlesen der Route sollte auch in der Main-Datei geschehen
 # Einlesen der .csv-Datei mit der Routenplanung inkl. Distanz und Steigung
 route = genfromtxt("Testdatensatz_10 Zeilen.csv", delimiter=',', names=True)
 

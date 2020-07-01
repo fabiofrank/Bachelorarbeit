@@ -2,6 +2,8 @@ import numpy as np
 from scipy import constants
 import Fahrer
 
+# TODO: Leistung als Funktion schreiben
+
 # physikalische Konstanten
 g = constants.g
 luftdichte = 1.225  # in kg/m³

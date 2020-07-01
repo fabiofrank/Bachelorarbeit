@@ -1,5 +1,4 @@
-import Antriebsstrang
-import Nebenverbraucher
+# TODO: zu Funktionen umschreiben
 
 kapazitaet_kWh = 350 # in kWh
 kapazitaet = kapazitaet_kWh * 3600000

@@ -39,9 +39,12 @@ def steigungswiderstand():
 # Berechnung der zu überwindenden Fahrwiderstände
 fahrwiderstaende = rollwiderstand() + beschleunigungswiderstand() + luftwiderstand() + steigungswiderstand()
 
-# Berechnung der Leistung, die der Antriebsstrang benötigt unter Berücksichtigung von Verlusten im E-Motor
-effizienz_elektromotor = 0.95
-benoetigte_leistung = (fahrwiderstaende * v_ist) / effizienz_elektromotor # in Watt
+# Berechnung der Leistung, die der Antriebsstrang benötigt bzw. abgibt unter Berücksichtigung von Verlusten
+effizienz_antriebsstrang = 0.9 # Motor, Getriebe, ...
 
-print("Leistung, die vom Antriebsstrang benötigt wird: ", benoetigte_leistung, " Watt")
+if fahrwiderstaende < 0:
+    leistung = fahrwiderstaende * v_ist * effizienz_antriebsstrang
+else:
+    leistung = (fahrwiderstaende * v_ist) / effizienz_antriebsstrang
 
+print("Leistung: ", leistung)

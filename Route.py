@@ -1,14 +1,17 @@
 from numpy import genfromtxt
 
-# Input: Fahrprofil mit Distanz und Steigung (next: v_soll für Streckenabschnitte)
-route = genfromtxt("Testdatensatz_10 Zeilen.csv",delimiter=',',names=True)
 
-print(route.dtype.names)
-print(route['distance_km'])
-
+# Einlesen der .csv-Datei mit der Routenplanung inkl. Distanz und Steigung
+route = genfromtxt("Testdatensatz_10 Zeilen.csv", delimiter=',', names=True)
 
 def steigung(distanz):
-    # bei gegebener zurückgelegter Strecke soll zurückgegeben werden, welche Steigung herrscht
-    # Schleife durch Datei mit Routeninformationen?
-    return 0
+    zeile = -1
+    for i in route['distance_km']: # Iteration über die Spalte mit der zurückgelegten Distanz
+        zeile += 1
+        if i < distanz:
+            continue
+        elif i >= distanz: # Die Schleife erreicht den übergebenen Streckenabschnitt
+            steigung_in_prozent = route['slope_'][zeile]
+            break
 
+    return steigung_in_prozent

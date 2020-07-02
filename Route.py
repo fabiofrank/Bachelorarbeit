@@ -18,3 +18,6 @@ class Route:
 
         return steigung_in_prozent
 
+    def v_soll(self, distanz):
+        # TODO: v_soll implementieren
+        return 50 / 3.6

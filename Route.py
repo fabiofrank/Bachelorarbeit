@@ -1,17 +1,20 @@
 from numpy import genfromtxt
 
-# TODO: Einlesen der Route sollte auch in der Main-Datei geschehen
-# Einlesen der .csv-Datei mit der Routenplanung inkl. Distanz und Steigung
-route = genfromtxt("Testdatensatz_10 Zeilen.csv", delimiter=',', names=True)
 
-def steigung(distanz):
-    zeile = -1
-    for i in route['distance_km']: # Iteration über die Spalte mit der zurückgelegten Distanz
-        zeile += 1
-        if i < distanz:
-            continue
-        elif i >= distanz: # Die Schleife erreicht den übergebenen Streckenabschnitt
-            steigung_in_prozent = route['slope_'][zeile]
-            break
+class Route:
 
-    return steigung_in_prozent
+    def __init__(self, csv_datei):
+        self.route = genfromtxt(csv_datei, delimiter=',', names=True)
+
+    def steigung(self, distanz):
+        zeile = -1
+        for i in self.route['distance_km']:  # Iteration über die Spalte mit der zurückgelegten Distanz
+            zeile += 1
+            if i < distanz:
+                continue
+            elif i >= distanz:  # Die Schleife erreicht den übergebenen Streckenabschnitt
+                steigung_in_prozent = self.route['slope_'][zeile]
+                break
+
+        return steigung_in_prozent
+

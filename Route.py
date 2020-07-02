@@ -1,6 +1,6 @@
 from numpy import genfromtxt
 
-
+# TODO: v_soll in Datei integrieren, Methode für v_soll schreiben analog zu steigung(self, distanz)
 class Route:
 
     def __init__(self, csv_datei):

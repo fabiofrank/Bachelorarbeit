@@ -1,5 +1,5 @@
 # TODO: Dokumente importieren
-import Route
+import Route, Fahrer
 # TODO: Schleife, die den Energieverbrauch errechnet
 
 # Initialisierung
@@ -9,6 +9,6 @@ distanz = 0 # zurückgelegte Strecke TODO: m oder km?
 kumulierter_Energieverbrauch = 0
 
 # Ein Objekt vom Typ Route wird mittels einer csv-Datei erzeugt
-route = Route.Route("Testdatensatz_10 Zeilen.csv")
+route = Route.Route("Testdatensatz_10 Zeilen.csv") # TODO: bessere Bezeichnungen überlegen bzw. abkürzen
 
 

@@ -1,22 +1,23 @@
 # TODO: zu Funktionen umschreiben
+class Batterie:
+    kapazitaet_kWh = 350 # in kWh
+    kapazitaet = kapazitaet_kWh * 3600000
+    inhalt = kapazitaet # Initialisierung
 
-kapazitaet_kWh = 350 # in kWh
-kapazitaet = kapazitaet_kWh * 3600000
-inhalt = kapazitaet # Initialisierung
+    def energieverbrauch(self, leistung):
+        leistung = Antriebsstrang.leistung + Nebenverbraucher.leistung
+        zeit_intervall = 1 # in Sekunden
+        energie = leistung * zeit_intervall
+        effizienz_batterie = 0.95
 
-leistung = Antriebsstrang.leistung + Nebenverbraucher.leistung
-zeit_intervall = 1 # in Sekunden
-energie = leistung * zeit_intervall
-effizienz_batterie = 0.95
+        if energie < 0:
+            delta = energie * effizienz_batterie
+        else:
+            delta = energie / effizienz_batterie
 
-if energie < 0:
-    delta = energie * effizienz_batterie
-    inhalt -= zufluss
-else:
-    delta = energie / effizienz_batterie
+        return delta / 3600000 # Umrechnung von Joule in kWh
 
-inhalt -= delta
-soc = inhalt / kapazitaet
-
-print("SoC: ", soc)
+    def state_of_charge(self, delta):
+        inhalt -= delta # Update des Batterieinhalts TODO: hier oder lieber in energieverbrauch()?
+        soc = inhalt / kapazitaet
 

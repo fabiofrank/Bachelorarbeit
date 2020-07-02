@@ -1,5 +1,5 @@
 # TODO: Dokumente importieren
-import Route, Fahrer, Fahrzeug
+import Route, Fahrer, Fahrzeug, Batterie, Nebenverbraucher
 # TODO: Schleife, die den Energieverbrauch errechnet
 
 # Initialisierung
@@ -14,12 +14,13 @@ route = Route.Route("Testdatensatz_10 Zeilen.csv") # TODO: bessere Bezeichnungen
 # Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
 # default-Werte: m=12000 kg, Stirnfläche=8.8m², f_roll = 0.015
 fahrzeug = Fahrzeug.Fahrzeug() # TODO: bessere Bezeichnung
-fahrzeug.masse = 12000
+fahrzeug.masse = 12000.0
 fahrzeug.stirnflaeche = 8.8
 
-
-
-
+# Ein Objekt vom Typ Batterie wird erzeugt und die seine Parameter festgelegt
+batterie = Batterie.Batterie() # TODO:bessere Bezeichnung
+batterie.kapazitaet_kWh = 350.0 # in KWh
+batterie.inhalt = 350.0 # initialer Batteriestand in kWh (default: 100% der Kapazität)
 
 # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der Routendatei ermittelt
 steigung = route.steigung(distanz)
@@ -28,6 +29,9 @@ v_soll = route.v_soll(distanz)
 # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
 beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 
-# Ermittlung der Leistung, die der Antriebsstrang benötigt
-fahrzeug.leistung(v_ist, beschleunigung, steigung)
+# Ermittlung des Gesamtleistungsbedarfs
+leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
+
+# Energieentnahme in an der Batterie
+batterie.energieverbrauch(leistung)
 

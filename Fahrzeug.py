@@ -1,6 +1,8 @@
 import numpy as np
 from scipy import constants
 
+# TODO: Fahrzeug als Klasse, Antriebsstrang (evtl. Batterie) als subclass?
+
 # physikalische Konstanten
 g = constants.g
 luftdichte = 1.225  # in kg/m³
@@ -8,7 +10,7 @@ luftdichte = 1.225  # in kg/m³
 
 class Fahrzeug:
     # feste Parameter TODO: diese als Tabelle eingeben?
-    masse = 12000  # in kg
+    masse = 12000.0  # in kg
     f_roll = 0.015  # Rollwiderstandbeiwert [ohne Einheit]
     stirnflaeche = 8.8
     c_w = 0.3  # Luftwiderstandsbeiwert

@@ -12,9 +12,11 @@ kumulierter_Energieverbrauch = 0
 route = Route.Route("Testdatensatz_10 Zeilen.csv") # TODO: bessere Bezeichnungen überlegen bzw. abkürzen
 
 # Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
-fahrzeug = Fahrzeug.Fahrzeug()
+# default-Werte: m=12000 kg, Stirnfläche=8.8m², f_roll = 0.015
+fahrzeug = Fahrzeug.Fahrzeug() # TODO: bessere Bezeichnung
 fahrzeug.masse = 12000
 fahrzeug.stirnflaeche = 8.8
+
 
 
 
@@ -27,5 +29,5 @@ v_soll = route.v_soll(distanz)
 beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 
 # Ermittlung der Leistung, die der Antriebsstrang benötigt
-Fahrzeug.leistung()
+fahrzeug.leistung(v_ist, beschleunigung, steigung)
 

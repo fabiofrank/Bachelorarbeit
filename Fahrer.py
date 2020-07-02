@@ -1,6 +1,7 @@
-# TODO: zu Funktionen umschreiben
-
 import numpy as np
+from scipy.interpolate import interp1d
+
+
 # gefahrene Beschleunigungen in SORT-Zyklen:
 # innerhalb von  15 m von 0 auf 20 km/h
 # innerhalb von  45 m von 0 auf 30 km/h

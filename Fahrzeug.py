@@ -42,5 +42,4 @@ class Fahrzeug:
         else:
             leistung = (fahrwiderstaende * v_ist) / effizienz_antriebsstrang
 
-        print("Leistung: ", leistung)
         return leistung

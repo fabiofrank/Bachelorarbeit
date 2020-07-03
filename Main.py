@@ -36,5 +36,6 @@ leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher
 aktueller_energieverbrauch = batterie.energieverbrauch(leistung)
 neuer_soc = batterie.state_of_charge(aktueller_energieverbrauch)
 kumulierter_Energieverbrauch += aktueller_energieverbrauch
+
 print("EV:", kumulierter_Energieverbrauch)
 

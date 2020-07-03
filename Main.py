@@ -23,29 +23,37 @@ batterie = Batterie.Batterie() # TODO: bessere Bezeichnung
 batterie.kapazitaet_kWh = 350.0 # in KWh
 batterie.inhalt_kWh = 350.0 # initialer Batteriestand in kWh (default: 100% der Kapazität)
 
-# in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der Routendatei ermittelt
-steigung = route.steigung(distanz)
-print("Steigung: ", steigung, " %")
-v_soll = route.v_soll(distanz)
-print("Soll-Geschwindigkeit: ", v_soll, " m/s")
+# Schleife, die läuft bis Umlauf beendet
+for t in range(0, 15): # TODO: richtige Schleife bauen TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
+    print("Intervall t = [", t, ",", t + zeit_intervall, ")")
+    # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der Routendatei ermittelt
+    steigung = route.steigung(distanz)
+    print("Steigung: ", steigung, " %")
+    v_soll = route.v_soll(distanz)
+    print("Soll-Geschwindigkeit: ", v_soll, " m/s")
 
-# Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
-beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
-print("Gewählte Beschleunigung: ", beschleunigung, " m/s²")
+    # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
+    beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
+    print("Gewählte Beschleunigung: ", beschleunigung, " m/s²")
 
-# Ermittlung des Gesamtleistungsbedarfs
-leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
-print("Gesamtleistungsbedarf: ", leistung, " Watt")
+    # Ermittlung des Gesamtleistungsbedarfs
+    leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
+    print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
-# Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
-aktueller_energieverbrauch = batterie.energieverbrauch(leistung)
-print("Aktueller Energieverbrauch: ", aktueller_energieverbrauch, " Joule")
-neuer_soc = batterie.state_of_charge(aktueller_energieverbrauch)
-print("Neuer SoC: ", neuer_soc, " %")
-kumulierter_energieverbrauch_joule += aktueller_energieverbrauch
-kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
-print("kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ", kumulierter_energieverbrauch_kWh, " kWh")
+    # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
+    aktueller_energieverbrauch = batterie.energieverbrauch(leistung)
+    print("Aktueller Energieverbrauch: ", aktueller_energieverbrauch, " Joule")
+    neuer_soc = batterie.state_of_charge(aktueller_energieverbrauch)
+    print("Neuer SoC: ", neuer_soc, " %")
+    kumulierter_energieverbrauch_joule += aktueller_energieverbrauch
+    kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
+    print("kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ", kumulierter_energieverbrauch_kWh, " kWh")
 
-# Berechnung der zurückgelegten Strecke
-distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
-print("zurückgelegte Strecke: ", distanz, "m")
+    # Berechnung der zurückgelegten Strecke und der neuen Ist-Geschwindigkeit
+    distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
+    print("zurückgelegte Strecke: ", distanz, "m")
+    v_ist += beschleunigung * zeit_intervall
+    print("Ist-Geschwindigkeit: ", v_ist, " m/s / ", v_ist * 3.6, " km/h")
+
+    print("___________________________________________________________________________")
+

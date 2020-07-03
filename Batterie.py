@@ -5,7 +5,6 @@ class Batterie:
     inhalt = kapazitaet # Initialisierung
 
     def energieverbrauch(self, leistung):
-        leistung = Antriebsstrang.leistung + Nebenverbraucher.leistung
         zeit_intervall = 1 # in Sekunden
         energie = leistung * zeit_intervall
         effizienz_batterie = 0.95
@@ -18,6 +17,6 @@ class Batterie:
         return delta / 3600000 # Umrechnung von Joule in kWh
 
     def state_of_charge(self, delta):
-        inhalt -= delta # Update des Batterieinhalts TODO: hier oder lieber in energieverbrauch()?
-        soc = inhalt / kapazitaet
+        self.inhalt -= delta # Update des Batterieinhalts TODO: hier oder lieber in energieverbrauch()?
+        soc = self.inhalt / self.kapazitaet
 

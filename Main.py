@@ -18,7 +18,7 @@ fahrzeug.masse = 12000.0
 fahrzeug.stirnflaeche = 8.8
 
 # Ein Objekt vom Typ Batterie wird erzeugt und die seine Parameter festgelegt
-batterie = Batterie.Batterie() # TODO:bessere Bezeichnung
+batterie = Batterie.Batterie() # TODO: bessere Bezeichnung
 batterie.kapazitaet_kWh = 350.0 # in KWh
 batterie.inhalt = 350.0 # initialer Batteriestand in kWh (default: 100% der Kapazität)
 
@@ -32,6 +32,9 @@ beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 # Ermittlung des Gesamtleistungsbedarfs
 leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
 
-# Energieentnahme in an der Batterie
-batterie.energieverbrauch(leistung)
+# Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
+aktueller_energieverbrauch = batterie.energieverbrauch(leistung)
+neuer_soc = batterie.state_of_charge(aktueller_energieverbrauch)
+kumulierter_Energieverbrauch += aktueller_energieverbrauch
+print("EV:", kumulierter_Energieverbrauch)
 

@@ -28,8 +28,8 @@ class Fahrzeug:
     def steigungswiderstand(self, alpha):
         return self.masse * g * np.sin(alpha)
 
-    def leistung(self, v_ist, beschleunigung, steigung_prozent):
-        alpha = np.arctan(steigung_prozent / 100)
+    def leistung(self, v_ist, beschleunigung, steigung_in_prozent):
+        alpha = np.arctan(steigung_in_prozent / 100)
 
         # Berechnung der zu überwindenden Fahrwiderstände
         fahrwiderstaende = self.rollwiderstand(alpha) + self.beschleunigungswiderstand(

@@ -31,4 +31,4 @@ def beschleunigung(v_ist, v_soll):
     else:
         gewaehlte_beschleunigung = 0.0
 
-    return gewaehlte_beschleunigung
+    return gewaehlte_beschleunigung # in m/s²

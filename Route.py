@@ -4,7 +4,7 @@ from numpy import genfromtxt
 
 
 # Aus der übergebenen CSV-Datei wird ein Array erzeugt
-def einlesen(csv_datei) -> object:
+def einlesen(csv_datei):
     return genfromtxt(csv_datei, delimiter=',', names=True)
 
 

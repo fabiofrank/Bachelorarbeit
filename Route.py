@@ -11,10 +11,10 @@ def einlesen(csv_datei) -> object:
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m, route):
     distanz_in_km = distanz_in_m / 1000
-    zeile = -1
+    zeile = 0
     for i in route['distance_km']:  # Iteration über die Spalte mit der zurückgelegten Distanz
-        zeile += 1
         if i < distanz_in_km:
+            zeile += 1
             continue
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             return route['slope_'][zeile]

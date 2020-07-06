@@ -4,8 +4,10 @@ import Fahrzeug
 import Nebenverbraucher
 import Route
 
+# TODO: Umgang mit NaN
+
 # Die Route wird mittels CSV-Datei eingelesen
-route = Route.einlesen("Testdatensatz_10 Zeilen.csv")
+route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
@@ -23,19 +25,19 @@ batterie.inhalt_kWh = 350.0  # initialer Batteriestand in kWh (default: 100% der
 # Initialisierung
 t = 0  # Zeit in s
 v_ist = 0.0  # Ist-Geschwindigkeit in m/s
-distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?
+zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?
 kumulierter_energieverbrauch_joule = 0.0
 
 # Schleife, die läuft bis Umlauf beendet
-while distanz < streckenlaenge:
+while zurueckgelegte_distanz < streckenlaenge:
     # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
     print("Intervall t = [", t, ",", t + zeit_intervall, ")")
 
     # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
     # Routendatei ermittelt
-    steigung = Route.steigung(distanz, route)
+    steigung = Route.steigung(zurueckgelegte_distanz, route)
     print("Steigung: ", steigung, " %")
-    v_soll = Route.v_soll(distanz, route)
+    v_soll = Route.v_soll(zurueckgelegte_distanz, route)
     print("Soll-Geschwindigkeit: ", v_soll, " m/s")
 
     # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
@@ -54,12 +56,12 @@ while distanz < streckenlaenge:
     print("Neuer SoC: ", neuer_soc, " %")
     kumulierter_energieverbrauch_joule += aktueller_energieverbrauch
     kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
-    print("kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ",
+    print("Kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ",
           kumulierter_energieverbrauch_kWh, " kWh")
 
     # Berechnung der zurückgelegten Strecke und der neuen Ist-Geschwindigkeit
-    distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
-    print("zurückgelegte Strecke: ", distanz, "m")
+    zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
+    print("Zurückgelegte Strecke: ", zurueckgelegte_distanz, "m")
     v_ist += beschleunigung * zeit_intervall
     print("Ist-Geschwindigkeit: ", v_ist, " m/s / ", v_ist * 3.6, " km/h")
     t += zeit_intervall

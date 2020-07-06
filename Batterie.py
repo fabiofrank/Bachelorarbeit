@@ -22,6 +22,6 @@ class Batterie:
         return delta # in Joule
 
     def state_of_charge(self, delta):
-        self.inhalt -= delta # Update des Batterieinhalts in Joule TODO: hier oder lieber in energieverbrauch()?
+        self.inhalt -= delta # Update des Batterieinhalts in Joule
         return self.inhalt / self.kapazitaet * 100 # SoC in Prozent
 

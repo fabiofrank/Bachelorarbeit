@@ -36,6 +36,7 @@ class Fahrzeug:
             beschleunigung) + self.luftwiderstand(v_ist) + self.steigungswiderstand(alpha)
 
         # Berechnung der Leistung, die der Antriebsstrang benötigt bzw. abgibt unter Berücksichtigung von Verlusten
+        # TODO: Effizienzgrade einzeln ausweisen: EM, Getriebe, Leistungselektronik (99%), Batterie --> "Verluste"
         effizienz_antriebsstrang = 0.9  # Motor, Getriebe, ...
         if fahrwiderstaende < 0:
             leistung = fahrwiderstaende * v_ist * effizienz_antriebsstrang

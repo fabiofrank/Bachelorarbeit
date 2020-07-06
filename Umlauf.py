@@ -6,6 +6,7 @@ import Route
 
 # Die Route wird mittels CSV-Datei eingelesen
 route = Route.einlesen("Testdatensatz_10 Zeilen.csv")
+streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
 # Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
@@ -26,9 +27,10 @@ distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?
 kumulierter_energieverbrauch_joule = 0.0
 
 # Schleife, die läuft bis Umlauf beendet
-for t in range(0, len(route)):
+while distanz < streckenlaenge:
     # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
     print("Intervall t = [", t, ",", t + zeit_intervall, ")")
+
     # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
     # Routendatei ermittelt
     steigung = Route.steigung(distanz, route)
@@ -41,6 +43,7 @@ for t in range(0, len(route)):
     print("Gewählte Beschleunigung: ", beschleunigung, " m/s²")
 
     # Ermittlung des Gesamtleistungsbedarfs
+    # TODO: Austauschen durch Leistung an der Batterie
     leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
     print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
@@ -59,7 +62,8 @@ for t in range(0, len(route)):
     print("zurückgelegte Strecke: ", distanz, "m")
     v_ist += beschleunigung * zeit_intervall
     print("Ist-Geschwindigkeit: ", v_ist, " m/s / ", v_ist * 3.6, " km/h")
+    t += zeit_intervall
 
-    print("___________________________________________________________________________")
+    print("_________________________________________________________________________________________")
 
     # TODO: Output-Array kreiieren anstatt print-Befehle

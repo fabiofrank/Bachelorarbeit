@@ -17,10 +17,9 @@ fahrzeug = Fahrzeug.Fahrzeug()  # TODO: bessere Bezeichnung / Klasse auflösen
 fahrzeug.masse = 12000.0
 fahrzeug.stirnflaeche = 8.8
 
-# Ein Objekt vom Typ Batterie wird erzeugt und seine Parameter festgelegt
-batterie = Batterie.Batterie()  # TODO: bessere Bezeichnung / Klasse auflösen
-batterie.kapazitaet_kWh = 350.0  # in KWh
-batterie.inhalt_kWh = 350.0  # initialer Batteriestand in kWh (default: 100% der Kapazität)
+# Batterie wird parametrisiert
+Batterie.kapazitaet_kWh = 350.0  # in KWh
+Batterie.inhalt_kWh = 350.0  # initialer Batteriestand in kWh (default: 100% der Kapazität)
 
 # Initialisierung
 t = 0  # Zeit in s
@@ -50,9 +49,9 @@ while zurueckgelegte_distanz < streckenlaenge:
     print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
-    aktueller_energieverbrauch = batterie.energieverbrauch(leistung)
+    aktueller_energieverbrauch = Batterie.energieverbrauch(leistung, zeit_intervall)
     print("Aktueller Energieverbrauch: ", aktueller_energieverbrauch, " Joule")
-    neuer_soc = batterie.state_of_charge(aktueller_energieverbrauch)
+    neuer_soc = Batterie.state_of_charge(aktueller_energieverbrauch, Batterie.inhalt)
     print("Neuer SoC: ", neuer_soc, " %")
     kumulierter_energieverbrauch_joule += aktueller_energieverbrauch
     kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000

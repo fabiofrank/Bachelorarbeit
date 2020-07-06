@@ -17,7 +17,6 @@ def energieverbrauch(leistung, zeit_intervall):
         delta = energie * effizienz_batterie
     else:
         delta = energie / effizienz_batterie
-
     return delta  # in Joule
 
 

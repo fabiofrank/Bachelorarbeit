@@ -1,4 +1,6 @@
 # TODO: Umgang mit NaN
+# TODO: Diskrepanz SoC zwischen letzten Commits nach Auflösen der Klasse Batterie
+# TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden
 
 import Batterie
 import Fahrer
@@ -51,6 +53,7 @@ while zurueckgelegte_distanz < streckenlaenge:
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
     aktueller_energieverbrauch = Batterie.energieverbrauch(leistung, zeit_intervall)
     print("Aktueller Energieverbrauch: ", aktueller_energieverbrauch, " Joule")
+    Batterie.inhalt -= aktueller_energieverbrauch
     neuer_soc = Batterie.state_of_charge(aktueller_energieverbrauch, Batterie.inhalt)
     print("Neuer SoC: ", neuer_soc, " %")
     kumulierter_energieverbrauch_joule += aktueller_energieverbrauch

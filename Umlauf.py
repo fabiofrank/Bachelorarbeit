@@ -6,7 +6,7 @@ import Route
 
 # Ein Objekt vom Typ Route wird mittels einer csv-Datei erzeugt
 route = Route.Route("Testdatensatz_10 Zeilen.csv")  # TODO: bessere Bezeichnungen überlegen bzw. abkürzen
-zeit_intervall = 1.0  # in Sekunden
+zeit_intervall = 1  # in Sekunden
 
 # Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
 # default-Werte: m=12000 kg, Stirnfläche=8.8m², f_roll = 0.015
@@ -26,7 +26,8 @@ distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?
 kumulierter_energieverbrauch_joule = 0.0
 
 # Schleife, die läuft bis Umlauf beendet
-for t in range(0, 15):  # TODO: richtige Schleife bauen TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
+for t in range(0, len(route.route)):
+    # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
     print("Intervall t = [", t, ",", t + zeit_intervall, ")")
     # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
     # Routendatei ermittelt
@@ -60,3 +61,5 @@ for t in range(0, 15):  # TODO: richtige Schleife bauen TODO: Überlegen, was ge
     print("Ist-Geschwindigkeit: ", v_ist, " m/s / ", v_ist * 3.6, " km/h")
 
     print("___________________________________________________________________________")
+
+    # TODO: Output-Array kreiieren anstatt print-Befehle

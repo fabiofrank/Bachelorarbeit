@@ -1,24 +1,26 @@
+# TODO: v_soll in Datei integrieren, Methode für v_soll schreiben analog zu steigung(self, distanz)
+
 from numpy import genfromtxt
 
-# TODO: v_soll in Datei integrieren, Methode für v_soll schreiben analog zu steigung(self, distanz)
-class Route:
 
-    def __init__(self, csv_datei):
-        self.route = genfromtxt(csv_datei, delimiter=',', names=True)
-
-    def steigung(self, distanz):
-        global steigung_in_prozent
-        distanz_in_km = distanz / 1000
-        zeile = -1
-        for i in self.route['distance_km']:  # Iteration über die Spalte mit der zurückgelegten Distanz
-            zeile += 1
-            if i < distanz_in_km:
-                continue
-            elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
-                steigung_in_prozent = self.route['slope_'][zeile]
-            return steigung_in_prozent
+# Aus der übergebenen CSV-Datei wird ein Array erzeugt
+def einlesen(csv_datei) -> object:
+    return genfromtxt(csv_datei, delimiter=',', names=True)
 
 
-    def v_soll(self, distanz):
-        # TODO: v_soll implementieren
-        return 50 / 3.6
+# Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
+def steigung(distanz_in_m, route):
+    distanz_in_km = distanz_in_m / 1000
+    zeile = -1
+    for i in route['distance_km']:  # Iteration über die Spalte mit der zurückgelegten Distanz
+        zeile += 1
+        if i < distanz_in_km:
+            continue
+        elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
+            return route['slope_'][zeile]
+
+
+# Die in der Route vorgegebene Soll-Geschwindigkeit wird ermittelt
+def v_soll(distanz, route):
+    # TODO: v_soll implementieren
+    return 50 / 3.6

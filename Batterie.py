@@ -19,7 +19,7 @@ def energieverbrauch(leistung, zeit_intervall):
         delta = energie / effizienz_batterie
     return delta  # in Joule
 
-
+# TODO: SoC unterschiedlich zu letztem Commit
 def state_of_charge(delta, inhalt):
     inhalt -= delta  # Update des Batterieinhalts in Joule
     return inhalt / kapazitaet * 100  # SoC in Prozent

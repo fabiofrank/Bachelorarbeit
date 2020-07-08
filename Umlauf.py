@@ -7,6 +7,7 @@ import Fahrzeug
 import Nebenverbraucher
 import Route
 
+
 # Die Route wird mittels CSV-Datei eingelesen
 route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern

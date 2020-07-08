@@ -1,3 +1,5 @@
+inhalt = 0.0
+kapazitaet = 0.0
 
 # Der Energieverbrauch bzw. Energiegewinn wird berechnet unter Berücksichtigung von Batterieverlusten
 def energieverbrauch(leistung, zeit_intervall):
@@ -15,6 +17,5 @@ def energieverbrauch(leistung, zeit_intervall):
 # Der neue SoC wird zurückgegeben
 def state_of_charge(delta):
     global inhalt
-    global kapazitaet
     inhalt -= delta / 3600000
     return inhalt / kapazitaet * 100  # SoC in Prozent

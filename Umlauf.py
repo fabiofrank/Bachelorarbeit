@@ -1,5 +1,5 @@
 # TODO: Umgang mit NaN
-# TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden
+# TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden???
 
 import Batterie
 import Fahrer
@@ -12,18 +12,18 @@ route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
-# Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
-# default-Werte: m=12000 kg, Stirnfläche=8.8m², f_roll = 0.015
+# Die Fahrzeugparameter werden festgelegt
 Fahrzeug.masse = 12000.0
 Fahrzeug.stirnflaeche = 8.8
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
-
-# Batterie wird parametrisiert
 Batterie.kapazitaet = 350.0  # in KWh
-Batterie.inhalt = 350.0  # Batteriestand zu Beginn des Umlaufs in kWh
 
-# Initialisierung
+# Der Batteriestand zu Beginn des Umlaufs wird festgelegt
+initialer_soc = 100  # in Prozent
+Batterie.inhalt = Batterie.kapazitaet * initialer_soc / 100
+
+# Initialisierung der Schleife
 t = 0  # Zeit in s
 v_ist = 0.0  # Ist-Geschwindigkeit in m/s
 zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?

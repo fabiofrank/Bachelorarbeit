@@ -1,4 +1,5 @@
-# TODO: v_soll in Datei integrieren, Methode für v_soll schreiben analog zu steigung(self, distanz)
+# TODO: v_soll in Datei integrieren, Funktion für v_soll schreiben analog zu steigung(distanz, route)
+# TODO: route als globale Variable anstatt Funktionsargument?
 
 from numpy import genfromtxt
 

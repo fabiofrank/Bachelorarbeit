@@ -14,13 +14,14 @@ zeit_intervall = 1  # in Sekunden
 
 # Ein Objekt vom Typ Antriebsstrang/Fahrzeug wird erzeugt und Parameter festgelegt
 # default-Werte: m=12000 kg, Stirnfläche=8.8m², f_roll = 0.015
-fahrzeug = Fahrzeug.Fahrzeug()  # TODO: bessere Bezeichnung / Klasse auflösen
-fahrzeug.masse = 12000.0
-fahrzeug.stirnflaeche = 8.8
+Fahrzeug.masse = 12000.0
+Fahrzeug.stirnflaeche = 8.8
+Fahrzeug.f_roll = 0.015
+Fahrzeug.c_w = 0.3
 
 # Batterie wird parametrisiert
 Batterie.kapazitaet = 350.0  # in KWh
-Batterie.inhalt = 350.0  # Bateriestand zu Beginn des Umlaufs in kWh
+Batterie.inhalt = 350.0  # Batteriestand zu Beginn des Umlaufs in kWh
 
 # Initialisierung
 t = 0  # Zeit in s
@@ -46,7 +47,7 @@ while zurueckgelegte_distanz < streckenlaenge:
 
     # Ermittlung des Gesamtleistungsbedarfs
     # TODO: Austauschen durch Leistung an der Batterie
-    leistung = fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
+    leistung = Fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
     print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie

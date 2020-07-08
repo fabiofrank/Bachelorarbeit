@@ -1,14 +1,5 @@
-# TODO: zu Funktionen umschreiben
 
-# Die Batterie hat den festen Parameter Kapazität und den variablen Inhalt
-
-kapazitaet_kWh = 350  # in kWh
-kapazitaet = kapazitaet_kWh * 3600000  # in Joule
-
-inhalt_kWh = kapazitaet_kWh  # Initialisierung: Batterie ist voll
-inhalt = inhalt_kWh * 3600000  # in Joule
-
-
+# Der Energieverbrauch bzw. Energiegewinn wird berechnet unter Berücksichtigung von Batterieverlusten
 def energieverbrauch(leistung, zeit_intervall):
     energie = leistung * zeit_intervall
     effizienz_batterie = 0.95
@@ -19,7 +10,11 @@ def energieverbrauch(leistung, zeit_intervall):
         delta = energie / effizienz_batterie
     return delta  # in Joule
 
-# TODO: SoC unterschiedlich zu letztem Commit
-def state_of_charge(delta, inhalt):
-    inhalt -= delta  # Update des Batterieinhalts in Joule
+# Die Batterie hat einen variablen Inhalt sowie eine feste Kapazität
+# Der Batterieinhalt wird angepasst (Laden oder Entladen der Batterie)
+# Der neue SoC wird zurückgegeben
+def state_of_charge(delta):
+    global inhalt
+    global kapazitaet
+    inhalt -= delta / 3600000
     return inhalt / kapazitaet * 100  # SoC in Prozent

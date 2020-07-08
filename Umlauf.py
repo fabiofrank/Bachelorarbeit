@@ -1,5 +1,4 @@
 # TODO: Umgang mit NaN
-# TODO: Diskrepanz SoC zwischen letzten Commits nach Auflösen der Klasse Batterie
 # TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden
 
 import Batterie
@@ -20,8 +19,8 @@ fahrzeug.masse = 12000.0
 fahrzeug.stirnflaeche = 8.8
 
 # Batterie wird parametrisiert
-Batterie.kapazitaet_kWh = 350.0  # in KWh
-Batterie.inhalt_kWh = 350.0  # initialer Batteriestand in kWh (default: 100% der Kapazität)
+Batterie.kapazitaet = 350.0  # in KWh
+Batterie.inhalt = 350.0  # Bateriestand zu Beginn des Umlaufs in kWh
 
 # Initialisierung
 t = 0  # Zeit in s
@@ -51,12 +50,11 @@ while zurueckgelegte_distanz < streckenlaenge:
     print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
-    aktueller_energieverbrauch = Batterie.energieverbrauch(leistung, zeit_intervall)
-    print("Aktueller Energieverbrauch: ", aktueller_energieverbrauch, " Joule")
-    Batterie.inhalt -= aktueller_energieverbrauch
-    neuer_soc = Batterie.state_of_charge(aktueller_energieverbrauch, Batterie.inhalt)
+    energieverbrauch_im_intervall = Batterie.energieverbrauch(leistung, zeit_intervall)
+    print("Aktueller Energieverbrauch: ", energieverbrauch_im_intervall, " Joule")
+    neuer_soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
     print("Neuer SoC: ", neuer_soc, " %")
-    kumulierter_energieverbrauch_joule += aktueller_energieverbrauch
+    kumulierter_energieverbrauch_joule += energieverbrauch_im_intervall
     kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
     print("Kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ",
           kumulierter_energieverbrauch_kWh, " kWh")

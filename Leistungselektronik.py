@@ -1,0 +1,1 @@
+effizienz = 0.0

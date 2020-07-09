@@ -31,19 +31,8 @@ def steigungswiderstand(alpha):
     return masse * g * np.sin(alpha)
 
 
-def leistung(v_ist, beschleunigung, steigung_in_prozent):
+# Berechnung der zu überwindenden Fahrwiderstände
+def fahrwiderstaende(v_ist, beschleunigung, steigung_in_prozent):
     alpha = np.arctan(steigung_in_prozent / 100)
-
-    # Berechnung der zu überwindenden Fahrwiderstände
-    fahrwiderstaende = rollwiderstand(alpha) + beschleunigungswiderstand(
+    return rollwiderstand(alpha) + beschleunigungswiderstand(
         beschleunigung) + luftwiderstand(v_ist) + steigungswiderstand(alpha)
-
-    # Berechnung der Leistung, die der Antriebsstrang benötigt bzw. abgibt unter Berücksichtigung von Verlusten
-    # TODO: Effizienzgrade einzeln ausweisen: EM, Getriebe, Leistungselektronik (99%), Batterie --> "Verluste"
-    effizienz_antriebsstrang = effizienz_motor * effizienz_getriebe
-    if fahrwiderstaende < 0:
-        leistung = fahrwiderstaende * v_ist * effizienz_antriebsstrang
-    else:
-        leistung = (fahrwiderstaende * v_ist) / effizienz_antriebsstrang
-
-    return leistung

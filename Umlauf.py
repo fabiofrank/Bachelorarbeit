@@ -4,6 +4,9 @@
 import Batterie
 import Fahrer
 import Fahrzeug
+import Elektromotor
+import Getriebe
+import Leistungselektronik
 import Nebenverbraucher
 import Route
 
@@ -18,11 +21,12 @@ Fahrzeug.masse = 12000.0 # in kg
 Fahrzeug.stirnflaeche = 8.8 # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
-Fahrzeug.effizienz_motor = 0.9
+Elektromotor.effizienz = 0.9
+Getriebe.effizienz = 1.0
 Fahrzeug.effizienz_getriebe = 1.0
 Batterie.kapazitaet = 350.0  # in KWh
 Batterie.effizienz = 0.95
-Batterie.effizienz_leistungselektronik = 1.0
+Leistungselektronik.effizienz = 1.0
 
 # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
 initialer_soc = 100  # in Prozent
@@ -52,7 +56,8 @@ while zurueckgelegte_distanz < streckenlaenge:
 
     # Ermittlung des Gesamtleistungsbedarfs
     # TODO: Austauschen durch Leistung an der Batterie
-    leistung = Fahrzeug.leistung(v_ist, beschleunigung, steigung) + Nebenverbraucher.leistung
+    fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
+    leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
     print("Gesamtleistungsbedarf: ", leistung, " Watt")
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie

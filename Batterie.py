@@ -1,17 +1,21 @@
+import Leistungselektronik
+
 inhalt = 0.0
 kapazitaet = 0.0
 effizienz = 0.0
-effizienz_leistungselektronik = 0.0
 
-# Der Energieverbrauch bzw. Energiegewinn wird berechnet unter Berücksichtigung von Batterieverlusten
+
+# Der Energieverbrauch bzw. Energiegewinn wird berechnet
+# unter Berücksichtigung von Verlusten in Batterie und Leistungselektronik
 def energieverbrauch(leistung, zeit_intervall):
     energie = leistung * zeit_intervall
 
     if energie < 0:
-        delta = energie * (effizienz * effizienz_leistungselektronik)
+        delta = energie * (effizienz * Leistungselektronik.effizienz)
     else:
-        delta = energie / (effizienz * effizienz_leistungselektronik)
+        delta = energie / (effizienz * Leistungselektronik.effizienz)
     return delta  # in Joule
+
 
 # Die Batterie hat einen variablen Inhalt sowie eine feste Kapazität
 # Der Batterieinhalt wird angepasst (Laden oder Entladen der Batterie)

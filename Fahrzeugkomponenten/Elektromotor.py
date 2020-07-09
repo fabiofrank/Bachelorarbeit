@@ -1,4 +1,4 @@
-import Getriebe
+from Fahrzeugkomponenten import Getriebe
 
 effizienz = 0.0
 

@@ -8,6 +8,16 @@ from numpy import genfromtxt
 def einlesen(csv_datei):
     return genfromtxt(csv_datei, delimiter=',', names=True)
 
+# TODO: Steigung und momentane Position
+def momentane_position(distanz_in_m, route):
+    distanz_in_km = distanz_in_m / 1000
+    zeile = 0
+    for i in route['distance_km']:  # Iteration über die Spalte mit der zurückgelegten Distanz
+        if i < distanz_in_km:
+            zeile += 1
+            continue
+        elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
+            return zeile
 
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m, route):

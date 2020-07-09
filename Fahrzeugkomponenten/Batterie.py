@@ -1,4 +1,4 @@
-import Leistungselektronik
+from Fahrzeugkomponenten import Leistungselektronik
 
 inhalt = 0.0
 kapazitaet = 0.0

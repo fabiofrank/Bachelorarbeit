@@ -1,13 +1,9 @@
 # TODO: Umgang mit NaN
 # TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden???
 
-import Batterie
+
+from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Fahrer
-import Fahrzeug
-import Elektromotor
-import Getriebe
-import Leistungselektronik
-import Nebenverbraucher
 import Route
 
 # Die Route wird mittels CSV-Datei eingelesen

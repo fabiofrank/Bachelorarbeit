@@ -14,11 +14,15 @@ streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
 # Die Fahrzeugparameter werden festgelegt
-Fahrzeug.masse = 12000.0
-Fahrzeug.stirnflaeche = 8.8
+Fahrzeug.masse = 12000.0 # in kg
+Fahrzeug.stirnflaeche = 8.8 # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
+Fahrzeug.effizienz_motor = 0.9
+Fahrzeug.effizienz_getriebe = 1.0
 Batterie.kapazitaet = 350.0  # in KWh
+Batterie.effizienz = 0.95
+Batterie.effizienz_leistungselektronik = 1.0
 
 # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
 initialer_soc = 100  # in Prozent

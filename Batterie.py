@@ -1,15 +1,16 @@
 inhalt = 0.0
 kapazitaet = 0.0
+effizienz = 0.0
+effizienz_leistungselektronik = 0.0
 
 # Der Energieverbrauch bzw. Energiegewinn wird berechnet unter Berücksichtigung von Batterieverlusten
 def energieverbrauch(leistung, zeit_intervall):
     energie = leistung * zeit_intervall
-    effizienz_batterie = 0.95
 
     if energie < 0:
-        delta = energie * effizienz_batterie
+        delta = energie * (effizienz * effizienz_leistungselektronik)
     else:
-        delta = energie / effizienz_batterie
+        delta = energie / (effizienz * effizienz_leistungselektronik)
     return delta  # in Joule
 
 # Die Batterie hat einen variablen Inhalt sowie eine feste Kapazität

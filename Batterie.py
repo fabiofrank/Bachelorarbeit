@@ -7,14 +7,12 @@ effizienz = 0.0
 
 # Der Energieverbrauch bzw. Energiegewinn wird berechnet
 # unter Berücksichtigung von Verlusten in Batterie und Leistungselektronik
-def energieverbrauch(leistung, zeit_intervall):
-    energie = leistung * zeit_intervall
-
-    if energie < 0:
-        delta = energie * (effizienz * Leistungselektronik.effizienz)
+def leistung(benoetigte_leistung):
+    if benoetigte_leistung < 0:
+        leistung_batterie = benoetigte_leistung * (effizienz * Leistungselektronik.effizienz)
     else:
-        delta = energie / (effizienz * Leistungselektronik.effizienz)
-    return delta  # in Joule
+        leistung_batterie = benoetigte_leistung / (effizienz * Leistungselektronik.effizienz)
+    return leistung_batterie  # in Watt
 
 
 # Die Batterie hat einen variablen Inhalt sowie eine feste Kapazität

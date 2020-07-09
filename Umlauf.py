@@ -16,17 +16,17 @@ route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
-# Die Fahrzeugparameter werden festgelegt
+# Die festen Fahrzeugparameter werden festgelegt
 Fahrzeug.masse = 12000.0 # in kg
 Fahrzeug.stirnflaeche = 8.8 # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
-Elektromotor.effizienz = 0.9
-Getriebe.effizienz = 1.0
-Fahrzeug.effizienz_getriebe = 1.0
 Batterie.kapazitaet = 350.0  # in KWh
 Batterie.effizienz = 0.95
 Leistungselektronik.effizienz = 1.0
+Elektromotor.effizienz = 0.9
+Getriebe.effizienz = 1.0
+
 
 # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
 initialer_soc = 100  # in Prozent
@@ -55,16 +55,18 @@ while zurueckgelegte_distanz < streckenlaenge:
     print("Gewählte Beschleunigung: ", beschleunigung, " m/s²")
 
     # Ermittlung des Gesamtleistungsbedarfs
-    # TODO: Austauschen durch Leistung an der Batterie
+    # TODO: Austauschen durch Leistung an der Batterie / oder energieverbrauch
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
-    leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
-    print("Gesamtleistungsbedarf: ", leistung, " Watt")
+    benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
+    leistung_batterie = Batterie.leistung(benoetigte_leistung)
+    print("Momentane Leistung an der Batterie: ", leistung_batterie, " Watt")
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
-    energieverbrauch_im_intervall = Batterie.energieverbrauch(leistung, zeit_intervall)
-    print("Aktueller Energieverbrauch: ", energieverbrauch_im_intervall, " Joule")
+    energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
     neuer_soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
     print("Neuer SoC: ", neuer_soc, " %")
+
+    # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
     kumulierter_energieverbrauch_joule += energieverbrauch_im_intervall
     kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
     print("Kumulierter Energieverbrauch: ", kumulierter_energieverbrauch_joule, "Joule / ",

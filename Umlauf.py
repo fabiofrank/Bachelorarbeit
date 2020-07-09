@@ -10,15 +10,14 @@ import Leistungselektronik
 import Nebenverbraucher
 import Route
 
-
 # Die Route wird mittels CSV-Datei eingelesen
 route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
 zeit_intervall = 1  # in Sekunden
 
 # Die festen Fahrzeugparameter werden festgelegt
-Fahrzeug.masse = 12000.0 # in kg
-Fahrzeug.stirnflaeche = 8.8 # in qm
+Fahrzeug.masse = 12000.0  # in kg
+Fahrzeug.stirnflaeche = 8.8  # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
 Batterie.kapazitaet = 350.0  # in KWh
@@ -26,7 +25,6 @@ Batterie.effizienz = 0.95
 Leistungselektronik.effizienz = 1.0
 Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
-
 
 # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
 initialer_soc = 100  # in Prozent

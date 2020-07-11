@@ -3,7 +3,7 @@ from scipy import constants
 
 # physikalische Konstanten
 g = constants.g
-luftdichte = 1.225  # in kg/m³
+luftdichte = 1.225  # in kg/m³, als konstant angenommen (eigentlich temperaturabhängig)
 
 # feste Parameter, die zu Beginn der Simulation festgelegt werden müssen
 masse = 0.0  # in kg

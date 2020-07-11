@@ -1,6 +1,9 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
+# Wahl der Beschleunigung und Verzögerung analog zu Sinhuber, Rohlfs und Sauer (2012):
+# "Study on power and energy demand for sizing the energy storage systems for electrified local public transport buses"
+
 # gefahrene Beschleunigungen in SORT-Zyklen:
 # innerhalb von  15 m von 0 auf 20 km/h
 # innerhalb von  45 m von 0 auf 30 km/h

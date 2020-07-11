@@ -1,6 +1,4 @@
-# TODO: Umgang mit NaN
-# TODO: mit globalen Variablen arbeiten anstelle von Argumenten, die an Funktionen weitergegeben werden???
-
+# TODO: Umgang mit NaN-Werten, die auftreten, wenn in der Input-Routendatei keine Steigung angegeben ist für bestimmte Stelle
 
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Fahrer
@@ -29,12 +27,13 @@ Batterie.inhalt = Batterie.kapazitaet * initialer_soc / 100
 # Initialisierung der Schleife
 t = 0  # Zeit in s
 v_ist = 0.0  # Ist-Geschwindigkeit in m/s
-zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in km TODO: m oder km?
+zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in m
 kumulierter_energieverbrauch_joule = 0.0
 
 # Schleife, die läuft bis Umlauf beendet
 while zurueckgelegte_distanz < streckenlaenge:
-    # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1
+    # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1? Größen am Anfang/am Ende des betrachteten Intervalls
+    # TODO: Output-Array erstellen anstatt print-Befehle, evtl. pandas Dataframe
     print("Intervall t = [", t, ",", t + zeit_intervall, ")")
 
     # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
@@ -49,7 +48,6 @@ while zurueckgelegte_distanz < streckenlaenge:
     print("Gewählte Beschleunigung: ", beschleunigung, " m/s²")
 
     # Ermittlung des Gesamtleistungsbedarfs
-    # TODO: Austauschen durch Leistung an der Batterie / oder energieverbrauch
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
     benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
     leistung_batterie = Batterie.leistung(benoetigte_leistung)
@@ -74,5 +72,3 @@ while zurueckgelegte_distanz < streckenlaenge:
     t += zeit_intervall
 
     print("_________________________________________________________________________________________")
-
-    # TODO: Output-Array kreiieren anstatt print-Befehle

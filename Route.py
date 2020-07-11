@@ -3,12 +3,14 @@
 
 from numpy import genfromtxt
 
-
+# CSV-Datei aus Online-Tool "GPS-Visualizer" (Route in Google Maps erzeugt)
+# Datei soll vorher um Sollgeschwindigkeit sowie Marker für Bushaltestellen und DWPT-Streckenabschnitte ergänzt werden
 # Aus der übergebenen CSV-Datei wird ein Array erzeugt
 def einlesen(csv_datei):
     return genfromtxt(csv_datei, delimiter=',', names=True)
 
-# TODO: Steigung und momentane Position
+
+# Funktion gibt die Zeile im Array zurück, in der sich das Fahrzeug gerade befindet
 def momentane_position(distanz_in_m, route):
     distanz_in_km = distanz_in_m / 1000
     zeile = 0
@@ -19,6 +21,7 @@ def momentane_position(distanz_in_m, route):
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             return zeile
 
+# TODO: Steigung und momentane Position verbinden
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m, route):
     distanz_in_km = distanz_in_m / 1000

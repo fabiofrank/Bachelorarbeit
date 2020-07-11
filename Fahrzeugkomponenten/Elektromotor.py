@@ -2,7 +2,7 @@ from Fahrzeugkomponenten import Getriebe
 
 effizienz = 0.0
 
-
+# TODO: Motorleistung durch Maximum begrenzen
 # Berechnung der Leistung des Elektromotors unter Berücksichtigung von Verlusten
 def leistung(fahrwiderstaende, v_ist):
     if fahrwiderstaende < 0:

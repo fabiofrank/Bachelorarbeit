@@ -1,2 +1,2 @@
-# TODO: Ladepause (Pause = Umlauf mit bestimmten Parametern?)
-# TODO: Halt an Bushaltestelle (Nebenverbraucher bleiben an, noch etwas?)
+# TODO: Ladepausen an Start-/Zielhaltestelle
+# TODO: Halt an Bushaltestelle (Klimatisierung und weitere Nebenverbraucher laufen)

@@ -7,27 +7,14 @@ from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungse
 import Fahrer
 import Route
 
-# Die Route wird mittels CSV-Datei eingelesen
-route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
-streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
-zeit_intervall = 1  # in Sekunden
+soc = 0.0
 
-# Die festen Fahrzeugparameter werden festgelegt
-Fahrzeug.masse = 12000.0  # in kg
-Fahrzeug.stirnflaeche = 8.8  # in qm
-Fahrzeug.f_roll = 0.015
-Fahrzeug.c_w = 0.3
-Batterie.kapazitaet = 350.0  # in KWh
-Batterie.effizienz = 0.95
-Leistungselektronik.effizienz = 1.0
-Elektromotor.effizienz = 0.9
-Getriebe.effizienz = 1.0
-
-
-def umlauf(nummer, initialer_soc):
+def umlauf(nummer, route):
     # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
     global soc
-    Batterie.inhalt = Batterie.kapazitaet * initialer_soc / 100
+    Batterie.inhalt = Batterie.kapazitaet * soc / 100
+    streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
+    zeit_intervall = 1
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s
@@ -86,12 +73,6 @@ def umlauf(nummer, initialer_soc):
         umlauf_tabelle.to_excel(writer, sheet_name='Umlauf Nr. '+ nummer, index=False)
     return soc
 
-# SoC zu Beginn des Betriebstages
-soc = 100.0
 
-# Aneinanderreihen von Umläufen
-# TODO: Ladepausen zwischen Umläufen
-for i in range(1,5):
-    umlauf(nummer=str(i),initialer_soc=soc)
 
 

@@ -16,7 +16,7 @@ def pause(nummer, laenge):
     liste = []
     global soc
     kumulierter_energieverbrauch = 0.0
-    ladeleistung = 60.000  # in Watt
+    ladeleistung = 60000  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     energieaufnahme = ladeleistung_batterie * zeit_intervall # in Joule
 

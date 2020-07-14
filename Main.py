@@ -26,11 +26,24 @@ Betriebstag.zeit_intervall = 1 # in Sekunden
 
 # TODO: Uhrzeit der einzelnen Umläufe
 # TODO: Übersicht über Betriebstag erstellen (Tabelle mit Umläufen): Dafür sind finale Werte der Umläufe nötig
-
+liste = []
 # Aneinanderreihen von Umläufen
-for i in range(1,3):
+for i in range(1,4):
     print("Umlauf ", i, " gestartet.")
+    soc_vor_umlauf = Betriebstag.soc
     aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
+    ergebnis_umlauf = {'Umlauf bzw. Pause': 'Umlauf '+str(i), 'SoC zu Beginn [%]': soc_vor_umlauf, 'SoC am Ende [%]': Betriebstag.soc}
+    liste.append(ergebnis_umlauf)
+
     print('Pause ', i, ' gestartet.')
-    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=3600)
-    print('Zur Liste hinzufügen.')
+    soc_vor_pause = Betriebstag.soc
+    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=900)
+    ergebnis_pause = {'Umlauf bzw. Pause': 'Pause '+str(i), 'SoC zu Beginn [%]': soc_vor_pause, 'SoC am Ende [%]': Betriebstag.soc}
+    liste.append(ergebnis_pause)
+
+    print('--------------------------------')
+
+print('Übersicht erstellen.')
+uebersicht_betriebstag = pd.DataFrame(liste)
+with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
+    uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False)

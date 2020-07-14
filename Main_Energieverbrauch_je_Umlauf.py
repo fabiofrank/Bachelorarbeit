@@ -1,4 +1,4 @@
-# TODO: Umgang mit NaN-Werten, die auftreten, wenn in der Input-Routendatei keine Steigung angegeben ist für
+# TODO: Umgang mit NaN-Werten, die auftreten, wenn in der Input-Routendatei z. B. keine Steigung angegeben ist für
 #  bestimmte Stelle
 
 import numpy as np
@@ -6,12 +6,6 @@ import pandas as pd
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Fahrer
 import Route
-from datetime import datetime
-
-start = datetime.now()
-
-# Daten des Umlaufs
-nummer = '1'
 
 # Die Route wird mittels CSV-Datei eingelesen
 route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
@@ -29,58 +23,75 @@ Leistungselektronik.effizienz = 1.0
 Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
-# Der Batteriestand zu Beginn des Umlaufs wird festgelegt
-initialer_soc = 100  # in Prozent
-Batterie.inhalt = Batterie.kapazitaet * initialer_soc / 100
 
-# Initialisierung der Schleife
-t = 0  # Zeit in s
-v_ist = 0.0  # Ist-Geschwindigkeit in m/s
-zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in m
-kumulierter_energieverbrauch_joule = 0.0
-liste = []
+def umlauf(nummer, initialer_soc):
+    # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
+    global soc
+    Batterie.inhalt = Batterie.kapazitaet * initialer_soc / 100
 
-# Schleife, die läuft bis Umlauf beendet
-while zurueckgelegte_distanz < streckenlaenge:
-    # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1? Größen am Anfang/am Ende des betrachteten Intervalls
+    # Initialisierung der Schleife
+    t = 0  # Zeit in s
+    v_ist = 0.0  # Ist-Geschwindigkeit in m/s
+    zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in m
+    kumulierter_energieverbrauch_joule = 0.0
+    liste = []
 
-    # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
-    # Routendatei ermittelt
-    steigung = Route.steigung(zurueckgelegte_distanz, route)
-    v_soll = Route.v_soll(zurueckgelegte_distanz, route)
+    # Schleife, die läuft bis Umlauf beendet
+    while zurueckgelegte_distanz < streckenlaenge:
+        # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1? Größen am Anfang/am Ende des betrachteten Intervalls
 
-    # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
-    beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
+        # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
+        # Routendatei ermittelt
+        steigung = Route.steigung(zurueckgelegte_distanz, route)
+        v_soll = Route.v_soll(zurueckgelegte_distanz, route)
 
-    # Ermittlung des Gesamtleistungsbedarfs
-    fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
-    benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
-    leistung_batterie = Batterie.leistung(benoetigte_leistung)
+        # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
+        beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 
-    # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls, Entladen bzw. Aufladen der Batterie
-    energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
-    neuer_soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
+        # Ermittlung des Gesamtleistungsbedarfs
+        fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
+        benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
+        leistung_batterie = Batterie.leistung(benoetigte_leistung)
 
-    # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
-    kumulierter_energieverbrauch_joule += energieverbrauch_im_intervall
-    kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
+        # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
+        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
 
-    # Sammle neu gewonnene Daten in Liste
-    neue_zeile = {'Zeit [s]': t, 'SoC [%]': neuer_soc,
-                  'Zurückgelegte Distanz [m]': zurueckgelegte_distanz,
-                  'Ist-Geschwindigkeit zum Zeitpunkt t [m/s]': v_ist,
-                  'Soll-Geschwindigkeit zum Zeitpunkt t [m/s]': v_soll, 'Steigung im Intervall [t, t+1) [%]': steigung,
-                  'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
-                  'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': leistung_batterie,
-                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch_kWh}
-    liste.append(neue_zeile)
+        # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
+        kumulierter_energieverbrauch_joule += energieverbrauch_im_intervall
+        kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
 
-    # Berechnung der zurückgelegten Strecke und der neuen Ist-Geschwindigkeit
-    zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
-    v_ist += beschleunigung * zeit_intervall
-    t += zeit_intervall
+        # Sammle neu gewonnene Daten in Liste
+        neue_zeile = {'Zeit [s]': t,
+                      'SoC [%]': soc,
+                      'Zurückgelegte Distanz [m]': zurueckgelegte_distanz,
+                      'Ist-Geschwindigkeit zum Zeitpunkt t [m/s]': v_ist,
+                      'Soll-Geschwindigkeit zum Zeitpunkt t [m/s]': v_soll,
+                      'Steigung im Intervall [t, t+1) [%]': steigung,
+                      'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
+                      'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': leistung_batterie,
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch_kWh}
+        liste.append(neue_zeile)
 
-# Tabelle mit allen Daten des Umlaufs wird erstellt
-umlauf_tabelle = pd.DataFrame(liste)
-umlauf_tabelle.to_excel('Output.xlsx', sheet_name='Umlauf Nr.' + nummer)
-print('Laufzeit:', datetime.now() - start)
+        # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC
+        soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
+
+        # Berechnung der zurückgelegten Strecke und der neuen Ist-Geschwindigkeit
+        zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
+        v_ist += beschleunigung * zeit_intervall
+        t += zeit_intervall
+
+    # Tabelle mit allen Daten des Umlaufs wird erstellt und zurückgegeben
+    umlauf_tabelle = pd.DataFrame(liste)
+    with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
+        umlauf_tabelle.to_excel(writer, sheet_name='Umlauf Nr. '+ nummer, index=False)
+    return soc
+
+# SoC zu Beginn des Betriebstages
+soc = 100.0
+
+# Aneinanderreihen von Umläufen
+# TODO: Ladepausen zwischen Umläufen
+for i in range(1,5):
+    umlauf(nummer=str(i),initialer_soc=soc)
+
+

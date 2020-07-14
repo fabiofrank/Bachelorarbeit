@@ -9,19 +9,43 @@ import Route
 
 soc: float
 route: np.ndarray
+zeit_intervall = 1
+
+
+def pause(nummer, laenge):
+    liste = []
+    global soc
+    kumulierter_energieverbrauch = 0.0
+    ladeleistung = 60.000  # in Watt
+    ladeleistung_batterie = Batterie.leistung(-ladeleistung)
+    energieaufnahme = ladeleistung_batterie * zeit_intervall # in Joule
+
+    for i in range(0, laenge):
+        t = i
+        kumulierter_energieverbrauch += energieaufnahme
+        neue_zeile = {'Zeit [s]': t,
+                  'SoC [%]': soc,
+                  'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': ladeleistung_batterie,
+                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
+        liste.append(neue_zeile)
+        soc = Batterie.state_of_charge(energieaufnahme)
+
+    pause_tabelle = pd.DataFrame(liste)
+    with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
+        pause_tabelle.to_excel(writer, sheet_name='Pause Nr. ' + nummer, index=False)
+
+    return pause_tabelle
 
 def umlauf(nummer):
     # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
     global soc, route
-    Batterie.inhalt = Batterie.kapazitaet * soc / 100
     streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
-    zeit_intervall = 1
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s
     v_ist = 0.0  # Ist-Geschwindigkeit in m/s
     zurueckgelegte_distanz = 0.0  # zurückgelegte Strecke in m
-    kumulierter_energieverbrauch_joule = 0.0
+    kumulierter_energieverbrauch = 0.0
     liste = []
 
     # Schleife, die läuft bis Umlauf beendet
@@ -42,11 +66,10 @@ def umlauf(nummer):
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
 
         # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
-        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
+        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall # in Joule
 
         # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
-        kumulierter_energieverbrauch_joule += energieverbrauch_im_intervall
-        kumulierter_energieverbrauch_kWh = kumulierter_energieverbrauch_joule / 3600000
+        kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
         # Sammle neu gewonnene Daten in Liste
         neue_zeile = {'Zeit [s]': t,
@@ -57,7 +80,7 @@ def umlauf(nummer):
                       'Steigung im Intervall [t, t+1) [%]': steigung,
                       'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
                       'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': leistung_batterie,
-                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch_kWh}
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
         liste.append(neue_zeile)
 
         # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC
@@ -71,9 +94,6 @@ def umlauf(nummer):
     # Tabelle mit allen Daten des Umlaufs wird erstellt und zurückgegeben
     umlauf_tabelle = pd.DataFrame(liste)
     with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
-        umlauf_tabelle.to_excel(writer, sheet_name='Umlauf Nr. '+ nummer, index=False)
-    return soc
+        umlauf_tabelle.to_excel(writer, sheet_name='Umlauf Nr. ' + nummer, index=False)
 
-
-
-
+    return umlauf_tabelle

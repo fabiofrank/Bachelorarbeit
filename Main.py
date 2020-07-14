@@ -1,8 +1,7 @@
+import pandas as pd
 import Betriebstag
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
-
-zeit_intervall = 1  # in Sekunden
 
 # Die festen Fahrzeugparameter werden festgelegt
 Fahrzeug.masse = 12000.0  # in kg
@@ -16,13 +15,22 @@ Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
-# Der SoC zu Beginn des Betriebstags wird festgelegt
 Betriebstag.route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
-Betriebstag.soc = 100.0
 
+# Der SoC zu Beginn des Betriebstags wird festgelegt
+Betriebstag.soc = 100.0
+Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
+
+# Es wird eingestellt, wie groß die Zeitschritte in der Simulation sein sollen
+Betriebstag.zeit_intervall = 1 # in Sekunden
+
+# TODO: Uhrzeit der einzelnen Umläufe
+# TODO: Übersicht über Betriebstag erstellen (Tabelle mit Umläufen): Dafür sind finale Werte der Umläufe nötig
 
 # Aneinanderreihen von Umläufen
-# TODO: Ladepausen zwischen Umläufen
-for i in range(1,5):
-    Betriebstag.umlauf(nummer=str(i))
-    # Betriebstag.pause...
+for i in range(1,3):
+    print("Umlauf ", i, " gestartet.")
+    aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
+    print('Pause ', i, ' gestartet.')
+    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=3600)
+    print('Zur Liste hinzufügen.')

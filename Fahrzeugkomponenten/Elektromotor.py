@@ -1,6 +1,6 @@
 from Fahrzeugkomponenten import Getriebe
 
-effizienz = 0.0
+effizienz: float
 
 # TODO: Motorleistung durch Maximum begrenzen
 # Berechnung der Leistung des Elektromotors unter Berücksichtigung von Verlusten

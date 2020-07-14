@@ -1,10 +1,7 @@
 import Betriebstag
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
-import Fahrer
 import Route
 
-# Die Route wird mittels CSV-Datei eingelesen
-route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 zeit_intervall = 1  # in Sekunden
 
 # Die festen Fahrzeugparameter werden festgelegt
@@ -18,11 +15,14 @@ Leistungselektronik.effizienz = 1.0
 Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
-# SoC zu Beginn des Betriebstages
+# Die Route des Umlaufs wird eingelesen
+# Der SoC zu Beginn des Betriebstags wird festgelegt
+Betriebstag.route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
 Betriebstag.soc = 100.0
+
 
 # Aneinanderreihen von Umläufen
 # TODO: Ladepausen zwischen Umläufen
 for i in range(1,5):
-    Betriebstag.umlauf(nummer=str(i), route=route)
-    soc = Betriebstag.soc
+    Betriebstag.umlauf(nummer=str(i))
+    # Betriebstag.pause...

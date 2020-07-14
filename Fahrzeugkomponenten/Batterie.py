@@ -1,8 +1,8 @@
 from Fahrzeugkomponenten import Leistungselektronik
 
-inhalt = 0.0
-kapazitaet = 0.0
-effizienz = 0.0
+inhalt: float
+kapazitaet: float
+effizienz: float
 
 
 # Der Energieverbrauch bzw. Energiegewinn wird berechnet

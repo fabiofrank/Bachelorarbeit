@@ -7,11 +7,12 @@ from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungse
 import Fahrer
 import Route
 
-soc = 0.0
+soc: float
+route: np.ndarray
 
-def umlauf(nummer, route):
+def umlauf(nummer):
     # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
-    global soc
+    global soc, route
     Batterie.inhalt = Batterie.kapazitaet * soc / 100
     streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
     zeit_intervall = 1

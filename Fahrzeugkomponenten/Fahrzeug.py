@@ -6,10 +6,10 @@ g = constants.g
 luftdichte = 1.225  # in kg/m³, als konstant angenommen (eigentlich temperaturabhängig)
 
 # feste Parameter, die zu Beginn der Simulation festgelegt werden müssen
-masse = 0.0  # in kg
-f_roll = 0.0  # Rollwiderstandskoeffizient[ohne Einheit]
-stirnflaeche = 0.0  # in qm
-c_w = 0.0  # Luftwiderstandsbeiwert
+masse: float  # in kg
+f_roll: float # Rollwiderstandskoeffizient[ohne Einheit]
+stirnflaeche: float  # in qm
+c_w: float # Luftwiderstandsbeiwert
 
 
 # Formeln der auftretenden Fahrwiderstände

@@ -1,1 +1,1 @@
-effizienz = 1.0
+effizienz: float

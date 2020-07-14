@@ -1,1 +1,1 @@
-effizienz = 0.0
+effizienz: float # in Prozent

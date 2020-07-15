@@ -1,13 +1,13 @@
 # TODO: v_soll in Datei integrieren, Funktion für v_soll schreiben analog zu steigung(distanz, route)
 # TODO: route als globale Variable anstatt Funktionsargument?
 
-from numpy import genfromtxt
+import numpy as np
 
 # CSV-Datei aus Online-Tool "GPS-Visualizer" (Route in Google Maps erzeugt)
 # Datei soll vorher um Sollgeschwindigkeit sowie Marker für Bushaltestellen und DWPT-Streckenabschnitte ergänzt werden
 # Aus der übergebenen CSV-Datei wird ein Array erzeugt
 def einlesen(csv_datei):
-    return genfromtxt(csv_datei, delimiter=',', names=True)
+    return np.genfromtxt(csv_datei, delimiter=';', names=True, skip_header=4)
 
 
 # Funktion gibt die Zeile im Array zurück, in der sich das Fahrzeug gerade befindet
@@ -31,7 +31,10 @@ def steigung(distanz_in_m, route):
             zeile += 1
             continue
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
-            return route['slope_'][zeile]
+            if np.isnan(route['slope_'][zeile]) == True:
+                return 0.0
+            else:
+                return route['slope_'][zeile]
 
 
 # Die in der Route vorgegebene Soll-Geschwindigkeit wird ermittelt

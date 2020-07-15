@@ -49,6 +49,7 @@ def umlauf(nummer):
     liste = []
 
     # Schleife, die läuft bis Umlauf beendet
+    # TODO: Halt an Bushaltestelle
     while zurueckgelegte_distanz < streckenlaenge:
         # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1? Größen am Anfang/am Ende des betrachteten Intervalls
 
@@ -62,9 +63,9 @@ def umlauf(nummer):
 
         # Ermittlung des Gesamtleistungsbedarfs
         fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
+
         benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
-
         # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
         energieverbrauch_im_intervall = leistung_batterie * zeit_intervall # in Joule
 

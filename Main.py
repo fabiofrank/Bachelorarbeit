@@ -15,7 +15,7 @@ Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
-Betriebstag.route = Route.einlesen('Testdatensatz_10 Zeilen.csv')
+Betriebstag.route = Route.einlesen('20200715031626-25131-data.txt')
 
 # Der SoC zu Beginn des Betriebstags wird festgelegt
 Betriebstag.soc = 100.0
@@ -25,7 +25,7 @@ Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
 Betriebstag.zeit_intervall = 1 # in Sekunden
 
 # TODO: Uhrzeit der einzelnen Umläufe
-# TODO: Übersicht über Betriebstag erstellen (Tabelle mit Umläufen): Dafür sind finale Werte der Umläufe nötig
+# TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 liste = []
 # Aneinanderreihen von Umläufen
 for i in range(1,4):
@@ -37,7 +37,7 @@ for i in range(1,4):
 
     print('Pause ', i, ' gestartet.')
     soc_vor_pause = Betriebstag.soc
-    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=900)
+    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=300)
     ergebnis_pause = {'Umlauf bzw. Pause': 'Pause '+str(i), 'SoC zu Beginn [%]': soc_vor_pause, 'SoC am Ende [%]': Betriebstag.soc}
     liste.append(ergebnis_pause)
 

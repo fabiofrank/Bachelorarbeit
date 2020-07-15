@@ -1,5 +1,4 @@
-# TODO: Umgang mit NaN-Werten, die auftreten, wenn in der Input-Routendatei z. B. keine Steigung angegeben ist für
-#  bestimmte Stelle
+from typing import Any, Union
 
 import numpy as np
 import pandas as pd
@@ -8,7 +7,7 @@ import Fahrer
 import Route
 
 soc: float
-route: np.ndarray
+route: pd.DataFrame
 zeit_intervall = 1
 
 
@@ -18,15 +17,15 @@ def pause(nummer, laenge):
     kumulierter_energieverbrauch = 0.0
     ladeleistung = 60000  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
-    energieaufnahme = ladeleistung_batterie * zeit_intervall # in Joule
+    energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
 
     for i in range(0, laenge):
         t = i
         kumulierter_energieverbrauch += energieaufnahme
         neue_zeile = {'Zeit [s]': t,
-                  'SoC [%]': soc,
-                  'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': ladeleistung_batterie,
-                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
+                      'SoC [%]': soc,
+                      'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': ladeleistung_batterie,
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
         liste.append(neue_zeile)
         soc = Batterie.state_of_charge(energieaufnahme)
 
@@ -36,10 +35,11 @@ def pause(nummer, laenge):
 
     return pause_tabelle
 
+
 def umlauf(nummer):
-    # Der Batteriestand zu Beginn des Umlaufs wird festgelegt
     global soc, route
-    streckenlaenge = route['distance_km'][len(route) - 1] * 1000  # in Metern
+    #  streckenlaenge = route['distance (km)'][len(route.index) - 1] * 1000  # in Metern
+    streckenlaenge = route['distance (km)'].iloc[-1] * 1000 # in m
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s
@@ -51,8 +51,6 @@ def umlauf(nummer):
     # Schleife, die läuft bis Umlauf beendet
     # TODO: Halt an Bushaltestelle
     while zurueckgelegte_distanz < streckenlaenge:
-        # TODO: Überlegen, was gehört zu t=0, was gehört zu t=1? Größen am Anfang/am Ende des betrachteten Intervalls
-
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
         # Routendatei ermittelt
         steigung = Route.steigung(zurueckgelegte_distanz, route)
@@ -67,7 +65,7 @@ def umlauf(nummer):
         benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
         # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
-        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall # in Joule
+        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall  # in Joule
 
         # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
         kumulierter_energieverbrauch += energieverbrauch_im_intervall

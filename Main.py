@@ -15,7 +15,7 @@ Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
-Betriebstag.route = Route.einlesen('20200715031626-25131-data.txt')
+Betriebstag.route = Route.einlesen('20200715070018-25131-data.csv')
 
 # Der SoC zu Beginn des Betriebstags wird festgelegt
 Betriebstag.soc = 100.0
@@ -28,7 +28,7 @@ Betriebstag.zeit_intervall = 1 # in Sekunden
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 liste = []
 # Aneinanderreihen von Umläufen
-for i in range(1,4):
+for i in range(1,10):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))

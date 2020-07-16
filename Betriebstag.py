@@ -8,13 +8,14 @@ import Route
 
 soc: float
 route: pd.DataFrame
+kumulierter_energieverbrauch: float
 zeit_intervall = 1
 
 
 def pause(nummer, laenge):
     liste = []
-    global soc
-    kumulierter_energieverbrauch = 0.0
+    global soc, kumulierter_energieverbrauch
+    kumulierter_energieverbrauch = 0.0 # in Joule
     ladeleistung = 60000  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
@@ -37,7 +38,7 @@ def pause(nummer, laenge):
 
 
 def umlauf(nummer):
-    global soc, route
+    global soc, route, kumulierter_energieverbrauch
     #  streckenlaenge = route['distance (km)'][len(route.index) - 1] * 1000  # in Metern
     streckenlaenge = route['distance (km)'].iloc[-1] * 1000 # in m
 
@@ -74,12 +75,12 @@ def umlauf(nummer):
         neue_zeile = {'Zeit [s]': t,
                       'SoC [%]': soc,
                       'Zurückgelegte Distanz [m]': zurueckgelegte_distanz,
-                      'Ist-Geschwindigkeit zum Zeitpunkt t [m/s]': v_ist,
-                      'Soll-Geschwindigkeit zum Zeitpunkt t [m/s]': v_soll,
+                      'Ist-Geschwindigkeit zum Zeitpunkt t [km/h]': v_ist * 3.6,
+                      'Soll-Geschwindigkeit zum Zeitpunkt t [km/h]': v_soll * 3.6,
                       'Steigung im Intervall [t, t+1) [%]': steigung,
                       'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
-                      'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': leistung_batterie,
-                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
+                      'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)
 
         # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC

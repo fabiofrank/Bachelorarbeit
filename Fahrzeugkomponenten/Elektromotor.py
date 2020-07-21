@@ -2,6 +2,7 @@ from Fahrzeugkomponenten import Getriebe
 
 effizienz: float
 
+
 # TODO: Motorleistung durch Maximum begrenzen
 # Berechnung der Leistung des Elektromotors unter Berücksichtigung von Verlusten
 def leistung(fahrwiderstaende, v_ist):

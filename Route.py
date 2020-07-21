@@ -5,6 +5,7 @@ import pandas as pd
 
 route: pd.DataFrame
 
+
 # CSV-Datei aus Online-Tool "GPS-Visualizer" (Route in Google Maps erzeugt)
 # Datei soll vorher um Sollgeschwindigkeit sowie Marker für Bushaltestellen und DWPT-Streckenabschnitte ergänzt werden
 # Aus der übergebenen CSV-Datei wird ein Array erzeugt
@@ -25,10 +26,11 @@ def momentane_position(distanz_in_m):
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             return zeile
 
+
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m):
     zeile = momentane_position(distanz_in_m)
-    if np.isnan(route['slope (%)'][zeile]) == True:
+    if np.isnan(route['slope (%)'][zeile]) is True:
         return 0.0
     else:
         return route['slope (%)'][zeile]
@@ -39,11 +41,12 @@ def v_soll(distanz):
     # TODO: v_soll implementieren
     return 50 / 3.6
 
+
 # Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
 def dwpt_ladeleistung(distanz_in_m):
     zeile = momentane_position(distanz_in_m)
     if route['dwpt'][zeile] == 1:
-        ladeleistung = 25000.0 # Watt
+        ladeleistung = 25000.0  # Watt
     else:
         ladeleistung = 0.0
     return ladeleistung

@@ -7,7 +7,7 @@ import Fahrer
 import Route
 
 soc: float
-#route: pd.DataFrame
+# route: pd.DataFrame
 kumulierter_energieverbrauch: float
 zeit_intervall = 1
 
@@ -15,7 +15,7 @@ zeit_intervall = 1
 def pause(nummer, laenge):
     liste = []
     global soc, kumulierter_energieverbrauch
-    kumulierter_energieverbrauch = 0.0 # in Joule
+    kumulierter_energieverbrauch = 0.0  # in Joule
     ladeleistung = 60000  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
@@ -39,7 +39,7 @@ def pause(nummer, laenge):
 
 def umlauf(nummer):
     global soc, kumulierter_energieverbrauch
-    streckenlaenge = Route.route['distance (km)'].iloc[-1] * 1000 # in m
+    streckenlaenge = Route.route['distance (km)'].iloc[-1] * 1000  # in m
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s

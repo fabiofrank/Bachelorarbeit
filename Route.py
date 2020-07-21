@@ -28,20 +28,16 @@ def momentane_position(distanz_in_m, route):
 # TODO: Steigung und momentane Position verbinden
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m, route):
-    distanz_in_km = distanz_in_m / 1000
-    zeile = 0
-    for i in route['distance (km)']:  # Iteration über die Spalte mit der zurückgelegten Distanz
-        if i < distanz_in_km:
-            zeile += 1
-            continue
-        elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
-            if np.isnan(route['slope (%)'][zeile]) == True:
-                return 0.0
-            else:
-                return route['slope (%)'][zeile]
+    zeile = momentane_position(distanz_in_m, route)
+    if np.isnan(route['slope (%)'][zeile]) == True:
+        return 0.0
+    else:
+        return route['slope (%)'][zeile]
 
 
 # Die in der Route vorgegebene Soll-Geschwindigkeit wird ermittelt
 def v_soll(distanz, route):
     # TODO: v_soll implementieren
     return 50 / 3.6
+
+#def dwpt_ladeleistung():

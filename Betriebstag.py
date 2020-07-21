@@ -7,7 +7,7 @@ import Fahrer
 import Route
 
 soc: float
-route: pd.DataFrame
+#route: pd.DataFrame
 kumulierter_energieverbrauch: float
 zeit_intervall = 1
 
@@ -38,9 +38,8 @@ def pause(nummer, laenge):
 
 
 def umlauf(nummer):
-    global soc, route, kumulierter_energieverbrauch
-    #  streckenlaenge = route['distance (km)'][len(route.index) - 1] * 1000  # in Metern
-    streckenlaenge = route['distance (km)'].iloc[-1] * 1000 # in m
+    global soc, kumulierter_energieverbrauch
+    streckenlaenge = Route.route['distance (km)'].iloc[-1] * 1000 # in m
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s
@@ -54,9 +53,9 @@ def umlauf(nummer):
     while zurueckgelegte_distanz < streckenlaenge:
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
         # Routendatei ermittelt
-        steigung = Route.steigung(zurueckgelegte_distanz, route)
-        v_soll = Route.v_soll(zurueckgelegte_distanz, route)
-        ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz, route)
+        steigung = Route.steigung(zurueckgelegte_distanz)
+        v_soll = Route.v_soll(zurueckgelegte_distanz)
+        ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
         # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
         beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)

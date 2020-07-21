@@ -15,7 +15,7 @@ Elektromotor.effizienz = 0.9
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
-Betriebstag.route = Route.einlesen('20200715070018-25131-data.csv')
+Route.einlesen('20200715070018-25131-data.csv')
 
 # Der SoC zu Beginn des Betriebstags wird festgelegt
 Betriebstag.soc = 100.0

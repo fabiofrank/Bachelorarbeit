@@ -25,7 +25,6 @@ def momentane_position(distanz_in_m, route):
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             return zeile
 
-# TODO: Steigung und momentane Position verbinden
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m, route):
     zeile = momentane_position(distanz_in_m, route)
@@ -40,4 +39,11 @@ def v_soll(distanz, route):
     # TODO: v_soll implementieren
     return 50 / 3.6
 
-#def dwpt_ladeleistung():
+# Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
+def dwpt_ladeleistung(distanz_in_m, route):
+    zeile = momentane_position(distanz_in_m, route)
+    if route['dwpt'][zeile] == 1:
+        ladeleistung = 25000.0 # Watt
+    else:
+        ladeleistung = 0.0
+    return ladeleistung

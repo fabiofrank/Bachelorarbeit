@@ -56,6 +56,7 @@ def umlauf(nummer):
         # Routendatei ermittelt
         steigung = Route.steigung(zurueckgelegte_distanz, route)
         v_soll = Route.v_soll(zurueckgelegte_distanz, route)
+        ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz, route)
 
         # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
         beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
@@ -63,7 +64,7 @@ def umlauf(nummer):
         # Ermittlung des Gesamtleistungsbedarfs
         fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
 
-        benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung
+        benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende, v_ist) + Nebenverbraucher.leistung - ladeleistung
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
         # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
         energieverbrauch_im_intervall = leistung_batterie * zeit_intervall  # in Joule
@@ -79,6 +80,7 @@ def umlauf(nummer):
                       'Soll-Geschwindigkeit zum Zeitpunkt t [km/h]': v_soll * 3.6,
                       'Steigung im Intervall [t, t+1) [%]': steigung,
                       'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
+                      'Empfangene Leistung mittels DWPT [kW]': ladeleistung / 1000,
                       'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
                       'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)

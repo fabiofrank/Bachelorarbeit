@@ -25,7 +25,7 @@ Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
 Betriebstag.zeit_intervall = 1 # in Sekunden
 
 # TODO: Uhrzeit der einzelnen Umläufe?
-# TODO: Übersicht über Betriebstag: Welche Werte sind interessant
+# TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 
 liste = []
 # Aneinanderreihen von Umläufen

@@ -12,6 +12,7 @@ Batterie.kapazitaet = 350.0  # in KWh
 Batterie.effizienz = 0.95
 Leistungselektronik.effizienz = 1.0
 Elektromotor.effizienz = 0.9
+Elektromotor.maximale_leistung = 300000.0 #Watt
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
@@ -25,6 +26,8 @@ Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
 Betriebstag.zeit_intervall = 1  # in Sekunden
 
 # TODO: Uhrzeit der einzelnen Umläufe?
+# TODO: Input Außentemperatur
+# TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 
 liste = []

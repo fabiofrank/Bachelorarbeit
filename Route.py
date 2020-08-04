@@ -40,8 +40,8 @@ def steigung(distanz_in_m):
 def v_soll(distanz):
     # TODO: v_soll implementieren
     zeile = momentane_position(distanz)
-    return route['v_soll'][zeile] / 3.6
-
+    # route['v_soll (km/h)'][zeile] / 3.6
+    return 50 / 3.6
 
 # Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
 def dwpt_ladeleistung(distanz_in_m):

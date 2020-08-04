@@ -92,9 +92,6 @@ def umlauf(nummer):
         v_ist += beschleunigung * zeit_intervall
         t += zeit_intervall
 
-    # Tabelle mit allen Daten des Umlaufs wird erstellt und zurückgegeben
+    # Tabelle mit allen relevanten Daten des Umlaufs wird erstellt und zurückgegeben
     umlauf_tabelle = pd.DataFrame(liste)
-    with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
-        umlauf_tabelle.to_excel(writer, sheet_name='Umlauf Nr. ' + nummer, index=False)
-
     return umlauf_tabelle

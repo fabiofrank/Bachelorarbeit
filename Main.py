@@ -31,11 +31,14 @@ Betriebstag.zeit_intervall = 1  # in Sekunden
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 
 liste = []
+liste_2 = []
+
 # Aneinanderreihen von Umläufen
 for i in range(1, 4):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
+    liste_2.append(aktueller_umlauf)
     ergebnis_umlauf = {'Umlauf bzw. Pause': 'Umlauf ' + str(i), 'SoC zu Beginn [%]': soc_vor_umlauf,
                        'SoC am Ende [%]': Betriebstag.soc,
                        'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
@@ -44,6 +47,7 @@ for i in range(1, 4):
     print('Pause ', i, ' gestartet.')
     soc_vor_pause = Betriebstag.soc
     aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=300)
+    liste_2.append(aktuelle_pause)
     ergebnis_pause = {'Umlauf bzw. Pause': 'Pause ' + str(i), 'SoC zu Beginn [%]': soc_vor_pause,
                       'SoC am Ende [%]': Betriebstag.soc,
                       'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
@@ -52,6 +56,10 @@ for i in range(1, 4):
     print('--------------------------------')
 
 print('Übersicht erstellen.')
+
+# TODO: Name Umlauf/Pause integrieren
 uebersicht_betriebstag = pd.DataFrame(liste)
-with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
+with pd.ExcelWriter('Output.xlsx') as writer:
     uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False)
+    for i in range(0, len(liste_2)):
+        liste_2[i].to_excel(writer, sheet_name='Umlauf Nr. ' + str(i+1), index=False)

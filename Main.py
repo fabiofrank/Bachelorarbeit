@@ -1,5 +1,5 @@
 import pandas as pd
-import pandas.io.formats.excel
+import datetime
 import Betriebstag
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
@@ -26,7 +26,11 @@ Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
 # Es wird eingestellt, wie groß die Zeitschritte in der Simulation sein sollen
 Betriebstag.zeit_intervall = 1  # in Sekunden
 
-# TODO: Uhrzeit der einzelnen Umläufe?
+# Uhrzeit des Betriebsstarts angeben
+uhrzeit = '09:00:00' # Format hh:mm:ss
+Betriebstag.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M:%S')
+
+
 # TODO: Input Außentemperatur
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
@@ -38,20 +42,28 @@ daten_umlaeufe = []
 for i in range(1, 4):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
-    aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
+    uhrzeit_vor_umlauf = Betriebstag.uhrzeit
+    aktueller_umlauf = Betriebstag.umlauf()
     daten_umlaeufe.append(aktueller_umlauf)
 
-    ergebnis_umlauf = {'Typ': 'Umlauf ' + str(i), 'SoC zu Beginn [%]': soc_vor_umlauf,
+    ergebnis_umlauf = {'Typ': 'Umlauf ' + str(i),
+                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
+                       'Uhrzeit am Ende': datetime.datetime.strftime(Betriebstag.uhrzeit, '%H:%M'),
+                       'SoC zu Beginn [%]': soc_vor_umlauf,
                        'SoC am Ende [%]': Betriebstag.soc,
                        'Energieverbrauch \ndes Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_umlauf)
 
     print('Pause ', i, ' gestartet.')
     soc_vor_pause = Betriebstag.soc
-    aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=300)
+    uhrzeit_vor_pause = Betriebstag.uhrzeit
+    aktuelle_pause = Betriebstag.pause(laenge=300)
     daten_umlaeufe.append(aktuelle_pause)
 
-    ergebnis_pause = {'Typ': 'Pause ' + str(i), 'SoC zu Beginn [%]': soc_vor_pause,
+    ergebnis_pause = {'Typ': 'Pause ' + str(i),
+                      'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
+                      'Uhrzeit am Ende': datetime.datetime.strftime(Betriebstag.uhrzeit, '%H:%M'),
+                      'SoC zu Beginn [%]': soc_vor_pause,
                       'SoC am Ende [%]': Betriebstag.soc,
                       'Energieverbrauch \ndes Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
@@ -81,13 +93,13 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
         'valign': 'vcenter'})
 
     worksheet = writer.sheets['Übersicht Betriebstag']
-    tabellenbereich = 'A1:D' + str(len(uebersicht_betriebstag['Typ']) + 1)
+    tabellenbereich = 'A1:F' + str(len(uebersicht_betriebstag['Typ']) + 1)
     ueberschriften = []
     for i in uebersicht_betriebstag.columns.values:
         ueberschriften.append({'header': i})
     worksheet.add_table(tabellenbereich, {'columns': ueberschriften,
                                   'style': 'Table Style Light 11'})
-    worksheet.set_column('A:D', 20, format_ganzzahl)
+    worksheet.set_column('A:F', 20, format_ganzzahl)
     worksheet.set_row(0, None, format_ueberschrift)
 
 
@@ -97,9 +109,9 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
         worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
 
         if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
-            tabellenbereich_umlauf = 'A1:K' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+            tabellenbereich_umlauf = 'A1:L' + str(len(daten_umlaeufe[i]['Typ']) + 1)
         if daten_umlaeufe[i]['Typ'][0] == 'Pause':
-            tabellenbereich_umlauf = 'A1:E' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+            tabellenbereich_umlauf = 'A1:F' + str(len(daten_umlaeufe[i]['Typ']) + 1)
 
         ueberschriften_umlauf = []
         for j in daten_umlaeufe[i].columns.values:

@@ -1,20 +1,22 @@
 from typing import Any, Union
 
 import numpy as np
+import datetime
 import pandas as pd
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Fahrer
 import Route
 
 soc: float
+uhrzeit: datetime
 # route: pd.DataFrame
 kumulierter_energieverbrauch: float
 zeit_intervall = 1
 
 
-def pause(nummer, laenge):
+def pause(laenge):
     liste = []
-    global soc, kumulierter_energieverbrauch
+    global soc, kumulierter_energieverbrauch, uhrzeit
     kumulierter_energieverbrauch = 0.0  # in Joule
     ladeleistung = 60000  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
@@ -23,20 +25,22 @@ def pause(nummer, laenge):
     for i in range(0, laenge):
         t = i
         kumulierter_energieverbrauch += energieaufnahme
-        neue_zeile = {'Typ': 'Pause',
+        neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
+                      'Typ': 'Pause',
                       'Zeit [s]': t,
                       'SoC [%]': soc,
                       'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': ladeleistung_batterie / 1000,
                       'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)
         soc = Batterie.state_of_charge(energieaufnahme)
+        uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
     pause_tabelle = pd.DataFrame(liste)
     return pause_tabelle
 
 
-def umlauf(nummer):
-    global soc, kumulierter_energieverbrauch
+def umlauf():
+    global soc, kumulierter_energieverbrauch, uhrzeit
     streckenlaenge = Route.route['distance (km)'].iloc[-1] * 1000  # in m
 
     # Initialisierung der Schleife
@@ -70,7 +74,8 @@ def umlauf(nummer):
         kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
         # Sammle neu gewonnene Daten in Liste
-        neue_zeile = {'Typ': 'Umlauf',
+        neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
+                      'Typ': 'Umlauf',
                       'Zeit \n[s]': t,
                       'SoC \n[%]': soc,
                       'Zurückgelegte Distanz \n[m]': zurueckgelegte_distanz,
@@ -90,6 +95,7 @@ def umlauf(nummer):
         zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
         v_ist += beschleunigung * zeit_intervall
         t += zeit_intervall
+        uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
     # Tabelle mit allen relevanten Daten des Umlaufs wird erstellt und zurückgegeben
     umlauf_tabelle = pd.DataFrame(liste)

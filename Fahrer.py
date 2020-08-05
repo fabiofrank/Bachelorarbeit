@@ -24,9 +24,9 @@ beschleunigung_interpoliert = interp1d(geschwindigkeit_SORT, beschleunigung_SORT
 def beschleunigung(v_ist, v_soll):
     if v_ist < v_soll:
         if v_ist <= 20 / 3.6:
-            gewaehlte_beschleunigung = beschleunigung_interpoliert(20 / 3.6)
+            gewaehlte_beschleunigung = float(beschleunigung_interpoliert(20 / 3.6))
         else:
-            gewaehlte_beschleunigung = beschleunigung_interpoliert(v_ist)
+            gewaehlte_beschleunigung = float(beschleunigung_interpoliert(v_ist))
 
     elif v_ist > v_soll:
         gewaehlte_beschleunigung = -0.8

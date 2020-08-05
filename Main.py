@@ -30,36 +30,50 @@ Betriebstag.zeit_intervall = 1  # in Sekunden
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 
-liste = []
-liste_2 = []
+daten_uebersicht = []
+daten_umlaeufe = []
 
 # Aneinanderreihen von Umläufen
-for i in range(1, 4):
+for i in range(1, 2):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
-    liste_2.append(aktueller_umlauf)
+    daten_umlaeufe.append(aktueller_umlauf)
+
     ergebnis_umlauf = {'Umlauf bzw. Pause': 'Umlauf ' + str(i), 'SoC zu Beginn [%]': soc_vor_umlauf,
                        'SoC am Ende [%]': Betriebstag.soc,
                        'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
-    liste.append(ergebnis_umlauf)
+    daten_uebersicht.append(ergebnis_umlauf)
 
     print('Pause ', i, ' gestartet.')
     soc_vor_pause = Betriebstag.soc
     aktuelle_pause = Betriebstag.pause(nummer=str(i), laenge=300)
-    liste_2.append(aktuelle_pause)
+    daten_umlaeufe.append(aktuelle_pause)
+
     ergebnis_pause = {'Umlauf bzw. Pause': 'Pause ' + str(i), 'SoC zu Beginn [%]': soc_vor_pause,
                       'SoC am Ende [%]': Betriebstag.soc,
                       'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
-    liste.append(ergebnis_pause)
+    daten_uebersicht.append(ergebnis_pause)
 
     print('--------------------------------')
 
 print('Übersicht erstellen.')
 
-# TODO: Name Umlauf/Pause integrieren
-uebersicht_betriebstag = pd.DataFrame(liste)
-with pd.ExcelWriter('Output.xlsx') as writer:
+uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
+with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
+    workbook = writer.book
+    format_ganzzahl = workbook.add_format({'num_format': '###,##0'})
+    format_gleitzahl = workbook.add_format({'num_format': '###,##0.00'})
+
     uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False)
-    for i in range(0, len(liste_2)):
-        liste_2[i].to_excel(writer, sheet_name='Umlauf Nr. ' + str(i+1), index=False)
+    worksheet = writer.sheets['Übersicht Betriebstag']
+    worksheet.set_column('B:D', 19, format_ganzzahl)
+
+    for i in range(0, len(daten_umlaeufe)):
+        daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False)
+        worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
+        worksheet.set_column('B:K', 19, format_ganzzahl)
+        worksheet.set_column('H:H', 19, format_gleitzahl)
+    writer.save()
+
+

@@ -23,17 +23,15 @@ def pause(nummer, laenge):
     for i in range(0, laenge):
         t = i
         kumulierter_energieverbrauch += energieaufnahme
-        neue_zeile = {'Zeit [s]': t,
+        neue_zeile = {'Typ': 'Pause',
+                      'Zeit [s]': t,
                       'SoC [%]': soc,
-                      'Abgerufene Batterieleistung im Intervall [t, t+1) [W]': ladeleistung_batterie,
-                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [J]': kumulierter_energieverbrauch}
+                      'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': ladeleistung_batterie / 1000,
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)
         soc = Batterie.state_of_charge(energieaufnahme)
 
     pause_tabelle = pd.DataFrame(liste)
-    with pd.ExcelWriter('Output.xlsx', mode='a') as writer:
-        pause_tabelle.to_excel(writer, sheet_name='Pause Nr. ' + nummer, index=False)
-
     return pause_tabelle
 
 
@@ -72,16 +70,17 @@ def umlauf(nummer):
         kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
         # Sammle neu gewonnene Daten in Liste
-        neue_zeile = {'Zeit [s]': t,
+        neue_zeile = {'Typ': 'Umlauf',
+                      'Zeit [s]': t,
                       'SoC [%]': soc,
-                      'Zurückgelegte Distanz [m]': zurueckgelegte_distanz,
-                      'Ist-Geschwindigkeit zum Zeitpunkt t [km/h]': v_ist * 3.6,
-                      'Soll-Geschwindigkeit zum Zeitpunkt t [km/h]': v_soll * 3.6,
+                      'Distanz [m]': zurueckgelegte_distanz,
+                      'Ist-Geschw. zum Zeitpkt. t [km/h]': v_ist * 3.6,
+                      'Soll-Geschw. zum Zeitpkt. t [km/h]': v_soll * 3.6,
                       'Steigung im Intervall [t, t+1) [%]': steigung,
-                      'Gewählte Beschleunigung im Intervall [t, t+1) [m/s²]': beschleunigung,
-                      'Empfangene Leistung mittels DWPT [kW]': ladeleistung / 1000,
-                      'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
-                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch / 3600000}
+                      'Gewählte Beschl. im Intervall [t, t+1) [m/s²]': beschleunigung,
+                      'Empfangene DWPT-Leistung [kW]': ladeleistung / 1000,
+                      'Abgerufene Bat-Leistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
+                      'Kum. Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)
 
         # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC

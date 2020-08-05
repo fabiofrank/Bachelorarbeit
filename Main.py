@@ -35,7 +35,7 @@ daten_uebersicht = []
 daten_umlaeufe = []
 
 # Aneinanderreihen von Umläufen
-for i in range(1, 2):
+for i in range(1, 4):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     aktueller_umlauf = Betriebstag.umlauf(nummer=str(i))
@@ -60,38 +60,59 @@ for i in range(1, 2):
 
 print('Übersicht erstellen.')
 
+
+
+# Output als Excel-Dokument
+
 uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
 with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
+
+    # Übersicht über Betriebstag auf erstem Tabellenblatt
     uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False, startrow=1, header=False)
 
     # Formatierung
     workbook = writer.book
-    worksheet = writer.sheets['Übersicht Betriebstag']
 
     format_ganzzahl = workbook.add_format({'num_format': '###,##0'})
     format_gleitzahl = workbook.add_format({'num_format': '###,##0.00'})
     format_ueberschrift = workbook.add_format({
-        'bold': True,
         'text_wrap': True,
         'align': 'center',
-        'valign': 'vcenter',
-        'fg_color': 'silver',
-        'border': True})
+        'valign': 'vcenter'})
 
-    for spalte, ueberschrift in enumerate(uebersicht_betriebstag.columns.values):
-        worksheet.write(0, spalte, ueberschrift, format_ueberschrift)
+    worksheet = writer.sheets['Übersicht Betriebstag']
+    tabellenbereich = 'A1:D' + str(len(uebersicht_betriebstag['Typ']) + 1)
+    ueberschriften = []
+    for i in uebersicht_betriebstag.columns.values:
+        ueberschriften.append({'header': i})
+    worksheet.add_table(tabellenbereich, {'columns': ueberschriften,
+                                  'style': 'Table Style Light 11'})
+    worksheet.set_column('A:D', 20, format_ganzzahl)
+    worksheet.set_row(0, None, format_ueberschrift)
 
-    worksheet.set_column('B:D', 19, format_ganzzahl)
 
-
+    # Übersicht über einzelne Umläufe auf eigenen Tabellenblättern
     for i in range(0, len(daten_umlaeufe)):
         daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False, startrow=1, header=False)
         worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
 
+        if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
+            tabellenbereich_umlauf = 'A1:K' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+        if daten_umlaeufe[i]['Typ'][0] == 'Pause':
+            tabellenbereich_umlauf = 'A1:E' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+
+        ueberschriften_umlauf = []
+        for j in daten_umlaeufe[i].columns.values:
+            ueberschriften_umlauf.append({'header': j})
+        worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
+                                              'style': 'Table Style Light 11'})
+        worksheet.set_column('A:K', 15, format_ganzzahl)
+        worksheet.set_row(0, None, format_ueberschrift)
+
         # Formatierung
-        for spalte, ueberschrift in enumerate(daten_umlaeufe[i].columns.values):
-            worksheet.write(0, spalte, ueberschrift, format_ueberschrift)
-        worksheet.set_column('B:K', 15, format_ganzzahl)
-        worksheet.set_column('H:H', 15, format_gleitzahl)
+        # for spalte, ueberschrift in enumerate(daten_umlaeufe[i].columns.values):
+        #     worksheet.write(0, spalte, ueberschrift, format_ueberschrift)
+        # worksheet.set_column('B:K', 15, format_ganzzahl)
+        # worksheet.set_column('H:H', 15, format_gleitzahl)
 
 

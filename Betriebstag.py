@@ -71,16 +71,16 @@ def umlauf(nummer):
 
         # Sammle neu gewonnene Daten in Liste
         neue_zeile = {'Typ': 'Umlauf',
-                      'Zeit [s]': t,
-                      'SoC [%]': soc,
-                      'Distanz [m]': zurueckgelegte_distanz,
-                      'Ist-Geschw. zum Zeitpkt. t [km/h]': v_ist * 3.6,
-                      'Soll-Geschw. zum Zeitpkt. t [km/h]': v_soll * 3.6,
-                      'Steigung im Intervall [t, t+1) [%]': steigung,
-                      'Gewählte Beschl. im Intervall [t, t+1) [m/s²]': beschleunigung,
-                      'Empfangene DWPT-Leistung [kW]': ladeleistung / 1000,
-                      'Abgerufene Bat-Leistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
-                      'Kum. Energieverbrauch nach Intervall [t, t+1) [kWh]': kumulierter_energieverbrauch / 3600000}
+                      'Zeit \n[s]': t,
+                      'SoC \n[%]': soc,
+                      'Zurückgelegte Distanz \n[m]': zurueckgelegte_distanz,
+                      'Ist-Geschwindigkeit zum Zeitpunkt t \n[km/h]': v_ist * 3.6,
+                      'Soll-Geschwindigkeit zum Zeitpunkt t \n[km/h]': v_soll * 3.6,
+                      'Steigung im Intervall [t, t+1) \n[%]': steigung,
+                      'Gewählte Beschleunigung im Intervall [t, t+1) \n[m/s²]': beschleunigung,
+                      'Empfangene Leistung mittels DWPT \n[kW]': ladeleistung / 1000,
+                      'Abgerufene Batterieleistung im Intervall [t, t+1) \n[kW]': leistung_batterie / 1000,
+                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) \n[kWh]': kumulierter_energieverbrauch / 3600000}
         liste.append(neue_zeile)
 
         # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC

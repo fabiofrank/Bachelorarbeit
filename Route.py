@@ -5,7 +5,6 @@ import pandas as pd
 
 route: pd.DataFrame
 
-
 # CSV-Datei aus Online-Tool "GPS-Visualizer" (Route in Google Maps erzeugt)
 # Datei soll vorher um Sollgeschwindigkeit sowie Marker für Bushaltestellen und DWPT-Streckenabschnitte ergänzt werden
 # Aus der übergebenen CSV-Datei wird ein Array erzeugt
@@ -30,7 +29,7 @@ def momentane_position(distanz_in_m):
 # Funktion gibt die Steigung in Prozent zurück, die auf einem bestimmten Streckenabschnitt auf der Route vorliegt
 def steigung(distanz_in_m):
     zeile = momentane_position(distanz_in_m)
-    if np.isnan(route['slope (%)'][zeile]) is True:
+    if np.isnan(route['slope (%)'][zeile]) == True:
         return 0.0
     else:
         return route['slope (%)'][zeile]

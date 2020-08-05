@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime
 import Betriebstag
-from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
+from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
 
 # Die festen Fahrzeugparameter werden festgelegt
@@ -17,7 +17,8 @@ Elektromotor.maximale_leistung = 300000.0  # Watt
 Getriebe.effizienz = 1.0
 
 # Die Route des Umlaufs wird eingelesen
-Route.einlesen('20200715070018-25131-data.csv')
+Route.hoehenprofil_einlesen('20200715070018-25131-data.csv')
+Route.strecke_einlesen('Input.xlsx')
 
 # Der SoC zu Beginn des Betriebstags wird festgelegt
 Betriebstag.soc = 100.0
@@ -27,9 +28,8 @@ Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
 Betriebstag.zeit_intervall = 1  # in Sekunden
 
 # Uhrzeit des Betriebsstarts angeben
-uhrzeit = '09:00:00' # Format hh:mm:ss
-Betriebstag.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M:%S')
-
+uhrzeit = '09:00'  # Format hh:mm
+Betriebstag.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Input Außentemperatur
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
@@ -72,13 +72,11 @@ for i in range(1, 4):
 
 print('Übersicht erstellen.')
 
-
-
 # Output als Excel-Dokument
-
+# TODO: in Datei/Funktionen auslagern
 uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
-with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
 
+with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
     # Übersicht über Betriebstag auf erstem Tabellenblatt
     uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False, startrow=1, header=False)
 
@@ -98,14 +96,14 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
     for i in uebersicht_betriebstag.columns.values:
         ueberschriften.append({'header': i})
     worksheet.add_table(tabellenbereich, {'columns': ueberschriften,
-                                  'style': 'Table Style Light 11'})
+                                          'style': 'Table Style Light 11'})
     worksheet.set_column('A:F', 20, format_ganzzahl)
     worksheet.set_row(0, None, format_ueberschrift)
 
-
     # Übersicht über einzelne Umläufe auf eigenen Tabellenblättern
     for i in range(0, len(daten_umlaeufe)):
-        daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False, startrow=1, header=False)
+        daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False,
+                                   startrow=1, header=False)
         worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
 
         if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
@@ -117,7 +115,7 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
         for j in daten_umlaeufe[i].columns.values:
             ueberschriften_umlauf.append({'header': j})
         worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
-                                              'style': 'Table Style Light 11'})
+                                                     'style': 'Table Style Light 11'})
         worksheet.set_column('A:K', 15, format_ganzzahl)
         worksheet.set_row(0, None, format_ueberschrift)
 
@@ -126,5 +124,3 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
         #     worksheet.write(0, spalte, ueberschrift, format_ueberschrift)
         # worksheet.set_column('B:K', 15, format_ganzzahl)
         # worksheet.set_column('H:H', 15, format_gleitzahl)
-
-

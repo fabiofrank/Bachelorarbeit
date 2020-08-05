@@ -1,4 +1,3 @@
-import math
 from Fahrzeugkomponenten import Leistungselektronik
 
 inhalt: float

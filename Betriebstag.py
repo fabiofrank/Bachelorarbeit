@@ -1,11 +1,9 @@
-from typing import Any, Union
-
-import numpy as np
 import datetime
 import pandas as pd
-from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Leistungselektronik, Elektromotor, Getriebe
+
 import Fahrer
 import Route
+from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
 
 soc: float
 uhrzeit: datetime
@@ -41,7 +39,7 @@ def pause(laenge):
 
 def umlauf():
     global soc, kumulierter_energieverbrauch, uhrzeit
-    streckenlaenge = Route.route['distance (km)'].iloc[-1] * 1000  # in m
+    streckenlaenge = Route.hoehenprofil['distance (km)'].iloc[-1] * 1000  # in m
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s

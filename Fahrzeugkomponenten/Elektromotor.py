@@ -3,6 +3,7 @@ from Fahrzeugkomponenten import Getriebe
 effizienz: float
 maximale_leistung: float
 
+
 # Berechnung der Leistung des Elektromotors unter Berücksichtigung von Verlusten
 def leistung(fahrwiderstaende, v_ist):
     if fahrwiderstaende < 0:

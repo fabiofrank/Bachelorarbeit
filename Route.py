@@ -38,8 +38,10 @@ def steigung(distanz_in_m):
             continue
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             break
-
-    if np.isnan(hoehenprofil['slope (%)'][zeile]):
+    #print('Zeile: ', zeile)
+    if zeile >= len(hoehenprofil['distance (km)']):
+        steigung_in_prozent = 0.0
+    elif np.isnan(hoehenprofil['slope (%)'][zeile]):
         steigung_in_prozent = 0.0
     else:
         steigung_in_prozent = hoehenprofil['slope (%)'][zeile]
@@ -56,8 +58,11 @@ def v_soll(distanz):
 # Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
 def dwpt_ladeleistung(distanz_in_m):
     zeile = momentane_position_strecke(distanz_in_m)
+    wirkungsgrad_dwpt = 0.8
+    ladeleistung_spule = 25000.0 # Watt
+    anzahl_spulen = 3
     if strecke['DWPT-Abschnitt?'][zeile] == 1:
-        ladeleistung = 25000.0  # Watt
+        ladeleistung = anzahl_spulen * ladeleistung_spule * wirkungsgrad_dwpt  # Watt
     else:
         ladeleistung = 0.0
     return ladeleistung

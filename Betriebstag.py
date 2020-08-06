@@ -16,7 +16,10 @@ def pause(laenge):
     liste = []
     global soc, kumulierter_energieverbrauch, uhrzeit
     kumulierter_energieverbrauch = 0.0  # in Joule
-    ladeleistung = 60000  # in Watt
+    wirkungsgrad_induktiv = 0.9
+    ladeleistung_spule = 25000 # in Watt
+    anzahl_spulen = 3
+    ladeleistung = anzahl_spulen * ladeleistung_spule * wirkungsgrad_induktiv  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
 
@@ -39,7 +42,8 @@ def pause(laenge):
 
 def umlauf():
     global soc, kumulierter_energieverbrauch, uhrzeit
-    streckenlaenge = Route.hoehenprofil['distance (km)'].iloc[-1] * 1000  # in m
+   # streckenlaenge = Route.hoehenprofil['distance (km)'].iloc[-1] * 1000  # in m
+    streckenlaenge = Route.strecke['zurückgelegte Distanz [km]'].iloc[-1] * 1000
 
     # Initialisierung der Schleife
     t = 0  # Zeit in s
@@ -53,9 +57,9 @@ def umlauf():
     while zurueckgelegte_distanz < streckenlaenge:
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie Soll-Geschwindigkeit aus der
         # Routendatei ermittelt
-        steigung = Route.steigung(zurueckgelegte_distanz)
         v_soll = Route.v_soll(zurueckgelegte_distanz)
         ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
+        steigung = Route.steigung(zurueckgelegte_distanz)
 
         # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
         beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)

@@ -9,12 +9,12 @@ Fahrzeug.masse = 12000.0  # in kg
 Fahrzeug.stirnflaeche = 8.8  # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
-Batterie.kapazitaet = 350.0  # in KWh
+Batterie.kapazitaet = 0.8 * 200.0  # in KWh
 Batterie.effizienz = 0.95
-Leistungselektronik.effizienz = 1.0
-Elektromotor.effizienz = 0.9
+Leistungselektronik.effizienz = 0.95
+Elektromotor.effizienz = 0.95
 Elektromotor.maximale_leistung = 300000.0  # Watt
-Getriebe.effizienz = 1.0
+Getriebe.effizienz = 0.95
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen('20200715070018-25131-data.csv')
@@ -39,7 +39,7 @@ daten_uebersicht = []
 daten_umlaeufe = []
 
 # Aneinanderreihen von Umläufen
-for i in range(1, 4):
+for i in range(1, 6):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     uhrzeit_vor_umlauf = Betriebstag.uhrzeit
@@ -116,11 +116,7 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
             ueberschriften_umlauf.append({'header': j})
         worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
                                                      'style': 'Table Style Light 11'})
-        worksheet.set_column('A:K', 15, format_ganzzahl)
+        worksheet.set_column('A:L', 15, format_ganzzahl)
+        worksheet.set_column('I:I', 15, format_gleitzahl)
         worksheet.set_row(0, None, format_ueberschrift)
 
-        # Formatierung
-        # for spalte, ueberschrift in enumerate(daten_umlaeufe[i].columns.values):
-        #     worksheet.write(0, spalte, ueberschrift, format_ueberschrift)
-        # worksheet.set_column('B:K', 15, format_ganzzahl)
-        # worksheet.set_column('H:H', 15, format_gleitzahl)

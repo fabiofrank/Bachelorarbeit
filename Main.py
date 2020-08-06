@@ -9,6 +9,7 @@ Fahrzeug.masse = 12000.0  # in kg
 Fahrzeug.stirnflaeche = 8.8  # in qm
 Fahrzeug.f_roll = 0.015
 Fahrzeug.c_w = 0.3
+Fahrzeug.anzahl_spulen = 3
 Batterie.kapazitaet = 0.8 * 200.0  # in KWh
 Batterie.effizienz = 0.95
 Leistungselektronik.effizienz = 0.95

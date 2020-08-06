@@ -68,7 +68,13 @@ def dwpt_ladeleistung(distanz_in_m):
     return ladeleistung
 
 # TODO: Haltestellen bzw. Haltezeiten, wenn Marker in Streckendatei
-
+def haltestelle(distanz_in_m):
+    zeile = momentane_position_strecke(distanz_in_m)
+    if strecke['Bushaltestelle?'][zeile] == 1:
+        haltestelle_bool = True
+    else:
+        haltestelle_bool = False
+    return haltestelle_bool
 
 def momentane_position_strecke(distanz_in_m):
     distanz_in_km = distanz_in_m / 1000

@@ -10,6 +10,7 @@ masse: float  # in kg
 f_roll: float  # Rollwiderstandskoeffizient[ohne Einheit]
 stirnflaeche: float  # in qm
 c_w: float  # Luftwiderstandsbeiwert
+anzahl_spulen: int # Anzahl an DWPT-Empfängerspulen
 
 
 # Formeln der auftretenden Fahrwiderstände

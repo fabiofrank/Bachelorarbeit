@@ -77,6 +77,14 @@ def umlauf():
         steigung = Route.steigung(zurueckgelegte_distanz)
 
         if Route.haltestelle(zurueckgelegte_distanz):
+            # TODO: Methodik:
+            #  1. Geschwindigkeit unmittelbar vor Bushaltestelle
+            #  2. Bremszeit errechnen 3.Bremsweg errechnen
+            #  4. Zeit errechnen, die Bus für 'Bremsweg' mit Geschwindigkeit benötigt hat
+            #  5. Penaltysekunden (t_Brems - t) --> for-Schleife
+            #  6. Rekuperationsenergie bei Bremsung errechnen (negativ)
+            #  7.Energieverbrauch beim Fahren während t_Brems errechnen
+            #  8. Energieverbrauch korrigieren: E = E_rekup - E_fahren
             # Es wird ermittelt, wie lange gebremst werden musste, um das Fahrzeug zu Stillstand zu bringen
             verzoegerung = 2.0
             bremszeit = anhalten(v_ist, verzoegerung)

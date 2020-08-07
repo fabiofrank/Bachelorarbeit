@@ -17,7 +17,7 @@ anzahl_spulen: int # Anzahl an DWPT-Empfängerspulen
 def rollwiderstand(alpha):
     return masse * g * np.cos(alpha) * f_roll
 
-
+# TODO: m_acc berücksichtigen oder mit Faktor multiplizieren
 def beschleunigungswiderstand(beschleunigung):
     return masse * beschleunigung
 

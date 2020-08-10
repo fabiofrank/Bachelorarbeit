@@ -22,9 +22,9 @@ f = np.poly1d(z)
 x_new = np.arange(-15, 40)
 y_new = f(x_new)
 
-#plt.plot(x_new, y_new)
-#plt.plot(aussentemperatur, heizleistung, 'ro')
-#plt.show()
+plt.plot(x_new, y_new)
+plt.plot(aussentemperatur, heizleistung, 'ro')
+plt.show()
 
 def leistung(gegebene_temperatur):
     leistung_klimatisierung = f(gegebene_temperatur)  # in Watt

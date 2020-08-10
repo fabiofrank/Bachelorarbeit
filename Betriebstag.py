@@ -79,30 +79,50 @@ def umlauf(temperatur):
         steigung = Route.steigung(zurueckgelegte_distanz)
 
         if Route.haltestelle(zurueckgelegte_distanz):
-            # TODO: Methodik:
-            #  1. Geschwindigkeit unmittelbar vor Bushaltestelle
-            #  2. Bremszeit errechnen
-            #  3. Bremsweg errechnen
-            #  4. Zeit errechnen, die Bus für 'Bremsweg' mit Geschwindigkeit benötigt hat
-            #  5. Penaltysekunden (t_Brems - t) --> for-Schleife
-            #  6. Rekuperationsenergie bei Bremsung errechnen (negativ)
-            #  7. Energieverbrauch beim Fahren während t_Brems errechnen
-            #  8. Energieverbrauch korrigieren: E = E_rekup - E_fahren
-            # Es wird ermittelt, wie lange gebremst werden musste, um das Fahrzeug zu Stillstand zu bringen
-            verzoegerung = 2.0
-            bremszeit = anhalten(v_ist, verzoegerung)
+            # Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde
+            # Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind
 
-            # Nachträglich wird ermittelt, welche Energiemenge rekuperiert wurde
-            # Diese wird im Modell nun im Stillstand aufgenommen
-            # TODO: Work In Progress
+            # Ermittlung von Bremszeit und Bremsweg bei konstanter Bremsverzögerung
+            bremsverzoegerung = 2.0
+            bremszeit = v_ist / bremsverzoegerung
+            bremsweg = 0.5 * bremsverzoegerung * (bremszeit ** 2)
 
-            # Der Bus muss stehen, sobald die Bushaltestelle erreicht ist.
+            # Ermittlung des Zeitfehlers
+            zusaetzliche_haltezeit = bremszeit - bremsweg / v_ist
+            fehlende_zeitintervalle = round(zusaetzliche_haltezeit / zeit_intervall)
+
+            # Ermittlung des Fehlers im Energieverbrauch
             beschleunigung = 0.0
-            v_ist = 0.0
-            v_soll = 0.0
+            energieverbrauch_fahren = energieverbrauch()
+
+            beschleunigung = -bremsverzoegerung
+            rekuperationsenergie = energieverbrauch()
+
+            energieverbrauch_fehler = rekuperationsenergie - energieverbrauch_fahren
+
+            # Korrektur des Energieverbrauchs
+            for i in range(0, fehlende_zeitintervalle):
+                # Das Fahrzeug steht an der Haltestelle
+                v_ist = 0.0
+                v_soll = 0.0
+                beschleunigung = 0.0
+
+                # Während der zeitkorrigierenden, zusätzlichen Haltezeit wird eine konstante Rekuperationsleistung simuliert
+                leistung_batterie = energieverbrauch_fehler / fehlende_zeitintervalle
+                energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
+                kumulierter_energieverbrauch += energieverbrauch_im_intervall
+
+                # Speichern der Daten, Aktualisieren von SoC, Zeit und Uhrzeit
+                daten_sichern()
+                soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
+                t += zeit_intervall
+                uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
         else:
             v_soll = Route.v_soll(zurueckgelegte_distanz)
+
+            # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
+            beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 
             # Berechnung des Energieverbrauchs
             energieverbrauch_im_intervall = energieverbrauch()
@@ -129,9 +149,6 @@ def umlauf(temperatur):
 def energieverbrauch():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
         beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur
-
-    # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
-    beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
 
     # Ermittlung des Gesamtleistungsbedarfs
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)

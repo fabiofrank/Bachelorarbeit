@@ -7,6 +7,7 @@ from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromot
 
 soc: float
 uhrzeit: datetime
+aussentemperatur: float
 kumulierter_energieverbrauch: float
 zeit_intervall = 1
 t: int
@@ -56,9 +57,10 @@ def anhalten(geschwindigkeit, verzoegerung):
     return bremszeit
 
 
-def umlauf():
+def umlauf(temperatur):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung,\
-        beschleunigung, leistung_batterie, liste, ladeleistung
+        beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur
+    aussentemperatur = temperatur
     streckenlaenge = Route.strecke['zurückgelegte Distanz [km]'].iloc[-1] * 1000
 
     # Initialisierung der Schleife
@@ -79,11 +81,12 @@ def umlauf():
         if Route.haltestelle(zurueckgelegte_distanz):
             # TODO: Methodik:
             #  1. Geschwindigkeit unmittelbar vor Bushaltestelle
-            #  2. Bremszeit errechnen 3.Bremsweg errechnen
+            #  2. Bremszeit errechnen
+            #  3. Bremsweg errechnen
             #  4. Zeit errechnen, die Bus für 'Bremsweg' mit Geschwindigkeit benötigt hat
             #  5. Penaltysekunden (t_Brems - t) --> for-Schleife
             #  6. Rekuperationsenergie bei Bremsung errechnen (negativ)
-            #  7.Energieverbrauch beim Fahren während t_Brems errechnen
+            #  7. Energieverbrauch beim Fahren während t_Brems errechnen
             #  8. Energieverbrauch korrigieren: E = E_rekup - E_fahren
             # Es wird ermittelt, wie lange gebremst werden musste, um das Fahrzeug zu Stillstand zu bringen
             verzoegerung = 2.0
@@ -125,7 +128,7 @@ def umlauf():
 
 def energieverbrauch():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
-        beschleunigung, leistung_batterie, liste, ladeleistung
+        beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur
 
     # Der Fahrer wählt in Abhängigkeit von Soll- und Ist-Geschwindigkeit eine Beschleunigung oder Verzögerung aus
     beschleunigung = Fahrer.beschleunigung(v_ist, v_soll)
@@ -133,7 +136,7 @@ def energieverbrauch():
     # Ermittlung des Gesamtleistungsbedarfs
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
     benoetigte_leistung = Elektromotor.leistung(fahrwiderstaende,
-                                                v_ist) + Nebenverbraucher.leistung - ladeleistung
+                                                v_ist) + Nebenverbraucher.leistung(aussentemperatur) - ladeleistung
 
     leistung_batterie = Batterie.leistung(benoetigte_leistung)
 
@@ -145,6 +148,7 @@ def energieverbrauch():
 def daten_sichern():
     # Sammle neu gewonnene Daten in Liste
     neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
+                  'Außentemperatur \n[°C]': aussentemperatur,
                   'Typ': 'Umlauf',
                   'Zeit \n[s]': t,
                   'SoC \n[%]': soc,

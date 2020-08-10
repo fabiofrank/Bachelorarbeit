@@ -32,9 +32,9 @@ Betriebstag.zeit_intervall = 1  # in Sekunden
 uhrzeit = '09:00'  # Format hh:mm
 Betriebstag.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
-# TODO: Input Außentemperatur
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
+# TODO: Außentemperatur an Uhrzeit koppeln?
 
 daten_uebersicht = []
 daten_umlaeufe = []
@@ -44,7 +44,8 @@ for i in range(1, 6):
     print("Umlauf ", i, " gestartet.")
     soc_vor_umlauf = Betriebstag.soc
     uhrzeit_vor_umlauf = Betriebstag.uhrzeit
-    aktueller_umlauf = Betriebstag.umlauf()
+    aktueller_umlauf = Betriebstag.umlauf(temperatur=20)
+    print('Umlauf beendet!')
     daten_umlaeufe.append(aktueller_umlauf)
 
     ergebnis_umlauf = {'Typ': 'Umlauf ' + str(i),

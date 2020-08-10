@@ -38,7 +38,7 @@ def steigung(distanz_in_m):
             continue
         elif i >= distanz_in_km:  # Die Schleife erreicht den übergebenen Streckenabschnitt
             break
-    #print('Zeile: ', zeile)
+    # print('Zeile: ', zeile)
     if zeile >= len(hoehenprofil['distance (km)']):
         steigung_in_prozent = 0.0
     elif np.isnan(hoehenprofil['slope (%)'][zeile]):
@@ -59,7 +59,7 @@ def v_soll(distanz):
 def dwpt_ladeleistung(distanz_in_m):
     zeile = momentane_position_strecke(distanz_in_m)
     wirkungsgrad_dwpt = 0.8
-    ladeleistung_spule = 25000.0 # Watt
+    ladeleistung_spule = 25000.0  # Watt
     anzahl_spulen = 3
     if strecke['DWPT-Abschnitt?'][zeile] == 1:
         ladeleistung = anzahl_spulen * ladeleistung_spule * wirkungsgrad_dwpt  # Watt
@@ -67,7 +67,9 @@ def dwpt_ladeleistung(distanz_in_m):
         ladeleistung = 0.0
     return ladeleistung
 
-# TODO: Haltestellen bzw. Haltezeiten, wenn Marker in Streckendatei
+
+# TODO: Wie verhindern, dass Haltestellen nicht registriert werden?
+#  (Bus fährt vorbei, weil er nicht genau an Haltestelle landet)
 def haltestelle(distanz_in_m):
     zeile = momentane_position_strecke(distanz_in_m)
     if strecke['Bushaltestelle?'][zeile] == 1:
@@ -75,6 +77,7 @@ def haltestelle(distanz_in_m):
     else:
         haltestelle_bool = False
     return haltestelle_bool
+
 
 def momentane_position_strecke(distanz_in_m):
     distanz_in_km = distanz_in_m / 1000

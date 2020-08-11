@@ -4,18 +4,19 @@ import Betrieb
 from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
 
+# TODO: feste Fahrzeugparameter auf Files verteilen oder ALLE hier platzieren
 # Die festen Fahrzeugparameter werden festgelegt
-Fahrzeug.masse = 12000.0  # in kg
-Fahrzeug.stirnflaeche = 8.8  # in qm
-Fahrzeug.f_roll = 0.015
-Fahrzeug.c_w = 0.3
+Fahrzeug.masse = 12000.0  # in kg # TODO: Gewicht der Passagiere berücksichtigen, Quelle: Gewicht eines Passagiers
+Fahrzeug.stirnflaeche = 8.8  # in qm # TODO: Quelle Stirnfläche
+Fahrzeug.f_roll = 0.015 # TODO: Quelle Rollwiderstandskoeffizient
+Fahrzeug.c_w = 0.3 # TODO: Quelle cw-Wert
 Fahrzeug.anzahl_spulen = 3
-Batterie.kapazitaet = 0.8 * 200.0  # in KWh
-Batterie.effizienz = 0.95
-Leistungselektronik.effizienz = 0.95
-Elektromotor.effizienz = 0.95
-Elektromotor.maximale_leistung = 300000.0  # Watt
-Getriebe.effizienz = 0.95
+Batterie.kapazitaet = 0.8 * 350.0  # in KWh # TODO: Quelle Brutto-Netto
+Batterie.effizienz = 0.95 # TODO: Quelle Batterieverluste
+Leistungselektronik.effizienz = 0.96 # TODO: Quelle LE-Wirkungsgrad
+Elektromotor.effizienz = 0.95 # TODO: EM-Wirkungsgrad errechnen aus PRIMOVE-Daten
+Elektromotor.maximale_leistung = 300000.0  # Watt # TODO: Quelle Max-Leistung EM
+Getriebe.effizienz = 0.95 # TODO: Quelle Getriebeverluste
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen('20200715070018-25131-data.csv')
@@ -33,7 +34,6 @@ uhrzeit = '09:00'  # Format hh:mm
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
-# TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
 # TODO: Außentemperatur an Uhrzeit koppeln?
 
 daten_uebersicht = []

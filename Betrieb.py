@@ -82,18 +82,19 @@ def umlauf(temperatur):
 
             # TODO: Wie lange steht Bus an Haltestelle?
             # Der Bus steht 30s an der Haltestelle
-            stehen(sekunden=30)
+            stehen(30, 'Haltestelle')
 
             # Nach dem Halt fährt der Bus wieder los
             # 20 Sekunden Fahrt, um zu verhindern, dass in gleichem Haltestellenabschnitt noch einmal gehalten wird
             for i in range(0, 20):
                 fahren()
 
-        # analog für Ampeln mit 20 Skunden Standzeit
+        # analog für Ampeln mit 20 Sekunden Standzeit
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
-            stehen(sekunden=20)
+            stehen(20, 'Ampel')
             for i in range(0, 20):
+                print('hier')
                 fahren()
 
         else:
@@ -227,12 +228,12 @@ def anhalten():
 # An Bushaltestellen sowie Ampeln muss der Bus eine bestimmte Zeit halten
 # Klimatisierung/Heizung sowie weitere Nebenverbraucher verbrauchen weiter Energie
 # Ggf. wird Energie induktiv aufgenommen
-def stehen(sekunden):
+def stehen(sekunden, ampel_oder_haltestelle):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, leistung_batterie, leistung_nv, leistung_em, ladeleistung, \
         energieverbrauch_im_intervall, status
 
     anzahl_intervalle = int(sekunden / zeit_intervall)
-    status = 'Halten'
+    status = 'Halten: ' + ampel_oder_haltestelle
     ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
     for i in range(0, anzahl_intervalle):

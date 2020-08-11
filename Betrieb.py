@@ -104,7 +104,7 @@ def umlauf(temperatur):
     return umlauf_tabelle
 
 
-# Berechnung des Energieverbrauchs bei geg. #TODO:
+# Berechnung des Energieverbrauchs bei geg. Parametern Ist-Geschwindigkeit, Beschleunigung, Steigung, Außentemperatur, zurückgelegter Distanz
 def energieverbrauch():
     global leistung_batterie, ladeleistung, leistung_em, leistung_nv
 
@@ -120,7 +120,8 @@ def energieverbrauch():
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
     return leistung_batterie * zeit_intervall  # in Joule
 
-
+# Speichern der gewonnenen Daten als Dictionary, das einer Liste hinzugefügt wird
+# Die Liste enthältjedes Zeitintervall des Umlaufs in Form eines Dictionarys
 def daten_sichern():
     # Sammle neu gewonnene Daten in Liste
     neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
@@ -172,8 +173,9 @@ def fahren():
     uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
 
-# Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde
-# Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind
+# Im Falle von Bushaltestellen sowie Ampeln muss der Bus zum Stehen kommen.
+# Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde.
+# Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind.
 def anhalten():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, v_ist, v_soll, \
         beschleunigung, leistung_batterie, ladeleistung, leistung_em, leistung_nv, energieverbrauch_im_intervall, status
@@ -222,7 +224,9 @@ def anhalten():
         t += zeit_intervall
         uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
-
+# An Bushaltestellen sowie Ampeln muss der Bus eine bestimmte Zeit halten
+# Klimatisierung/Heizung sowie weitere Nebenverbraucher verbrauchen weiter Energie
+# Ggf. wird Energie induktiv aufgenommen
 def stehen(sekunden):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, leistung_batterie, leistung_nv, leistung_em, ladeleistung, \
         energieverbrauch_im_intervall, status

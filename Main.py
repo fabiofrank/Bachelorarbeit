@@ -1,6 +1,6 @@
 import pandas as pd
 import datetime
-import Betriebstag
+import Betrieb
 from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
 
@@ -22,15 +22,15 @@ Route.hoehenprofil_einlesen('20200715070018-25131-data.csv')
 Route.strecke_einlesen('Input.xlsx')
 
 # Der SoC zu Beginn des Betriebstags wird festgelegt
-Betriebstag.soc = 100.0
-Batterie.inhalt = Batterie.kapazitaet * Betriebstag.soc / 100
+Betrieb.soc = 100.0
+Batterie.inhalt = Batterie.kapazitaet * Betrieb.soc / 100
 
 # Es wird eingestellt, wie groß die Zeitschritte in der Simulation sein sollen
-Betriebstag.zeit_intervall = 1  # in Sekunden
+Betrieb.zeit_intervall = 1  # in Sekunden
 
 # Uhrzeit des Betriebsstarts angeben
 uhrzeit = '09:00'  # Format hh:mm
-Betriebstag.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
+Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Übersicht über Betriebstag: Welche Werte sind interessant?
@@ -42,33 +42,33 @@ daten_umlaeufe = []
 # Aneinanderreihen von Umläufen
 for i in range(1, 6):
     print("Umlauf ", i, " gestartet.")
-    soc_vor_umlauf = Betriebstag.soc
-    uhrzeit_vor_umlauf = Betriebstag.uhrzeit
-    aktueller_umlauf = Betriebstag.umlauf(temperatur=20)
+    soc_vor_umlauf = Betrieb.soc
+    uhrzeit_vor_umlauf = Betrieb.uhrzeit
+    aktueller_umlauf = Betrieb.umlauf(temperatur=20)
     daten_umlaeufe.append(aktueller_umlauf)
 
     ergebnis_umlauf = {'Typ': 'Umlauf ' + str(i),
                        'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
-                       'Uhrzeit am Ende': datetime.datetime.strftime(Betriebstag.uhrzeit, '%H:%M'),
-                       'Außentemperatur [°C]': Betriebstag.aussentemperatur,
+                       'Uhrzeit am Ende': datetime.datetime.strftime(Betrieb.uhrzeit, '%H:%M'),
+                       'Außentemperatur [°C]': Betrieb.aussentemperatur,
                        'SoC zu Beginn [%]': soc_vor_umlauf,
-                       'SoC am Ende [%]': Betriebstag.soc,
-                       'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
+                       'SoC am Ende [%]': Betrieb.soc,
+                       'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_umlauf)
 
     print('Pause ', i, ' gestartet.')
-    soc_vor_pause = Betriebstag.soc
-    uhrzeit_vor_pause = Betriebstag.uhrzeit
-    aktuelle_pause = Betriebstag.pause(laenge=300)
+    soc_vor_pause = Betrieb.soc
+    uhrzeit_vor_pause = Betrieb.uhrzeit
+    aktuelle_pause = Betrieb.pause(laenge=300)
     daten_umlaeufe.append(aktuelle_pause)
 
     ergebnis_pause = {'Typ': 'Pause ' + str(i),
                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
-                      'Uhrzeit am Ende': datetime.datetime.strftime(Betriebstag.uhrzeit, '%H:%M'),
-                      'Außentemperatur [°C]': Betriebstag.aussentemperatur,
+                      'Uhrzeit am Ende': datetime.datetime.strftime(Betrieb.uhrzeit, '%H:%M'),
+                      'Außentemperatur [°C]': Betrieb.aussentemperatur,
                       'SoC zu Beginn [%]': soc_vor_pause,
-                      'SoC am Ende [%]': Betriebstag.soc,
-                      'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
+                      'SoC am Ende [%]': Betrieb.soc,
+                      'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
 
     print('--------------------------------')

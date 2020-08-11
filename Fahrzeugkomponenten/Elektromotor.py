@@ -1,5 +1,7 @@
 from Fahrzeugkomponenten import Getriebe
 
+#TODO: Wirkungsgrad aus Primove-Daten
+
 effizienz: float
 maximale_leistung: float
 

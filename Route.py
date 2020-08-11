@@ -68,8 +68,6 @@ def dwpt_ladeleistung(distanz_in_m):
     return ladeleistung
 
 
-# TODO: Wie verhindern, dass Haltestellen nicht registriert werden?
-#  (Bus fährt vorbei, weil er nicht genau an Haltestelle landet)
 def haltestelle(distanz_in_m):
     zeile = momentane_position_strecke(distanz_in_m)
     if strecke['Bushaltestelle?'][zeile] == 1:
@@ -77,6 +75,15 @@ def haltestelle(distanz_in_m):
     else:
         haltestelle_bool = False
     return haltestelle_bool
+
+
+def ampel(distanz_in_m):
+    zeile = momentane_position_strecke(distanz_in_m)
+    if strecke['Ampel?'][zeile] == 1:
+        ampel_bool = True
+    else:
+        ampel_bool = False
+    return ampel_bool
 
 
 def momentane_position_strecke(distanz_in_m):

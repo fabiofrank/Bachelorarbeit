@@ -53,7 +53,7 @@ for i in range(1, 6):
                        'Außentemperatur [°C]': Betriebstag.aussentemperatur,
                        'SoC zu Beginn [%]': soc_vor_umlauf,
                        'SoC am Ende [%]': Betriebstag.soc,
-                       'Energieverbrauch \ndes Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
+                       'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_umlauf)
 
     print('Pause ', i, ' gestartet.')
@@ -66,9 +66,9 @@ for i in range(1, 6):
                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
                       'Uhrzeit am Ende': datetime.datetime.strftime(Betriebstag.uhrzeit, '%H:%M'),
                       'Außentemperatur [°C]': Betriebstag.aussentemperatur,
-                      'SoC zu Beginn \n%]': soc_vor_pause,
-                      'SoC am Ende \n[%]': Betriebstag.soc,
-                      'Energieverbrauch \ndes Intervalls \n[kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
+                      'SoC zu Beginn [%]': soc_vor_pause,
+                      'SoC am Ende [%]': Betriebstag.soc,
+                      'Energieverbrauch des Intervalls [kWh]': Betriebstag.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
 
     print('--------------------------------')
@@ -110,7 +110,7 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
         worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
 
         if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
-            tabellenbereich_umlauf = 'A1:M' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+            tabellenbereich_umlauf = 'A1:P' + str(len(daten_umlaeufe[i]['Typ']) + 1)
         if daten_umlaeufe[i]['Typ'][0] == 'Pause':
             tabellenbereich_umlauf = 'A1:F' + str(len(daten_umlaeufe[i]['Typ']) + 1)
 
@@ -119,7 +119,7 @@ with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
             ueberschriften_umlauf.append({'header': j})
         worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
                                                      'style': 'Table Style Light 11'})
-        worksheet.set_column('A:M', 15, format_ganzzahl)
+        worksheet.set_column('A:P', 15, format_ganzzahl)
         worksheet.set_column('I:I', 15, format_gleitzahl)
         worksheet.set_row(0, None, format_ueberschrift)
 

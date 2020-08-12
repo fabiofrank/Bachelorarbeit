@@ -1,26 +1,17 @@
-import pandas as pd
 import datetime
 import Betrieb
 from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
 import Output
 
-# TODO: feste Fahrzeugparameter auf Files verteilen oder ALLE hier platzieren
+#######################################################################################################################
 # SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
-Fahrzeug.masse_leer = 12760.0  # in kg
-Fahrzeug.anzahl_fahrgaeste = 45 # Max. 90 Fahrgäste
-Fahrzeug.stirnflaeche = 2.55 * 3.398  # in qm
-Fahrzeug.f_roll = 0.015 # TODO: Quelle Rollwiderstandskoeffizient
-Fahrzeug.c_w = 0.3 # TODO: Quelle cw-Wert
-Fahrzeug.anzahl_spulen = 3
-Batterie.kapazitaet = 345.6  # in KWh # TODO: Quelle Brutto-Netto-Umrechnung
-Batterie.effizienz = 0.95 # TODO: Quelle Batterieverluste
-Leistungselektronik.effizienz = 0.96 # TODO: Quelle LE-Wirkungsgrad
-Elektromotor.effizienz = 0.95 # TODO: EM-Wirkungsgrad errechnen aus PRIMOVE-Daten
-Elektromotor.maximale_leistung = 300000.0  # Watt # TODO: Quelle Max-Leistung EM
-Getriebe.effizienz = 0.95 # TODO: Quelle Getriebeverluste
 
+# siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie'
+
+#######################################################################################################################
 # SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN
+
 hoehenprofil = '20200715070018-25131-data.csv'
 strecke = 'Input.xlsx'
 
@@ -28,10 +19,9 @@ strecke = 'Input.xlsx'
 Route.hoehenprofil_einlesen(hoehenprofil)
 Route.strecke_einlesen(strecke)
 
-# Zu Beginn der Simulation ist Batterie vollgeladen
-Batterie.inhalt = Batterie.kapazitaet
+#######################################################################################################################
 
-# Es wird eingestellt, wie groß die Zeitschritte in der Simulation sein sollen
+# SCHRITT 3: EINSTELLEN, WIE GROẞ DIE ZEITSCHRITTE IN DER SIMULATION SEIN SOLLEN
 Betrieb.zeit_intervall = 1  # in Sekunden
 
 # Uhrzeit des Betriebsstarts angeben

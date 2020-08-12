@@ -1,9 +1,19 @@
 from Fahrzeugkomponenten import Getriebe
 
-#TODO: Wirkungsgrad aus Primove-Daten
 
-effizienz: float
-maximale_leistung: float
+#######################################################################################################################
+# KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
+
+# Nennleistung des Elektromotors in Watt
+maximale_leistung = 160000.0 # TODO: Quelle
+
+# Wirkungsgrad des Elektromotors, konstant angenommen
+effizienz = 0.95 # TODO: Wirkungsgrad aus Primovedaten
+
+# Wirkungsgrad des Getriebes
+Getriebe.effizienz = 0.95 # TODO: Quelle Getriebeverluste
+
+#######################################################################################################################
 
 
 # Berechnung der Leistung des Elektromotors unter Berücksichtigung von Verlusten

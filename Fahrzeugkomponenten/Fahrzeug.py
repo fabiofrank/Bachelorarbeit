@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import constants
 
+#######################################################################################################################
 # KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
 
 # Leergewicht des Fahrzeugs in kg
@@ -12,19 +13,24 @@ stirnflaeche = 8.6649
 # Anzahl an DWPT-Empfängerspulen am Fahrzeug
 anzahl_spulen = 3
 
-# Anzahl an Fahrgästen
-anzahl_fahrgaeste: int # Higer-Bus: Max. 90 Passagiere
+# Anzahl an Fahrgästen #TODO: Variable oder Konstante?
+anzahl_fahrgaeste = 45  # Higer-Bus: Max. 90 Passagiere
 
-#############################################################################################
+# Mittleres Fahrgastgewicht in kg, abhängig von Kunden des Busbetriebs
+masse_je_fahrgast = 77.8  # Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
 
-# Annahmen
-f_roll: float  # Rollwiderstandskoeffizient[ohne Einheit]
-c_w: float  # Luftwiderstandsbeiwert
-masse_je_fahrgast = 77.8  # in kg, Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
+# Rollwiderstandskoeffizient[ohne Einheit], konstant angenommen
+f_roll = 0.015 # TODO: Quelle
+
+# Luftwiderstandsbeiwert
+c_w = 0.3 # TODO: Quelle
+
+#######################################################################################################################
+
 
 # physikalische Konstanten
-g = constants.g
-luftdichte = 1.225  # in kg/m³, als konstant angenommen
+g = constants.g  # Erdbeschleunigung in m/s²
+luftdichte = 1.225  # in kg/m³, als konstant angenommen # TODO: Quelle
 
 
 # Masse in Abhängigkeit von Leergewicht und Fahrgastaufkommen

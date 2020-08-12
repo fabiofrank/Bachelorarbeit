@@ -1,25 +1,45 @@
 import numpy as np
 from scipy import constants
 
+# KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
+
+# Leergewicht des Fahrzeugs in kg
+masse_leer = 12760
+
+# Frontfäche des Fahrzeugs in qm
+stirnflaeche = 8.6649
+
+# Anzahl an DWPT-Empfängerspulen am Fahrzeug
+anzahl_spulen = 3
+
+# Anzahl an Fahrgästen
+anzahl_fahrgaeste: int # Higer-Bus: Max. 90 Passagiere
+
+#############################################################################################
+
+# Annahmen
+f_roll: float  # Rollwiderstandskoeffizient[ohne Einheit]
+c_w: float  # Luftwiderstandsbeiwert
+masse_je_fahrgast = 77.8  # in kg, Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
+
 # physikalische Konstanten
 g = constants.g
-luftdichte = 1.225  # in kg/m³, als konstant angenommen (eigentlich temperaturabhängig)
+luftdichte = 1.225  # in kg/m³, als konstant angenommen
 
-# feste Parameter, die zu Beginn der Simulation festgelegt werden müssen
-masse: float  # in kg
-f_roll: float  # Rollwiderstandskoeffizient[ohne Einheit]
-stirnflaeche: float  # in qm
-c_w: float  # Luftwiderstandsbeiwert
-anzahl_spulen: int # Anzahl an DWPT-Empfängerspulen
+
+# Masse in Abhängigkeit von Leergewicht und Fahrgastaufkommen
+def masse():
+    return masse_leer + anzahl_fahrgaeste * masse_je_fahrgast
 
 
 # Formeln der auftretenden Fahrwiderstände
 def rollwiderstand(alpha):
-    return masse * g * np.cos(alpha) * f_roll
+    return masse() * g * np.cos(alpha) * f_roll
+
 
 # TODO: m_acc berücksichtigen oder mit Faktor multiplizieren
 def beschleunigungswiderstand(beschleunigung):
-    return masse * beschleunigung
+    return masse() * beschleunigung
 
 
 def luftwiderstand(v_ist):
@@ -27,7 +47,7 @@ def luftwiderstand(v_ist):
 
 
 def steigungswiderstand(alpha):
-    return masse * g * np.sin(alpha)
+    return masse() * g * np.sin(alpha)
 
 
 # Berechnung der zu überwindenden Fahrwiderstände

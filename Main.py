@@ -3,28 +3,33 @@ import datetime
 import Betrieb
 from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
+import Output
 
 # TODO: feste Fahrzeugparameter auf Files verteilen oder ALLE hier platzieren
-# Die festen Fahrzeugparameter werden festgelegt
-Fahrzeug.masse = 12000.0  # in kg # TODO: Gewicht der Passagiere berücksichtigen, Quelle: Gewicht eines Passagiers
-Fahrzeug.stirnflaeche = 8.8  # in qm # TODO: Quelle Stirnfläche
+# SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
+Fahrzeug.masse_leer = 12760.0  # in kg
+Fahrzeug.anzahl_fahrgaeste = 45 # Max. 90 Fahrgäste
+Fahrzeug.stirnflaeche = 2.55 * 3.398  # in qm
 Fahrzeug.f_roll = 0.015 # TODO: Quelle Rollwiderstandskoeffizient
 Fahrzeug.c_w = 0.3 # TODO: Quelle cw-Wert
 Fahrzeug.anzahl_spulen = 3
-Batterie.kapazitaet = 0.8 * 350.0  # in KWh # TODO: Quelle Brutto-Netto
+Batterie.kapazitaet = 345.6  # in KWh # TODO: Quelle Brutto-Netto-Umrechnung
 Batterie.effizienz = 0.95 # TODO: Quelle Batterieverluste
 Leistungselektronik.effizienz = 0.96 # TODO: Quelle LE-Wirkungsgrad
 Elektromotor.effizienz = 0.95 # TODO: EM-Wirkungsgrad errechnen aus PRIMOVE-Daten
 Elektromotor.maximale_leistung = 300000.0  # Watt # TODO: Quelle Max-Leistung EM
 Getriebe.effizienz = 0.95 # TODO: Quelle Getriebeverluste
 
-# Die Route des Umlaufs wird eingelesen
-Route.hoehenprofil_einlesen('20200715070018-25131-data.csv')
-Route.strecke_einlesen('Input.xlsx')
+# SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN
+hoehenprofil = '20200715070018-25131-data.csv'
+strecke = 'Input.xlsx'
 
-# Der SoC zu Beginn des Betriebstags wird festgelegt
-Betrieb.soc = 100.0
-Batterie.inhalt = Batterie.kapazitaet * Betrieb.soc / 100
+# Die Route des Umlaufs wird eingelesen
+Route.hoehenprofil_einlesen(hoehenprofil)
+Route.strecke_einlesen(strecke)
+
+# Zu Beginn der Simulation ist Batterie vollgeladen
+Batterie.inhalt = Batterie.kapazitaet
 
 # Es wird eingestellt, wie groß die Zeitschritte in der Simulation sein sollen
 Betrieb.zeit_intervall = 1  # in Sekunden
@@ -35,6 +40,7 @@ Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
 # TODO: Außentemperatur an Uhrzeit koppeln?
+# TODO: Umlauf soll bei bestimmter Uhrzeit starten (Pausenlänge anpassen)
 
 daten_uebersicht = []
 daten_umlaeufe = []
@@ -75,51 +81,7 @@ for i in range(1, 6):
 
 print('Übersicht erstellen.')
 
-# Output als Excel-Dokument
-# TODO: in Datei/Funktionen auslagern
-uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
+# Output als formatierte Tabelle in Excel-Dokument
+Output.formatierung(daten_uebersicht, daten_umlaeufe)
 
-with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
-    # Übersicht über Betriebstag auf erstem Tabellenblatt
-    uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False, startrow=1, header=False)
-
-    # Formatierung
-    workbook = writer.book
-
-    format_ganzzahl = workbook.add_format({'num_format': '###,##0'})
-    format_gleitzahl = workbook.add_format({'num_format': '###,##0.00'})
-    format_ueberschrift = workbook.add_format({
-        'text_wrap': True,
-        'align': 'center',
-        'valign': 'vcenter'})
-
-    worksheet = writer.sheets['Übersicht Betriebstag']
-    tabellenbereich = 'A1:G' + str(len(uebersicht_betriebstag['Typ']) + 1)
-    ueberschriften = []
-    for i in uebersicht_betriebstag.columns.values:
-        ueberschriften.append({'header': i})
-    worksheet.add_table(tabellenbereich, {'columns': ueberschriften,
-                                          'style': 'Table Style Light 11'})
-    worksheet.set_column('A:G', 20, format_ganzzahl)
-    worksheet.set_row(0, None, format_ueberschrift)
-
-    # Übersicht über einzelne Umläufe auf eigenen Tabellenblättern
-    for i in range(0, len(daten_umlaeufe)):
-        daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False,
-                                   startrow=1, header=False)
-        worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]
-
-        if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
-            tabellenbereich_umlauf = 'A1:P' + str(len(daten_umlaeufe[i]['Typ']) + 1)
-        if daten_umlaeufe[i]['Typ'][0] == 'Pause':
-            tabellenbereich_umlauf = 'A1:F' + str(len(daten_umlaeufe[i]['Typ']) + 1)
-
-        ueberschriften_umlauf = []
-        for j in daten_umlaeufe[i].columns.values:
-            ueberschriften_umlauf.append({'header': j})
-        worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
-                                                     'style': 'Table Style Light 11'})
-        worksheet.set_column('A:P', 15, format_ganzzahl)
-        worksheet.set_column('I:I', 15, format_gleitzahl)
-        worksheet.set_row(0, None, format_ueberschrift)
 

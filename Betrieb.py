@@ -8,7 +8,7 @@ from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromot
 
 # Variablen des Busbetriebs
 zeit_intervall = 1
-soc: float
+soc = 100.0 # SoC beträgt bei Start der Simulation 100%
 t: int
 zurueckgelegte_distanz: float
 uhrzeit: datetime
@@ -94,7 +94,6 @@ def umlauf(temperatur):
             anhalten()
             stehen(20, 'Ampel')
             for i in range(0, 20):
-                print('hier')
                 fahren()
 
         else:

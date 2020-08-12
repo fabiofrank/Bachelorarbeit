@@ -1,9 +1,9 @@
 from Fahrzeugkomponenten import Leistungselektronik
+import Betrieb
 
-inhalt: float
 kapazitaet: float
+inhalt: float
 effizienz: float
-
 
 # Der Energieverbrauch bzw. Energiegewinn wird berechnet
 # unter Berücksichtigung von Verlusten in Batterie und Leistungselektronik

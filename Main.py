@@ -28,16 +28,14 @@ Betrieb.zeit_intervall = 1  # in Sekunden
 uhrzeit = '09:00'  # Format hh:mm
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
-# TODO: Ändert sich die Masse/Passagierzahl im Laufe des Betriebstags?
-# TODO: Außentemperatur an Uhrzeit koppeln?
+# TODO: Variable Passagieranzahl
+# TODO: Außentemperatur (Passagierzahl) an Uhrzeit koppeln?
 # TODO: Umlauf soll bei bestimmter Uhrzeit starten (Pausenlänge anpassen)
 
 daten_uebersicht = []
 daten_umlaeufe = []
 
-# Aneinanderreihen von Umläufen
-for i in range(1, 6):
-    print("Umlauf ", i, " gestartet.")
+def umlauf():
     soc_vor_umlauf = Betrieb.soc
     uhrzeit_vor_umlauf = Betrieb.uhrzeit
     aktueller_umlauf = Betrieb.umlauf(temperatur=20)
@@ -52,7 +50,7 @@ for i in range(1, 6):
                        'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_umlauf)
 
-    print('Pause ', i, ' gestartet.')
+def pause():
     soc_vor_pause = Betrieb.soc
     uhrzeit_vor_pause = Betrieb.uhrzeit
     aktuelle_pause = Betrieb.pause(laenge=300)
@@ -67,11 +65,16 @@ for i in range(1, 6):
                       'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
 
+# Aneinanderreihen von Umläufen
+for i in range(1, 6):
+    print("Umlauf ", i)
+    umlauf()
+    print('Pause ', i)
+    pause()
     print('--------------------------------')
 
 print('Übersicht erstellen.')
 
 # Output als formatierte Tabelle in Excel-Dokument
 Output.formatierung(daten_uebersicht, daten_umlaeufe)
-
 

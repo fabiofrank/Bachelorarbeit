@@ -142,6 +142,14 @@ def daten_sichern():
                   'Kumulierter Energieverbrauch nach Intervall [t, t+1) \n[kWh]': kumulierter_energieverbrauch / 3600000}
     liste.append(neue_zeile)
 
+def daten_sichern_uebersicht():
+    pass
+
+
+
+
+
+
 
 def fahren():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \

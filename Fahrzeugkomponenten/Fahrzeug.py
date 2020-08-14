@@ -13,7 +13,7 @@ stirnflaeche = 8.6649
 # Anzahl an DWPT-Empfängerspulen am Fahrzeug
 anzahl_spulen = 3
 
-# Anzahl an Fahrgästen #TODO: Variable oder Konstante?
+# Anzahl an Fahrgästen
 anzahl_fahrgaeste = 45  # Higer-Bus: Max. 90 Passagiere
 
 # Mittleres Fahrgastgewicht in kg, abhängig von Kunden des Busbetriebs
@@ -43,7 +43,7 @@ def rollwiderstand(alpha):
     return masse() * g * np.cos(alpha) * f_roll
 
 
-# TODO: m_acc berücksichtigen oder mit Faktor multiplizieren
+# TODO: m_acc berücksichtigen oder mit Faktor multiplizieren (Quelle)
 def beschleunigungswiderstand(beschleunigung):
     return masse() * beschleunigung
 

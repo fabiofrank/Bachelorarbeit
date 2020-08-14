@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+# TODO: reale Strecke konstruieren
+
 hoehenprofil: pd.DataFrame
 strecke: pd.DataFrame
 

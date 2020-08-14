@@ -29,52 +29,20 @@ uhrzeit = '09:00'  # Format hh:mm
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Variable Passagieranzahl
-# TODO: Außentemperatur (Passagierzahl) an Uhrzeit koppeln?
-# TODO: Umlauf soll bei bestimmter Uhrzeit starten (Pausenlänge anpassen)
+# TODO: Keine Energieaufnahme, wenn SoC = 100 % !!!
 
-daten_uebersicht = []
-daten_umlaeufe = []
-
-def umlauf():
-    soc_vor_umlauf = Betrieb.soc
-    uhrzeit_vor_umlauf = Betrieb.uhrzeit
-    aktueller_umlauf = Betrieb.umlauf(temperatur=20)
-    daten_umlaeufe.append(aktueller_umlauf)
-
-    ergebnis_umlauf = {'Typ': 'Umlauf ' + str(i),
-                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
-                       'Uhrzeit am Ende': datetime.datetime.strftime(Betrieb.uhrzeit, '%H:%M'),
-                       'Außentemperatur [°C]': Betrieb.aussentemperatur,
-                       'SoC zu Beginn [%]': soc_vor_umlauf,
-                       'SoC am Ende [%]': Betrieb.soc,
-                       'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
-    daten_uebersicht.append(ergebnis_umlauf)
-
-def pause():
-    soc_vor_pause = Betrieb.soc
-    uhrzeit_vor_pause = Betrieb.uhrzeit
-    aktuelle_pause = Betrieb.pause(laenge=300)
-    daten_umlaeufe.append(aktuelle_pause)
-
-    ergebnis_pause = {'Typ': 'Pause ' + str(i),
-                      'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
-                      'Uhrzeit am Ende': datetime.datetime.strftime(Betrieb.uhrzeit, '%H:%M'),
-                      'Außentemperatur [°C]': Betrieb.aussentemperatur,
-                      'SoC zu Beginn [%]': soc_vor_pause,
-                      'SoC am Ende [%]': Betrieb.soc,
-                      'Energieverbrauch des Intervalls [kWh]': Betrieb.kumulierter_energieverbrauch / 3600000}
-    daten_uebersicht.append(ergebnis_pause)
 
 # Aneinanderreihen von Umläufen
-for i in range(1, 6):
-    print("Umlauf ", i)
-    umlauf()
-    print('Pause ', i)
-    pause()
-    print('--------------------------------')
+print("Pause")
+Betrieb.pause(ende='09:30')
+print("Umlauf")
+Betrieb.umlauf(temperatur=20)
+print('Pause')
+Betrieb.pause(ende='11:00')
+print('--------------------------------')
 
 print('Übersicht erstellen.')
 
 # Output als formatierte Tabelle in Excel-Dokument
-Output.formatierung(daten_uebersicht, daten_umlaeufe)
+Output.formatierung(Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)
 

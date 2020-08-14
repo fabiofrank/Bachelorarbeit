@@ -6,13 +6,18 @@ from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromot
 
 # TODO: Sicherstellen, das DWPT auch während Bushaltestelle/Ampel funktioniert!!!
 
-# Variablen des Busbetriebs
 zeit_intervall = 1
+
+# Initialisierung: Start des Betriebstags
 soc = 100.0 # SoC beträgt bei Start der Simulation 100%
+daten_uebersicht = []
+daten_umlaeufe = []
+aussentemperatur = 20.0 # TODO: variabel gestalten
+
+# Variablen während des Busbetriebs
 t: int
 zurueckgelegte_distanz: float
-uhrzeit: datetime
-aussentemperatur: float
+uhrzeit: datetime.datetime
 status: str
 v_ist: float
 v_soll: float
@@ -27,19 +32,31 @@ kumulierter_energieverbrauch: float
 liste: list
 
 
+
 # (Lade-)Pause an Start-/Zielhaltestelle
-def pause(laenge):
+def pause(ende):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, liste, ladeleistung
+
+    # Initialisierung
+    t = 0
+    soc_vor_pause = soc
+    uhrzeit_vor_pause = uhrzeit
+    uhrzeit_nach_pause = datetime.datetime.strptime(ende, '%H:%M')
     liste = []
     kumulierter_energieverbrauch = 0.0  # in Joule
-    wirkungsgrad_induktiv = 0.9
-    ladeleistung_spule = 25000  # in Watt
+    wirkungsgrad_induktiv = 0.9 # TODO: benutzerfreundlich oben festlegen
+    ladeleistung_spule = 25000  # in Watt # TODO: benutzerfreundlich oben festlegen
     ladeleistung = Fahrzeug.anzahl_spulen * ladeleistung_spule * wirkungsgrad_induktiv  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
-    energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
+    theoretische_energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
 
-    for i in range(0, laenge):
-        t = i
+    # Der SoC von 100% nicht überschritten werden
+    if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
+        energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+    else:
+        energieaufnahme = theoretische_energieaufnahme
+
+    while uhrzeit <= uhrzeit_nach_pause:
         kumulierter_energieverbrauch += energieaufnahme
         neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
                       'Typ': 'Pause',
@@ -50,15 +67,29 @@ def pause(laenge):
         liste.append(neue_zeile)
         soc = Batterie.state_of_charge(energieaufnahme)
         uhrzeit += datetime.timedelta(seconds=zeit_intervall)
+        t += zeit_intervall
 
     pause_tabelle = pd.DataFrame(liste)
-    return pause_tabelle
+    daten_umlaeufe.append(pause_tabelle)
+
+    ergebnis_pause = {'Typ': 'Pause ', # TODO: Nummer
+                      'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
+                      'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
+                      'Außentemperatur [°C]': aussentemperatur,
+                      'SoC zu Beginn [%]': soc_vor_pause,
+                      'SoC am Ende [%]': soc,
+                      'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
+    daten_uebersicht.append(ergebnis_pause)
 
 
 # einzelner Umlauf des Busses
 def umlauf(temperatur):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
-        beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur
+        beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur, soc_vor_umlauf, uhrzeit_vor_umlauf
+
+    soc_vor_umlauf = soc
+    uhrzeit_vor_umlauf = uhrzeit
+
     aussentemperatur = temperatur
     streckenlaenge = Route.strecke['zurückgelegte Distanz [km]'].iloc[-1] * 1000
 
@@ -101,7 +132,8 @@ def umlauf(temperatur):
 
     # Tabelle mit allen relevanten Daten des Umlaufs wird erstellt und zurückgegeben
     umlauf_tabelle = pd.DataFrame(liste)
-    return umlauf_tabelle
+    daten_umlaeufe.append(umlauf_tabelle)
+    daten_sichern_uebersicht()
 
 
 # Berechnung des Energieverbrauchs bei geg. Parametern Ist-Geschwindigkeit, Beschleunigung, Steigung, Außentemperatur, zurückgelegter Distanz
@@ -118,7 +150,15 @@ def energieverbrauch():
     leistung_batterie = Batterie.leistung(benoetigte_leistung)
 
     # Berechnung des Energieverbrauchs während des gewählten Zeitintervalls
-    return leistung_batterie * zeit_intervall  # in Joule
+    theoretischer_energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
+
+    # Sonderfall: Im Falle von Energieaufnahme darf der SoC von 100% nicht überschritten werden
+    if (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall > (Batterie.kapazitaet * 3600000):
+        realer_energieverbrauch_im_intervall = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+    else:
+        realer_energieverbrauch_im_intervall = theoretischer_energieverbrauch_im_intervall
+
+    return realer_energieverbrauch_im_intervall  # in Joule
 
 # Speichern der gewonnenen Daten als Dictionary, das einer Liste hinzugefügt wird
 # Die Liste enthältjedes Zeitintervall des Umlaufs in Form eines Dictionarys
@@ -143,12 +183,14 @@ def daten_sichern():
     liste.append(neue_zeile)
 
 def daten_sichern_uebersicht():
-    pass
-
-
-
-
-
+    ergebnis_umlauf = {'Typ': 'Umlauf ', # TODO: Nummer
+                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
+                       'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
+                       'Außentemperatur [°C]': aussentemperatur,
+                       'SoC zu Beginn [%]': soc_vor_umlauf,
+                       'SoC am Ende [%]': soc,
+                       'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
+    daten_uebersicht.append(ergebnis_umlauf)
 
 
 def fahren():

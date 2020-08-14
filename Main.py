@@ -20,28 +20,22 @@ Route.hoehenprofil_einlesen(hoehenprofil)
 Route.strecke_einlesen(strecke)
 
 #######################################################################################################################
+# SCHRITT 3: UHRZEIT DES BETRIEBSSTARTS ANGEBEN (hh:mm)
 
-# SCHRITT 3: EINSTELLEN, WIE GROẞ DIE ZEITSCHRITTE IN DER SIMULATION SEIN SOLLEN
-Betrieb.zeit_intervall = 1  # in Sekunden
-
-# Uhrzeit des Betriebsstarts angeben
 uhrzeit = '09:00'  # Format hh:mm
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
-# TODO: Variable Passagieranzahl
-# TODO: Keine Energieaufnahme, wenn SoC = 100 % !!!
+#######################################################################################################################
+# SCHRITT 4: UMLÄUFE UND LADEPAUSEN ANEINANDERREIHEN
+# Betrieb.umlauf()
+# Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist
 
-
-# Aneinanderreihen von Umläufen
-print("Pause")
+# TODO: Fahrplan umsetzen
 Betrieb.pause(ende='09:30')
-print("Umlauf")
-Betrieb.umlauf(temperatur=20)
-print('Pause')
+Betrieb.umlauf()
 Betrieb.pause(ende='11:00')
-print('--------------------------------')
 
-print('Übersicht erstellen.')
+#######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument
 Output.formatierung(Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)

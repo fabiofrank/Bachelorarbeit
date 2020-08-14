@@ -2,7 +2,6 @@ import pandas as pd
 # TODO: Tabellenblatt mit Übersicht über Parameterannahmen
 # Output als Excel-Dokument
 def formatierung(daten_uebersicht, daten_umlaeufe):
-
     uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
 
     with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
@@ -49,3 +48,5 @@ def formatierung(daten_uebersicht, daten_umlaeufe):
             worksheet.set_column('A:P', 15, format_ganzzahl)
             worksheet.set_column('I:I', 15, format_gleitzahl)
             worksheet.set_row(0, None, format_ueberschrift)
+
+    print('Simulationslauf beendet.')

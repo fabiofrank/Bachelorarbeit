@@ -35,10 +35,6 @@ def leistung(benoetigte_leistung):
 # SoC kann nicht über 100% sein
 def state_of_charge(delta):
     global inhalt
-    neuer_inhalt = inhalt - (delta / 3600000)
-    if neuer_inhalt >= kapazitaet:
-        soc = 100.0
-    else:
-        inhalt = neuer_inhalt
-        soc = inhalt / kapazitaet * 100
+    inhalt -= (delta / 3600000)
+    soc = inhalt / kapazitaet * 100
     return soc  # in %

@@ -36,7 +36,7 @@ liste: list
 # (Lade-)Pause an Start-/Zielhaltestelle
 def pause(ende):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, liste, ladeleistung
-
+    print(datetime.datetime.strftime(uhrzeit, '%H:%M'), ': Pause gestartet.')
     # Initialisierung
     t = 0
     soc_vor_pause = soc
@@ -50,13 +50,14 @@ def pause(ende):
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     theoretische_energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
 
-    # Der SoC von 100% nicht überschritten werden
-    if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
-        energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
-    else:
-        energieaufnahme = theoretische_energieaufnahme
-
+    # Pause läuft bis zu gegebener Uhrzeit (Beginn der nächsten Fahrt)
     while uhrzeit <= uhrzeit_nach_pause:
+        # Der SoC von 100% nicht überschritten werden
+        if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
+            energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+        else:
+            energieaufnahme = theoretische_energieaufnahme
+
         kumulierter_energieverbrauch += energieaufnahme
         neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
                       'Typ': 'Pause',
@@ -83,14 +84,13 @@ def pause(ende):
 
 
 # einzelner Umlauf des Busses
-def umlauf(temperatur):
+def umlauf():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
         beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur, soc_vor_umlauf, uhrzeit_vor_umlauf
-
+    print(datetime.datetime.strftime(uhrzeit, '%H:%M'), ': Umlauf gestartet.')
     soc_vor_umlauf = soc
     uhrzeit_vor_umlauf = uhrzeit
 
-    aussentemperatur = temperatur
     streckenlaenge = Route.strecke['zurückgelegte Distanz [km]'].iloc[-1] * 1000
 
     # Initialisierung der Schleife
@@ -120,13 +120,14 @@ def umlauf(temperatur):
             for i in range(0, 20):
                 fahren()
 
-        # analog für Ampeln mit 20 Sekunden Standzeit
+        # Erreicht der Bus eine Ampel, so hält er an und steht 20 s lang und fährt wieder los
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
             stehen(20, 'Ampel')
             for i in range(0, 20):
                 fahren()
 
+        # "Normalfall": Der Bus muss nicht anhalten und fährt einfach
         else:
             fahren()
 
@@ -136,7 +137,8 @@ def umlauf(temperatur):
     daten_sichern_uebersicht()
 
 
-# Berechnung des Energieverbrauchs bei geg. Parametern Ist-Geschwindigkeit, Beschleunigung, Steigung, Außentemperatur, zurückgelegter Distanz
+# Berechnung des Energieverbrauchs bei geg. Parametern Ist-Geschwindigkeit, Beschleunigung,
+# Steigung, Außentemperatur, zurückgelegter Distanz
 def energieverbrauch():
     global leistung_batterie, ladeleistung, leistung_em, leistung_nv
 
@@ -160,6 +162,7 @@ def energieverbrauch():
 
     return realer_energieverbrauch_im_intervall  # in Joule
 
+# TODO: Auslagerung in 'Ausgabe'
 # Speichern der gewonnenen Daten als Dictionary, das einer Liste hinzugefügt wird
 # Die Liste enthältjedes Zeitintervall des Umlaufs in Form eines Dictionarys
 def daten_sichern():
@@ -293,7 +296,13 @@ def stehen(sekunden, ampel_oder_haltestelle):
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
 
         # Berechnung des Energieverbrauchs
-        energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
+        # Im Falle von Energieaufnahme darf der SoC von 100% nicht überschritten werden
+        theoretischer_energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
+
+        if (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall > (Batterie.kapazitaet * 3600000):
+            energieverbrauch_im_intervall = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+        else:
+            energieverbrauch_im_intervall = theoretischer_energieverbrauch_im_intervall
 
         # Aktualisieren des Gesamtenergieverbrauchs im Umlauf
         kumulierter_energieverbrauch += energieverbrauch_im_intervall

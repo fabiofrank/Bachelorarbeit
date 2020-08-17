@@ -186,7 +186,7 @@ def daten_sichern():
     liste.append(neue_zeile)
 
 def daten_sichern_uebersicht():
-    ergebnis_umlauf = {'Typ': 'Umlauf ', # TODO: Nummer
+    ergebnis_umlauf = {'Typ': 'Umlauf ',
                        'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
                        'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
                        'Außentemperatur [°C]': aussentemperatur,

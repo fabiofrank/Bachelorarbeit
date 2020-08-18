@@ -33,6 +33,7 @@ def formatierung(daten_uebersicht, daten_umlaeufe):
 
         # Übersicht über einzelne Umläufe auf eigenen Tabellenblättern
         for i in range(0, len(daten_umlaeufe)):
+
             daten_umlaeufe[i].to_excel(writer, sheet_name=str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0], index=False,
                                        startrow=1, header=False)
             worksheet = writer.sheets[str(i + 1) + ' ' + daten_umlaeufe[i]['Typ'][0]]

@@ -99,7 +99,6 @@ def umlauf():
 
     # Schleife, die läuft bis Umlauf beendet
     while zurueckgelegte_distanz < streckenlaenge:
-
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie DWPT-Ladeleistung ermittelt
         ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 

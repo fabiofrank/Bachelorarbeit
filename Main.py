@@ -11,10 +11,14 @@ import Ausgabe
 # siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie', 'Nebenverbraucher', 'DWPT'
 
 #######################################################################################################################
+# NAME DER SIMULATION FESTLEGEN (ALS STRING)
+name_simulation = 'Testsimulation'
+
+#######################################################################################################################
 # SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN
 
-hoehenprofil = '20200715070018-25131-data.csv'
-strecke = 'Input.xlsx'
+hoehenprofil = 'Inputdateien/20200715070018-25131-data.csv'
+strecke = 'Inputdateien/Input.xlsx'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)
@@ -39,5 +43,5 @@ Betrieb.pause(ende='11:00')
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument
-Ausgabe.formatierung(Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)
+Ausgabe.formatierung(name_simulation, Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)
 

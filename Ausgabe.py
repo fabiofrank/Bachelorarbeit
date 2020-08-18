@@ -1,12 +1,16 @@
 import pandas as pd
+import xlsxwriter
 import numpy as np
 # TODO: Tabellenblatt mit Übersicht über Parameterannahmen
 
 # Output als Excel-Dokument
-def formatierung(daten_uebersicht, daten_umlaeufe):
+def formatierung(name_simulation, daten_uebersicht, daten_umlaeufe):
+    datei = 'Outputdateien/' + name_simulation + '.xlsx'
+
+    workbook = xlsxwriter.Workbook(name_simulation)
     uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)
 
-    with pd.ExcelWriter('Output.xlsx', engine='xlsxwriter') as writer:
+    with pd.ExcelWriter(datei, engine='xlsxwriter') as writer:
         # Übersicht über Betriebstag auf erstem Tabellenblatt
         uebersicht_betriebstag.to_excel(writer, sheet_name='Übersicht Betriebstag', index=False, startrow=1,
                                         header=False)
@@ -52,4 +56,4 @@ def formatierung(daten_uebersicht, daten_umlaeufe):
             worksheet.set_column('I:I', 15, format_gleitzahl)
             worksheet.set_row(0, None, format_ueberschrift)
 
-    print('Simulationslauf beendet.')
+    print('Simulationslauf "' + name_simulation + '" beendet.')

@@ -5,9 +5,7 @@ import Route
 import DWPT
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
 
-# TODO: Sicherstellen, das DWPT auch während Bushaltestelle/Ampel funktioniert!!!
-
-zeit_intervall = 1
+zeit_intervall = 1 # in Sekunden
 
 # Initialisierung: Start des Betriebstags
 soc = 100.0 # SoC beträgt bei Start der Simulation 100%

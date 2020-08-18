@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 # TODO: Tabellenblatt mit Übersicht über Parameterannahmen
 
-parameter = {}
-
 # Output als Excel-Dokument
 def formatierung(daten_uebersicht, daten_umlaeufe):
     uebersicht_betriebstag = pd.DataFrame(daten_uebersicht)

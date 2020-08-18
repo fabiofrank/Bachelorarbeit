@@ -8,7 +8,7 @@ import Ausgabe
 #######################################################################################################################
 # SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
 
-# siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie' # TODO: Ergänzen
+# siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie', 'Nebenverbraucher', 'DWPT'
 
 #######################################################################################################################
 # SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN

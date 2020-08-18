@@ -2,12 +2,13 @@ import datetime
 import Betrieb
 from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektromotor, Getriebe
 import Route
-import Output
+import Ausgabe
 
+# TODO: Name der Simulation
 #######################################################################################################################
 # SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
 
-# siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie'
+# siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie' # TODO: Ergänzen
 
 #######################################################################################################################
 # SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN
@@ -38,5 +39,5 @@ Betrieb.pause(ende='11:00')
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument
-Output.formatierung(Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)
+Ausgabe.formatierung(Betrieb.daten_uebersicht, Betrieb.daten_umlaeufe)
 

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import DWPT
 
 # TODO: reale Strecke konstruieren
 
@@ -60,11 +61,8 @@ def v_soll(distanz):
 # Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
 def dwpt_ladeleistung(distanz_in_m):
     zeile = momentane_position_strecke(distanz_in_m)
-    wirkungsgrad_dwpt = 0.8
-    ladeleistung_spule = 25000.0  # Watt
-    anzahl_spulen = 3
     if strecke['DWPT-Abschnitt?'][zeile] == 1:
-        ladeleistung = anzahl_spulen * ladeleistung_spule * wirkungsgrad_dwpt  # Watt
+        ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * DWPT.wirkungsgrad_dynamisch  # Watt
     else:
         ladeleistung = 0.0
     return ladeleistung

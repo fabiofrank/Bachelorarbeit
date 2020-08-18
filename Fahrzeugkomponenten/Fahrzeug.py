@@ -10,9 +10,6 @@ masse_leer = 12760
 # Frontfäche des Fahrzeugs in qm
 stirnflaeche = 8.6649
 
-# Anzahl an DWPT-Empfängerspulen am Fahrzeug
-anzahl_spulen = 3
-
 # Anzahl an Fahrgästen
 anzahl_fahrgaeste = 45  # Higer-Bus: Max. 90 Passagiere
 

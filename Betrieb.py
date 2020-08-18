@@ -2,6 +2,7 @@ import datetime
 import pandas as pd
 import Fahrer
 import Route
+import DWPT
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
 
 # TODO: Sicherstellen, das DWPT auch während Bushaltestelle/Ampel funktioniert!!!
@@ -44,9 +45,7 @@ def pause(ende):
     uhrzeit_nach_pause = datetime.datetime.strptime(ende, '%H:%M')
     liste = []
     kumulierter_energieverbrauch = 0.0  # in Joule
-    wirkungsgrad_induktiv = 0.9 # TODO: benutzerfreundlich oben festlegen
-    ladeleistung_spule = 25000  # in Watt # TODO: benutzerfreundlich oben festlegen
-    ladeleistung = Fahrzeug.anzahl_spulen * ladeleistung_spule * wirkungsgrad_induktiv  # in Watt
+    ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * DWPT.wirkungsgrad_statisch  # in Watt
     ladeleistung_batterie = Batterie.leistung(-ladeleistung)
     theoretische_energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
 
@@ -73,7 +72,7 @@ def pause(ende):
     pause_tabelle = pd.DataFrame(liste)
     daten_umlaeufe.append(pause_tabelle)
 
-    ergebnis_pause = {'Typ': 'Pause ', # TODO: Nummer
+    ergebnis_pause = {'Typ': 'Pause ',
                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
                       'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
                       'Außentemperatur [°C]': aussentemperatur,

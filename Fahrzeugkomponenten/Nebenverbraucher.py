@@ -1,10 +1,14 @@
-# TODO: plausibler Fit?
-
 import numpy as np
 import pandas as pd
-from scipy.optimize import curve_fit
-from scipy.interpolate import interp1d
 from matplotlib import pyplot as plt
+
+#######################################################################################################################
+# KONSTANTE LEISTUNG DER SONSTIGEN NEBENVERBRAUCHER (OHNE KLIMATISIERUNG/HEIZUNG) IN WATT
+
+leistung_sonstiges = 6000 # Watt # TODO: Quelle
+
+#######################################################################################################################
+
 
 # Aus Modelldaten des Primove-Projekts wird die Klimatisierungsleistung hergeleitet
 inputdatei = r'C:\Users\fabio\PycharmProjects\Bachelorarbeit_Git\Fahrzeugkomponenten\Klimatisierungsdaten.xlsx'
@@ -27,11 +31,11 @@ heizleistung_funktion = np.poly1d(fit)
 x_new = np.arange(-15, 40)
 y_new = heizleistung_funktion(x_new)
 
-plt.plot(x_new, y_new)
-plt.plot(aussentemperatur, heizleistung, 'ro')
-plt.show()
+#plt.plot(x_new, y_new)
+#plt.plot(aussentemperatur, heizleistung, 'ro')
+#plt.show()
 
 def leistung(gegebene_temperatur):
+    global leistung_sonstiges
     leistung_klimatisierung = heizleistung_funktion(gegebene_temperatur)  # in Watt
-    leistung_sonstiges = 6000  # in Watt # TODO: Quelle, nach oben setzen
     return leistung_klimatisierung + leistung_sonstiges

@@ -5,6 +5,8 @@ import Route
 import DWPT
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
 
+# TODO: v_ist darf nicht kleiner 0 sein!
+
 zeit_intervall = 1 # in Sekunden
 
 # Initialisierung: Start des Betriebstags
@@ -32,41 +34,46 @@ kumulierter_energieverbrauch: float
 liste: list
 
 
-
+# TODO: Klimatisierung soll während Pause laufen
 # (Lade-)Pause an Start-/Zielhaltestelle
-def pause(ende):
-    global soc, kumulierter_energieverbrauch, uhrzeit, t, liste, ladeleistung
+def pause(ende, aussentemperatur):
+    global soc, kumulierter_energieverbrauch, uhrzeit, t, liste, ladeleistung, leistung_nv, leistung_batterie, temperatur
     print(datetime.datetime.strftime(uhrzeit, '%H:%M'), ': Pause gestartet.')
     # Initialisierung
     t = 0
+    temperatur = aussentemperatur
     soc_vor_pause = soc
     uhrzeit_vor_pause = uhrzeit
     uhrzeit_nach_pause = datetime.datetime.strptime(ende, '%H:%M')
     liste = []
     kumulierter_energieverbrauch = 0.0  # in Joule
     ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * DWPT.wirkungsgrad_statisch  # in Watt
-    ladeleistung_batterie = Batterie.leistung(-ladeleistung)
-    theoretische_energieaufnahme = ladeleistung_batterie * zeit_intervall  # in Joule
+    leistung_nv = Nebenverbraucher.leistung(temperatur)
+    leistung_batterie = Batterie.leistung(leistung_nv - ladeleistung)
+    theoretische_energieaufnahme = leistung_batterie * zeit_intervall  # in Joule
 
-    # Pause läuft bis zu gegebener Uhrzeit (Beginn der nächsten Fahrt)
-    while uhrzeit <= uhrzeit_nach_pause:
-        # Der SoC von 100% nicht überschritten werden
-        if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
-            energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
-        else:
-            energieaufnahme = theoretische_energieaufnahme
+    # Sonderfall: Pause kann nicht stattfinden, da vorheriger Umlauf zu lange gebraucht hat
+    if uhrzeit > uhrzeit_nach_pause:
+        daten_sichern_pause()
+    else:
+        # Pause läuft bis zu gegebener Uhrzeit (Beginn der nächsten Fahrt)
+        while uhrzeit <= uhrzeit_nach_pause:
+            # Der SoC von 100% nicht überschritten werden
+            if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
+                energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+            else:
+                energieaufnahme = theoretische_energieaufnahme
 
-        kumulierter_energieverbrauch += energieaufnahme
-        neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
-                      'Typ': 'Pause',
-                      'Zeit [s]': t,
-                      'SoC [%]': soc,
-                      'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': ladeleistung_batterie / 1000,
-                      'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
-        liste.append(neue_zeile)
-        soc = Batterie.state_of_charge(energieaufnahme)
-        uhrzeit += datetime.timedelta(seconds=zeit_intervall)
-        t += zeit_intervall
+            # Energie wird "verbraucht" bzw. aufgenommen (negativ)
+            kumulierter_energieverbrauch += energieaufnahme
+
+            # Abspeichern
+            daten_sichern_pause()
+
+            # Aktualisieren der Größen
+            soc = Batterie.state_of_charge(energieaufnahme)
+            uhrzeit += datetime.timedelta(seconds=zeit_intervall)
+            t += zeit_intervall
 
     pause_tabelle = pd.DataFrame(liste)
     daten_umlaeufe.append(pause_tabelle)
@@ -74,12 +81,20 @@ def pause(ende):
     ergebnis_pause = {'Typ': 'Pause ',
                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
                       'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
-                      'Außentemperatur [°C]': '-',
+                      'Außentemperatur [°C]': temperatur,
                       'SoC zu Beginn [%]': soc_vor_pause,
                       'SoC am Ende [%]': soc,
                       'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
 
+def daten_sichern_pause():
+    neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
+                  'Typ': 'Pause',
+                  'Zeit [s]': t,
+                  'SoC [%]': soc,
+                  'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
+                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
+    liste.append(neue_zeile)
 
 # einzelner Umlauf des Busses
 def umlauf(fahrgaeste, aussentemperatur):
@@ -115,15 +130,20 @@ def umlauf(fahrgaeste, aussentemperatur):
             stehen(30, 'Haltestelle')
 
             # Nach dem Halt fährt der Bus wieder los
-            # 20 Sekunden Fahrt, um zu verhindern, dass in gleichem Haltestellenabschnitt noch einmal gehalten wird
-            for i in range(0, 20):
+            # Solange bis nächste Zeile in Inputtabelle erreicht
+            zeile = Route.momentane_position_strecke(zurueckgelegte_distanz)
+            while zurueckgelegte_distanz < 1000 * Route.strecke['zurückgelegte Distanz [km]'][zeile + 1]:
                 fahren()
 
         # Erreicht der Bus eine Ampel, so hält er an und steht 20 s lang und fährt wieder los
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
             stehen(20, 'Ampel')
-            for i in range(0, 20):
+
+            # Nach dem Halt fährt der Bus wieder los
+            # Solange bis nächste Zeile in Inputtabelle erreicht
+            zeile = Route.momentane_position_strecke(zurueckgelegte_distanz)
+            while zurueckgelegte_distanz < 1000 * Route.strecke['zurückgelegte Distanz [km]'][zeile + 1]:
                 fahren()
 
         # "Normalfall": Der Bus muss nicht anhalten und fährt einfach
@@ -221,6 +241,8 @@ def fahren():
     # Berechnung der zurückgelegten Strecke und der neuen Ist-Geschwindigkeit
     zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
     v_ist += beschleunigung * zeit_intervall
+    if v_ist < 0:
+        v_ist = 0.0 # Ist-Geschwindigkeit wird nicht kleiner 0
     t += zeit_intervall
     uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 

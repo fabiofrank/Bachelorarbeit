@@ -4,7 +4,7 @@ from Fahrzeugkomponenten import Fahrzeug, Batterie, Leistungselektronik, Elektro
 import Route
 import Ausgabe
 
-# TODO: Name der Simulation
+
 #######################################################################################################################
 # SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
 
@@ -35,14 +35,14 @@ Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 # Betrieb.umlauf()
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist
 
-# TODO: Fahrplan umsetzen
-Betrieb.pause(ende='09:30')
-Betrieb.umlauf(fahrgaeste=90, aussentemperatur=-10)
-Betrieb.pause(ende='09:49')
+Betrieb.pause(ende='09:30', aussentemperatur=20)
 Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
-Betrieb.pause(ende='11:30')
-Betrieb.umlauf(fahrgaeste=0, aussentemperatur=40)
-Betrieb.pause(ende='12:00')
+Betrieb.pause('10:45', 20)
+Betrieb.umlauf(45, 20)
+Betrieb.pause('10:55',20)
+Betrieb.umlauf(45, 20)
+
+
 
 #######################################################################################################################
 

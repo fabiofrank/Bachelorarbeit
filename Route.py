@@ -13,7 +13,8 @@ def hoehenprofil_einlesen(csv_datei):
     global hoehenprofil
     hoehenprofil = pd.read_csv(csv_datei, skiprows=4, skipinitialspace=True)
 
-# TODO: Idee: Zeilen einfügen, die verhindern, dass Bushaltestelle mehrmals angefahren wird
+# TODO: Zeilen einfügen, die verhindern, dass Bushaltestelle mehrmals angefahren wird
+#  ODER Bus "fährt" bis nächste Zeile erreicht
 def strecke_einlesen(xlsx_datei):
     global strecke
     strecke = pd.read_excel(xlsx_datei)

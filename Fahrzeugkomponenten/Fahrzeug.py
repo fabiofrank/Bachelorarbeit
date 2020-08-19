@@ -10,8 +10,7 @@ masse_leer = 12760
 # Frontfäche des Fahrzeugs in qm
 stirnflaeche = 8.6649
 
-# Anzahl an Fahrgästen
-anzahl_fahrgaeste = 45  # Higer-Bus: Max. 90 Passagiere
+
 
 # Mittleres Fahrgastgewicht in kg, abhängig von Kunden des Busbetriebs
 masse_je_fahrgast = 77.8  # Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
@@ -29,6 +28,8 @@ c_w = 0.3 # TODO: Quelle
 g = constants.g  # Erdbeschleunigung in m/s²
 luftdichte = 1.225  # in kg/m³, als konstant angenommen # TODO: Quelle
 
+# Anzahl an Fahrgästen (wird durch Umlauf übergeben)
+anzahl_fahrgaeste: int  # Higer-Bus: Max. 90 Passagiere
 
 # Masse in Abhängigkeit von Leergewicht und Fahrgastaufkommen
 def masse():

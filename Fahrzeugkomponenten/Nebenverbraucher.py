@@ -22,10 +22,10 @@ daten_winter['Heizleistung Mittelwert [kW]'] = 0.5 * daten_winter['Heizleistung 
 daten_kumuliert = pd.concat([daten_sommer, daten_winter, daten_herbst])
 daten_geordnet = daten_kumuliert.sort_values(by='Außentemperatur [°C]')
 
-aussentemperatur = daten_geordnet['Außentemperatur [°C]'].to_numpy()
+temperatur = daten_geordnet['Außentemperatur [°C]'].to_numpy()
 heizleistung = daten_geordnet['Heizleistung Mittelwert [kW]'].to_numpy()
 
-fit = np.polyfit(aussentemperatur, heizleistung, 2)
+fit = np.polyfit(temperatur, heizleistung, 2)
 heizleistung_funktion = np.poly1d(fit)
 
 x_new = np.arange(-15, 40)
@@ -37,5 +37,5 @@ y_new = heizleistung_funktion(x_new)
 
 def leistung(gegebene_temperatur):
     global leistung_sonstiges
-    leistung_klimatisierung = heizleistung_funktion(gegebene_temperatur)  # in Watt
+    leistung_klimatisierung = 1000 * heizleistung_funktion(gegebene_temperatur)  # in Watt
     return leistung_klimatisierung + leistung_sonstiges

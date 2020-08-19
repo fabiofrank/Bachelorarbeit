@@ -37,8 +37,12 @@ Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 # TODO: Fahrplan umsetzen
 Betrieb.pause(ende='09:30')
-Betrieb.umlauf()
-Betrieb.pause(ende='11:00')
+Betrieb.umlauf(fahrgaeste=90, aussentemperatur=-10)
+Betrieb.pause(ende='09:49')
+Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
+Betrieb.pause(ende='11:30')
+Betrieb.umlauf(fahrgaeste=0, aussentemperatur=40)
+Betrieb.pause(ende='12:00')
 
 #######################################################################################################################
 

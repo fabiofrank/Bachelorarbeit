@@ -11,12 +11,13 @@ zeit_intervall = 1 # in Sekunden
 soc = 100.0 # SoC beträgt bei Start der Simulation 100%
 daten_uebersicht = []
 daten_umlaeufe = []
-aussentemperatur = 20.0 # TODO: variabel gestalten
+
 
 # Variablen während des Busbetriebs
 t: int
 zurueckgelegte_distanz: float
 uhrzeit: datetime.datetime
+temperatur: float
 status: str
 v_ist: float
 v_soll: float
@@ -73,7 +74,7 @@ def pause(ende):
     ergebnis_pause = {'Typ': 'Pause ',
                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_pause, '%H:%M'),
                       'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
-                      'Außentemperatur [°C]': aussentemperatur,
+                      'Außentemperatur [°C]': '-',
                       'SoC zu Beginn [%]': soc_vor_pause,
                       'SoC am Ende [%]': soc,
                       'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
@@ -81,10 +82,12 @@ def pause(ende):
 
 
 # einzelner Umlauf des Busses
-def umlauf():
+def umlauf(fahrgaeste, aussentemperatur):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
-        beschleunigung, leistung_batterie, liste, ladeleistung, aussentemperatur, soc_vor_umlauf, uhrzeit_vor_umlauf
+        beschleunigung, leistung_batterie, liste, ladeleistung, temperatur, soc_vor_umlauf, uhrzeit_vor_umlauf
     print(datetime.datetime.strftime(uhrzeit, '%H:%M'), ': Umlauf gestartet.')
+    Fahrzeug.anzahl_fahrgaeste = fahrgaeste
+    temperatur = aussentemperatur
     soc_vor_umlauf = soc
     uhrzeit_vor_umlauf = uhrzeit
 
@@ -141,7 +144,7 @@ def energieverbrauch():
     # Ermittlung des Gesamtleistungsbedarfs
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
     leistung_em = Elektromotor.leistung(fahrwiderstaende, v_ist)
-    leistung_nv = Nebenverbraucher.leistung(aussentemperatur)
+    leistung_nv = Nebenverbraucher.leistung(temperatur)
     ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
     benoetigte_leistung = leistung_em + leistung_nv - ladeleistung
 
@@ -166,7 +169,7 @@ def daten_sichern():
     neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
                   'Zeit t \n[s]': t,
                   'Zurückgelegte Distanz \n[m]': zurueckgelegte_distanz,
-                  'Außen-\ntemperatur \n[°C]': aussentemperatur,
+                  'Außen-\ntemperatur \n[°C]': temperatur,
                   'Typ': 'Umlauf',
                   'SoC zum Zeitpunkt t \n[%]': soc,
                   'Status': status,
@@ -185,7 +188,7 @@ def daten_sichern_uebersicht():
     ergebnis_umlauf = {'Typ': 'Umlauf ',
                        'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
                        'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
-                       'Außentemperatur [°C]': aussentemperatur,
+                       'Außentemperatur [°C]': temperatur,
                        'SoC zu Beginn [%]': soc_vor_umlauf,
                        'SoC am Ende [%]': soc,
                        'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
@@ -287,7 +290,7 @@ def stehen(sekunden, ampel_oder_haltestelle):
     for i in range(0, anzahl_intervalle):
         # Der Elektromotor dreht nicht, lediglich die Nebenverbraucher benötigen Leistung
         leistung_em = 0.0
-        leistung_nv = Nebenverbraucher.leistung(aussentemperatur)
+        leistung_nv = Nebenverbraucher.leistung(temperatur)
         benoetigte_leistung = leistung_nv - ladeleistung
         leistung_batterie = Batterie.leistung(benoetigte_leistung)
 

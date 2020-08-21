@@ -16,17 +16,17 @@ stirnflaeche = 8.6649
 masse_je_fahrgast = 77.8  # Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
 
 # Rollwiderstandskoeffizient[ohne Einheit], konstant angenommen
-f_roll = 0.015 # TODO: Quelle
+f_roll = 0.015
 
 # Luftwiderstandsbeiwert
-c_w = 0.3 # TODO: Quelle
+c_w = 0.66
 
 #######################################################################################################################
 
 
 # physikalische Konstanten
 g = constants.g  # Erdbeschleunigung in m/s²
-luftdichte = 1.225  # in kg/m³, als konstant angenommen # TODO: Quelle
+luftdichte = 1.225  # in kg/m³, als konstant angenommen
 
 # Anzahl an Fahrgästen (wird durch Umlauf übergeben)
 anzahl_fahrgaeste: int  # Higer-Bus: Max. 90 Passagiere

@@ -6,19 +6,33 @@ import Ausgabe
 
 
 #######################################################################################################################
-# SCHRITT 1: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
+
+#######################################################################################################################
+# SCHRITT 1: NAME DER SIMULATION FESTLEGEN (ALS STRING)
+name_simulation = 'Testsimulation'
+
+#######################################################################################################################
+# SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
 
 # siehe Dateien: 'Fahrzeug', 'Elektromotor', 'Batterie', 'Nebenverbraucher', 'DWPT'
 
 #######################################################################################################################
-# NAME DER SIMULATION FESTLEGEN (ALS STRING)
-name_simulation = 'Testsimulation'
+# SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
+
+strecke = 'Inputdateien/Input.xlsx'
 
 #######################################################################################################################
-# SCHRITT 2: DIE PFADE DER INPUTDATEIEN ALS STRING ANGEBEN
+# SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
+#               1) Route in Google Maps kontruieren
+#               2) https://www.gpsvisualizer.com/convert_input
+#                   - Output format: plain text
+#                   - URL aus Google Maps angeben
+#                   - Google API-Key angeben
+#                   - Add estimated fields: slope(%)
+#                   - Add DEM elevation data: best available source
+#               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben
 
-hoehenprofil = 'Inputdateien/20200715070018-25131-data.csv'
-strecke = 'Inputdateien/Input.xlsx'
+hoehenprofil = 'Inputdateien/Hoehenprofil.csv'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)
@@ -32,8 +46,8 @@ Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 #######################################################################################################################
 # SCHRITT 4: UMLÄUFE UND LADEPAUSEN ANEINANDERREIHEN
-# Betrieb.umlauf()
-# Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist
+# Betrieb.umlauf(fahrgaeste, aussentemperatur)
+# Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
 
 Betrieb.pause(ende='09:30', aussentemperatur=20)
 Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
@@ -41,8 +55,6 @@ Betrieb.pause('10:45', 20)
 Betrieb.umlauf(45, 20)
 Betrieb.pause('10:55',20)
 Betrieb.umlauf(45, 20)
-
-
 
 #######################################################################################################################
 

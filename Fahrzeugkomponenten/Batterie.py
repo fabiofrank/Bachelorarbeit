@@ -5,13 +5,13 @@ from Fahrzeugkomponenten import Leistungselektronik
 # KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
 
 # Nutzbare Kapazität der Batterie in kWh
-kapazitaet = 345.6 * 0.8 # TODO: Quelle Brutto-Netto-Umrechnung
+kapazitaet = 345.6 * 0.8
 
 # Effizienz der Batterie
-effizienz = 0.95 # TODO: Quelle
+effizienz = 0.95 # TODO: Quelle Batterieverluste
 
 # Effizienz der Leistungselektronik
-Leistungselektronik.effizienz = 0.96 # TODO: Quelle
+Leistungselektronik.effizienz = 0.96 # TODO: Quelle Leistungselektronik-Wirkungsgrad
 
 #######################################################################################################################
 

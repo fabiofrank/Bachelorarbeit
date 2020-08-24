@@ -5,7 +5,7 @@ from Fahrzeugkomponenten import Getriebe
 # KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
 
 # Nennleistung des Elektromotors in Watt
-maximale_leistung = 250000.0 # TODO: Quelle finden oder Annahme treffen (Citaro), Auswirkungen vergleichen
+maximale_leistung = 160000.0 # Siemens 1DB2016-2NB06
 
 # Wirkungsgrad des Elektromotors, konstant angenommen
 effizienz = 0.82 # Mittelwert aus Primove-Datensatz

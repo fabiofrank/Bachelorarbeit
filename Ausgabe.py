@@ -45,7 +45,7 @@ def formatierung(name_simulation, daten_uebersicht, daten_umlaeufe):
             if daten_umlaeufe[i]['Typ'][0] == 'Umlauf':
                 tabellenbereich_umlauf = 'A1:P' + str(len(daten_umlaeufe[i]['Typ']) + 1)
             if daten_umlaeufe[i]['Typ'][0] == 'Pause':
-                tabellenbereich_umlauf = 'A1:F' + str(len(daten_umlaeufe[i]['Typ']) + 1)
+                tabellenbereich_umlauf = 'A1:H' + str(len(daten_umlaeufe[i]['Typ']) + 1)
 
             ueberschriften_umlauf = []
             for j in daten_umlaeufe[i].columns.values:

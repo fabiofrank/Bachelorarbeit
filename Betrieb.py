@@ -1,11 +1,10 @@
 import datetime
 import pandas as pd
+from scipy import constants
 import Fahrer
 import Route
 import DWPT
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
-
-# TODO: v_ist darf nicht kleiner 0 sein!
 
 zeit_intervall = 1 # in Sekunden
 
@@ -92,6 +91,8 @@ def daten_sichern_pause():
                   'Typ': 'Pause',
                   'Zeit [s]': t,
                   'SoC [%]': soc,
+                  'Empfangene Leistung mittels DWPT [kW]': ladeleistung / 1000,
+                  'Leistung der Nebenverbraucher [KW]': leistung_nv / 1000,
                   'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
                   'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
     liste.append(neue_zeile)
@@ -130,8 +131,13 @@ def umlauf(fahrgaeste, aussentemperatur):
             geplante_abfahrt = uhrzeit_vor_umlauf + datetime.timedelta(minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
 
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 30 Sekunden
-            zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
-            haltezeit = max(30, zeit_bis_geplante_abfahrt)
+            if uhrzeit < geplante_abfahrt:
+                zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
+                haltezeit = max(30, zeit_bis_geplante_abfahrt)
+            else:
+                haltezeit = 30
+
+            print(haltezeit)
 
             for i in range (0, haltezeit):
                 stehen()
@@ -195,7 +201,6 @@ def energieverbrauch():
 
     return realer_energieverbrauch_im_intervall  # in Joule
 
-# TODO: Auslagerung in 'Ausgabe'
 # Speichern der gewonnenen Daten als Dictionary, das einer Liste hinzugefügt wird
 # Die Liste enthältjedes Zeitintervall des Umlaufs in Form eines Dictionarys
 def daten_sichern():
@@ -269,7 +274,7 @@ def anhalten():
         beschleunigung, leistung_batterie, ladeleistung, leistung_em, leistung_nv, energieverbrauch_im_intervall, status
 
     # Ermittlung von Bremszeit und Bremsweg bei konstanter Bremsverzögerung
-    bremsverzoegerung = 2.0
+    bremsverzoegerung = 0.19 * constants.g # Kirchner, Schubert und Haas (2014)
     bremszeit = v_ist / bremsverzoegerung
     bremsweg = 0.5 * bremsverzoegerung * (bremszeit ** 2)
 

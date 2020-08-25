@@ -33,7 +33,6 @@ kumulierter_energieverbrauch: float
 liste: list
 
 
-# TODO: Klimatisierung soll während Pause laufen
 # (Lade-)Pause an Start-/Zielhaltestelle
 def pause(ende, aussentemperatur):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, liste, ladeleistung, leistung_nv, leistung_batterie, temperatur
@@ -136,8 +135,6 @@ def umlauf(fahrgaeste, aussentemperatur):
                 haltezeit = max(30, zeit_bis_geplante_abfahrt)
             else:
                 haltezeit = 30
-
-            print(haltezeit)
 
             for i in range (0, haltezeit):
                 stehen()

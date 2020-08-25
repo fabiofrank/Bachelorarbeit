@@ -53,7 +53,7 @@ def formatierung(name_simulation, daten_uebersicht, daten_umlaeufe):
             worksheet.add_table(tabellenbereich_umlauf, {'columns': ueberschriften_umlauf,
                                                          'style': 'Table Style Light 11'})
             worksheet.set_column('A:P', 15, format_ganzzahl)
-            worksheet.set_column('I:I', 15, format_gleitzahl)
+            worksheet.set_column('K:K', 15, format_gleitzahl)
             worksheet.set_row(0, None, format_ueberschrift)
 
     print('Simulationslauf "' + name_simulation + '" beendet.')

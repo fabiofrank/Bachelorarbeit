@@ -41,9 +41,10 @@ def rollwiderstand(alpha):
     return masse() * g * np.cos(alpha) * f_roll
 
 
-# TODO: m_acc berücksichtigen oder mit Faktor multiplizieren (Quelle)
 def beschleunigungswiderstand(beschleunigung):
-    return masse() * beschleunigung
+    massenfaktor = 1.05 # berücksichtigt rotatorische Trägheit
+    zusatzmasse = anzahl_fahrgaeste * masse_je_fahrgast # Masse der Fahrgäste
+    return (massenfaktor * masse_leer + zusatzmasse) * beschleunigung
 
 
 def luftwiderstand(v_ist):

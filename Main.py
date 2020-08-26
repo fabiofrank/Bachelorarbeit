@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'Testsimulation'
+name_simulation = 'Modell-Haltestelle nach konstanter Geschw'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'Testsimulation'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input.xlsx'
+strecke = 'Inputdateien/Input_Bremsung.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -46,12 +46,9 @@ Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 # Betrieb.umlauf(fahrgaeste, aussentemperatur)
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
 
-Betrieb.umlauf(fahrgaeste=20, aussentemperatur=20)
+Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
 Betrieb.pause('09:30', 20)
-Betrieb.umlauf(70, 25)
-Betrieb.pause('10:00', 25)
-Betrieb.umlauf(90,30)
-Betrieb.pause('11:00', 30)
+
 
 
 #######################################################################################################################

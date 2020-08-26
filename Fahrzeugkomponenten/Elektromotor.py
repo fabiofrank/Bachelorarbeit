@@ -11,7 +11,7 @@ maximale_leistung = 160000.0 # Siemens 1DB2016-2NB06
 effizienz = 0.82 # Mittelwert aus Primove-Datensatz
 
 # Wirkungsgrad des Getriebes
-Getriebe.effizienz = 0.95 # TODO: Quelle Getriebeverluste
+Getriebe.effizienz = 0.98 # nach Absprache mit Markus Tesar 26.08.2020
 
 #######################################################################################################################
 

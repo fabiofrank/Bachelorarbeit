@@ -120,6 +120,7 @@ def umlauf(fahrgaeste, aussentemperatur):
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie DWPT-Ladeleistung ermittelt
         ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
+        # TODO: Haltezeit Bushaltestelle
         # Erreicht der Bus eine Haltestelle, so hält er an, steht für 30 Sekunden und fährt wieder los
         if Route.haltestelle(zurueckgelegte_distanz):
             # Der Bus kommt zum Stehen
@@ -145,6 +146,7 @@ def umlauf(fahrgaeste, aussentemperatur):
             while zurueckgelegte_distanz < 1000 * Route.strecke['zurückgelegte Distanz [km]'][zeile + 1]:
                 fahren()
 
+        # TODO: Haltezeit Ampel
         # Erreicht der Bus eine Ampel, so hält er an und steht 20 s lang und fährt wieder los
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
@@ -272,7 +274,7 @@ def anhalten():
 
     # Ermittlung von Bremszeit und Bremsweg bei konstanter Bremsverzögerung
     bremsverzoegerung = 0.19 * constants.g # Kirchner, Schubert und Haas (2014)
-    bremszeit = v_ist / bremsverzoegerung
+    bremszeit = v_ist / bremsverzoegerung # in Sekunden
     bremsweg = 0.5 * bremsverzoegerung * (bremszeit ** 2)
 
     # Ermittlung des Zeitfehlers
@@ -283,14 +285,15 @@ def anhalten():
         zusaetzliche_haltezeit = bremszeit - bremsweg / v_ist
         fehlende_zeitintervalle = round(zusaetzliche_haltezeit / zeit_intervall)
 
+    # TODO: Korrektur überprüfen
     # Ermittlung des Fehlers im Energieverbrauch
     beschleunigung = 0.0
-    energieverbrauch_fahren = energieverbrauch()
+    energieverbrauch_fahren = energieverbrauch() * ((bremszeit - zusaetzliche_haltezeit) / zeit_intervall)
 
     beschleunigung = -bremsverzoegerung
-    rekuperationsenergie = energieverbrauch()
+    energieverbrauch_bremsen = energieverbrauch() * (bremszeit / zeit_intervall)
 
-    energieverbrauch_fehler = rekuperationsenergie - energieverbrauch_fahren
+    energieverbrauch_fehler_gesamt = energieverbrauch_bremsen - energieverbrauch_fahren
 
     # Korrektur des Energieverbrauchs
     for i in range(0, fehlende_zeitintervalle):
@@ -304,7 +307,7 @@ def anhalten():
         ladeleistung = 0.0
         leistung_nv = 0.0
         leistung_em = 0.0
-        leistung_batterie = energieverbrauch_fehler / fehlende_zeitintervalle
+        leistung_batterie = energieverbrauch_fehler_gesamt / fehlende_zeitintervalle
         energieverbrauch_im_intervall = leistung_batterie * zeit_intervall
         kumulierter_energieverbrauch += energieverbrauch_im_intervall
 

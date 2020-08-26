@@ -8,10 +8,10 @@ from Fahrzeugkomponenten import Leistungselektronik
 kapazitaet = 345.6 * 0.8
 
 # Effizienz der Batterie
-effizienz = 0.95 # TODO: Quelle Batterieverluste
+effizienz = 0.9 # nach Absprache mit Markus Tesar 26.08.2020
 
 # Effizienz der Leistungselektronik
-Leistungselektronik.effizienz = 0.96 # TODO: Quelle Leistungselektronik-Wirkungsgrad
+Leistungselektronik.effizienz = 0.96 # nach Absprache mit Markus Tesar 26.08.2020
 
 #######################################################################################################################
 

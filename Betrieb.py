@@ -120,7 +120,7 @@ def umlauf(fahrgaeste, aussentemperatur):
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie DWPT-Ladeleistung ermittelt
         ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
-        # TODO: Haltezeit Bushaltestelle
+        # TODO: Haltezeit Bushaltestelle empirisch aus Primove
         # Erreicht der Bus eine Haltestelle, so hält er an, steht für 30 Sekunden und fährt wieder los
         if Route.haltestelle(zurueckgelegte_distanz):
             # Der Bus kommt zum Stehen
@@ -264,7 +264,7 @@ def fahren():
     t += zeit_intervall
     uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
-
+# TODO: Korrektur überprüfen while>>for
 # Im Falle von Bushaltestellen sowie Ampeln muss der Bus zum Stehen kommen.
 # Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde.
 # Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind.
@@ -285,13 +285,18 @@ def anhalten():
         zusaetzliche_haltezeit = bremszeit - bremsweg / v_ist
         fehlende_zeitintervalle = round(zusaetzliche_haltezeit / zeit_intervall)
 
-    # TODO: Korrektur überprüfen
     # Ermittlung des Fehlers im Energieverbrauch
+
+    # 1) Energie, die verbraucht wurde, da das Modell gefahren ist (anstatt schon zu bremsen)
     beschleunigung = 0.0
     energieverbrauch_fahren = energieverbrauch() * ((bremszeit - zusaetzliche_haltezeit) / zeit_intervall)
 
-    beschleunigung = -bremsverzoegerung
-    energieverbrauch_bremsen = energieverbrauch() * (bremszeit / zeit_intervall)
+    # 2) Energie, die bei der Bremsung rekuperiert worden wäre
+    energieverbrauch_bremsen = 0 # zu bestimmen
+    while v_ist > 0:
+        beschleunigung = -bremsverzoegerung
+        energieverbrauch_bremsen += energieverbrauch()
+        v_ist += beschleunigung
 
     energieverbrauch_fehler_gesamt = energieverbrauch_bremsen - energieverbrauch_fahren
 

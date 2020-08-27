@@ -29,8 +29,8 @@ def beschleunigung(v_ist, v_soll):
         else:
             gewaehlte_beschleunigung = float(beschleunigung_interpoliert(v_ist))
 
-    elif v_ist > v_soll: # TODO: ändern zu -0.8
-        gewaehlte_beschleunigung = -0.19 * constants.g
+    elif v_ist > v_soll:
+        gewaehlte_beschleunigung = -0.8
     else:
         gewaehlte_beschleunigung = 0.0
 

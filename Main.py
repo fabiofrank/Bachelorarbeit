@@ -25,6 +25,7 @@ strecke = 'Inputdateien/Input.xlsx'
 #                   - Output format: plain text
 #                   - URL aus Google Maps angeben
 #                   - Google API-Key angeben
+#                   - Plain text delimiter: comma
 #                   - Add estimated fields: slope(%)
 #                   - Add DEM elevation data: best available source
 #               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben

@@ -4,20 +4,22 @@ from scipy import constants
 import Fahrer
 import Route
 import DWPT
+import Ausgabe
 from Fahrzeugkomponenten import Fahrzeug, Nebenverbraucher, Batterie, Elektromotor
 
-zeit_intervall = 1 # in Sekunden
+zeit_intervall = 1  # in Sekunden
 
 # Initialisierung: Start des Betriebstags
-soc = 100.0 # SoC beträgt bei Start der Simulation 100%
+soc = 100.0  # SoC beträgt bei Start der Simulation 100%
 daten_uebersicht = []
 daten_umlaeufe = []
-
 
 # Variablen während des Busbetriebs
 t: int
 zurueckgelegte_distanz: float
 uhrzeit: datetime.datetime
+uhrzeit_vor_umlauf: datetime.datetime
+soc_vor_umlauf: float
 temperatur: float
 status: str
 v_ist: float
@@ -52,7 +54,7 @@ def pause(ende, aussentemperatur):
 
     # Sonderfall: Pause kann nicht stattfinden, da vorheriger Umlauf zu lange gebraucht hat
     if uhrzeit > uhrzeit_nach_pause:
-        daten_sichern_pause()
+        Ausgabe.daten_sichern_pause()
     else:
         # Pause läuft bis zu gegebener Uhrzeit (Beginn der nächsten Fahrt)
         while uhrzeit <= uhrzeit_nach_pause:
@@ -66,7 +68,7 @@ def pause(ende, aussentemperatur):
             kumulierter_energieverbrauch += energieaufnahme
 
             # Abspeichern
-            daten_sichern_pause()
+            Ausgabe.daten_sichern_pause()
 
             # Aktualisieren der Größen
             soc = Batterie.state_of_charge(energieaufnahme)
@@ -85,16 +87,6 @@ def pause(ende, aussentemperatur):
                       'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
     daten_uebersicht.append(ergebnis_pause)
 
-def daten_sichern_pause():
-    neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
-                  'Typ': 'Pause',
-                  'Zeit [s]': t,
-                  'SoC [%]': soc,
-                  'Empfangene Leistung mittels DWPT [kW]': ladeleistung / 1000,
-                  'Leistung der Nebenverbraucher [KW]': leistung_nv / 1000,
-                  'Abgerufene Batterieleistung im Intervall [t, t+1) [kW]': leistung_batterie / 1000,
-                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) [KWh]': kumulierter_energieverbrauch / 3600000}
-    liste.append(neue_zeile)
 
 # einzelner Umlauf des Busses
 def umlauf(fahrgaeste, aussentemperatur):
@@ -128,7 +120,8 @@ def umlauf(fahrgaeste, aussentemperatur):
 
             status = 'Halten: Bushaltestelle'
             zeile = Route.momentane_position_strecke(zurueckgelegte_distanz)
-            geplante_abfahrt = uhrzeit_vor_umlauf + datetime.timedelta(minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
+            geplante_abfahrt = uhrzeit_vor_umlauf + datetime.timedelta(
+                minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
 
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 30 Sekunden
             if uhrzeit < geplante_abfahrt:
@@ -137,7 +130,7 @@ def umlauf(fahrgaeste, aussentemperatur):
             else:
                 haltezeit = 30
 
-            for i in range (0, haltezeit):
+            for i in range(0, haltezeit):
                 stehen()
 
             # Nach dem Halt fährt der Bus wieder los
@@ -152,7 +145,7 @@ def umlauf(fahrgaeste, aussentemperatur):
             anhalten()
             status = 'Halten: Ampel'
 
-            haltezeit = 20 # Sekunden
+            haltezeit = 20  # Sekunden
             anzahl_intervalle = int(haltezeit / zeit_intervall)
             ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
@@ -172,7 +165,7 @@ def umlauf(fahrgaeste, aussentemperatur):
     # Tabelle mit allen relevanten Daten des Umlaufs wird erstellt und zurückgegeben
     umlauf_tabelle = pd.DataFrame(liste)
     daten_umlaeufe.append(umlauf_tabelle)
-    daten_sichern_uebersicht()
+    Ausgabe.daten_sichern_uebersicht()
 
 
 # Berechnung des Energieverbrauchs bei geg. Parametern Ist-Geschwindigkeit, Beschleunigung,
@@ -200,38 +193,6 @@ def energieverbrauch():
 
     return realer_energieverbrauch_im_intervall  # in Joule
 
-# Speichern der gewonnenen Daten als Dictionary, das einer Liste hinzugefügt wird
-# Die Liste enthältjedes Zeitintervall des Umlaufs in Form eines Dictionarys
-def daten_sichern():
-    # Sammle neu gewonnene Daten in Liste
-    neue_zeile = {'Uhrzeit': datetime.datetime.strftime(uhrzeit, '%H:%M:%S'),
-                  'Zeit t \n[s]': t,
-                  'Zurückgelegte Distanz \n[m]': zurueckgelegte_distanz,
-                  'Außen-\ntemperatur \n[°C]': temperatur,
-                  'Typ': 'Umlauf',
-                  'SoC zum Zeitpunkt t \n[%]': soc,
-                  'Status': status,
-                  'Ist-Geschwindigkeit zum Zeitpunkt t \n[km/h]': v_ist * 3.6,
-                  'Soll-Geschwindigkeit zum Zeitpunkt t \n[km/h]': v_soll * 3.6,
-                  'Steigung im Intervall [t, t+1) \n[%]': steigung,
-                  'Gewählte Beschleunigung im Intervall [t, t+1) \n[m/s²]': beschleunigung,
-                  'Empfangene Leistung mittels DWPT \n[kW]': ladeleistung / 1000,
-                  'Motorleistung [kW]': leistung_em / 1000,
-                  'Leistung der Nebenverbraucher [kW]': leistung_nv / 1000,
-                  'Abgerufene Batterieleistung im Intervall [t, t+1) \n[kW]': leistung_batterie / 1000,
-                  'Kumulierter Energieverbrauch nach Intervall [t, t+1) \n[kWh]': kumulierter_energieverbrauch / 3600000}
-    liste.append(neue_zeile)
-
-def daten_sichern_uebersicht():
-    ergebnis_umlauf = {'Typ': 'Umlauf ',
-                       'Uhrzeit zu Beginn': datetime.datetime.strftime(uhrzeit_vor_umlauf, '%H:%M'),
-                       'Uhrzeit am Ende': datetime.datetime.strftime(uhrzeit, '%H:%M'),
-                       'Außentemperatur [°C]': temperatur,
-                       'SoC zu Beginn [%]': soc_vor_umlauf,
-                       'SoC am Ende [%]': soc,
-                       'Energieverbrauch des Intervalls [kWh]': kumulierter_energieverbrauch / 3600000}
-    daten_uebersicht.append(ergebnis_umlauf)
-
 
 def fahren():
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, v_ist, v_soll, steigung, \
@@ -251,7 +212,7 @@ def fahren():
     kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
     # Gesammelte Daten abspeichern (wichtig: vor dem Aktualisieren des SoC)
-    daten_sichern()
+    Ausgabe.daten_sichern()
 
     # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC
     soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
@@ -260,11 +221,12 @@ def fahren():
     zurueckgelegte_distanz += 0.5 * beschleunigung * (zeit_intervall ** 2) + v_ist * zeit_intervall
     v_ist += beschleunigung * zeit_intervall
     if v_ist < 0:
-        v_ist = 0.0 # Ist-Geschwindigkeit wird nicht kleiner 0
+        v_ist = 0.0  # Ist-Geschwindigkeit wird nicht kleiner 0
     t += zeit_intervall
     uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
-# TODO: Korrektur überprüfen while>>for
+
+# TODO: Korrektur überprüfen, while>>for
 # Im Falle von Bushaltestellen sowie Ampeln muss der Bus zum Stehen kommen.
 # Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde.
 # Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind.
@@ -273,8 +235,8 @@ def anhalten():
         beschleunigung, leistung_batterie, ladeleistung, leistung_em, leistung_nv, energieverbrauch_im_intervall, status
 
     # Ermittlung von Bremszeit und Bremsweg bei konstanter Bremsverzögerung
-    bremsverzoegerung = 0.19 * constants.g # Kirchner, Schubert und Haas (2014)
-    bremszeit = v_ist / bremsverzoegerung # in Sekunden
+    bremsverzoegerung = 0.19 * constants.g  # Kirchner, Schubert und Haas (2014)
+    bremszeit = v_ist / bremsverzoegerung  # in Sekunden
     bremsweg = 0.5 * bremsverzoegerung * (bremszeit ** 2)
 
     # Ermittlung des Zeitfehlers
@@ -289,10 +251,10 @@ def anhalten():
 
     # 1) Energie, die verbraucht wurde, da das Modell gefahren ist (anstatt schon zu bremsen)
     beschleunigung = 0.0
-    energieverbrauch_fahren = energieverbrauch() * ((bremszeit - zusaetzliche_haltezeit) / zeit_intervall)
+    energieverbrauch_fahren = energieverbrauch() * ((bremsweg / v_ist) / zeit_intervall)
 
     # 2) Energie, die bei der Bremsung rekuperiert worden wäre
-    energieverbrauch_bremsen = 0 # zu bestimmen
+    energieverbrauch_bremsen = 0  # zu bestimmen
     while v_ist > 0:
         beschleunigung = -bremsverzoegerung
         energieverbrauch_bremsen += energieverbrauch()
@@ -317,7 +279,7 @@ def anhalten():
         kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
         # Speichern der Daten, Aktualisieren von SoC, Zeit und Uhrzeit
-        daten_sichern()
+        Ausgabe.daten_sichern()
         soc = Batterie.state_of_charge(energieverbrauch_im_intervall)
         t += zeit_intervall
         uhrzeit += datetime.timedelta(seconds=zeit_intervall)
@@ -348,7 +310,7 @@ def stehen():
     kumulierter_energieverbrauch += energieverbrauch_im_intervall
 
     # Gesammelte Daten abspeichern (wichtig: vor dem Aktualisieren des SoC)
-    daten_sichern()
+    Ausgabe.daten_sichern()
 
     # Laden bzw. Entladen der Batterie, Berechnung des neuen SoC
     soc = Batterie.state_of_charge(energieverbrauch_im_intervall)

@@ -112,7 +112,6 @@ def umlauf(fahrgaeste, aussentemperatur):
         # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie DWPT-Ladeleistung ermittelt
         ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
-        # TODO: Haltezeit Bushaltestelle empirisch aus Primove
         # Erreicht der Bus eine Haltestelle, so hält er an, steht für 30 Sekunden und fährt wieder los
         if Route.haltestelle(zurueckgelegte_distanz):
             # Der Bus kommt zum Stehen
@@ -123,12 +122,12 @@ def umlauf(fahrgaeste, aussentemperatur):
             geplante_abfahrt = uhrzeit_vor_umlauf + datetime.timedelta(
                 minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
 
-            # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 30 Sekunden
+            # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 20 Sekunden
             if uhrzeit < geplante_abfahrt:
                 zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
-                haltezeit = max(30, zeit_bis_geplante_abfahrt)
+                haltezeit = max(20, zeit_bis_geplante_abfahrt)
             else:
-                haltezeit = 30
+                haltezeit = 20 # Mittelwert aus Primove-Daten
 
             for i in range(0, haltezeit):
                 stehen()
@@ -139,13 +138,12 @@ def umlauf(fahrgaeste, aussentemperatur):
             while zurueckgelegte_distanz < 1000 * Route.strecke['zurückgelegte Distanz [km]'][zeile + 1]:
                 fahren()
 
-        # TODO: Haltezeit Ampel
         # Erreicht der Bus eine Ampel, so hält er an und steht 20 s lang und fährt wieder los
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
             status = 'Halten: Ampel'
 
-            haltezeit = 20  # Sekunden
+            haltezeit = 15  # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
             anzahl_intervalle = int(haltezeit / zeit_intervall)
             ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 

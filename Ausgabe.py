@@ -4,7 +4,6 @@ import datetime
 import Betrieb
 import DWPT
 from Fahrzeugkomponenten import Batterie, Elektromotor, Fahrzeug, Getriebe, Leistungselektronik, Nebenverbraucher
-# TODO: Tabellenblatt mit Übersicht über Parameterannahmen
 
 def daten_sichern_uebersicht():
     ergebnis_umlauf = {'Typ': 'Umlauf ',

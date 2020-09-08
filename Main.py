@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'Testsimulation'
+name_simulation = 'Balingen_3Haltestellen_ohneDWPT'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'Testsimulation'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input.xlsx'
+strecke = 'Inputdateien/Input_Balingen.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -30,7 +30,7 @@ strecke = 'Inputdateien/Input.xlsx'
 #                   - Add DEM elevation data: best available source
 #               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben
 
-hoehenprofil = 'Inputdateien/Hoehenprofil.csv'
+hoehenprofil = 'Inputdateien/Hoehenprofil_Balingen.csv'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)
@@ -39,28 +39,16 @@ Route.strecke_einlesen(strecke)
 #######################################################################################################################
 # SCHRITT 3: UHRZEIT DES BETRIEBSSTARTS ANGEBEN (hh:mm)
 
-uhrzeit = '09:00'  # Format hh:mm
+uhrzeit = '08:30'  # Format hh:mm
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
 
 #######################################################################################################################
 # SCHRITT 4: UMLÄUFE UND LADEPAUSEN ANEINANDERREIHEN
 # Betrieb.umlauf(fahrgaeste, aussentemperatur)
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
-
+Betrieb.pause(ende='09:00', aussentemperatur=20)
 Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
-Betrieb.pause('09:30', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('10:00', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('10:30', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('11:00', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('11:30', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('12:00', 20)
-Betrieb.umlauf(90, 20)
-Betrieb.pause('12:30', 20)
+
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument

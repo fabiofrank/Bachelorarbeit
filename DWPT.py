@@ -1,11 +1,10 @@
-# TODO: Wirkungsgrade checken
+
 # EFFIZIENZ IM STILLSTAND
 wirkungsgrad_statisch = 0.9
 
 # EFFIZIENZ WÄHREND DER FAHRT
 wirkungsgrad_dynamisch = 0.8
 
-# TODO: Ladeleistung checken
 # LEISTUNG EINER SPULE IN WATT
 ladeleistung = 25000 # Watt
 

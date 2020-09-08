@@ -121,13 +121,14 @@ def umlauf(fahrgaeste, aussentemperatur):
             zeile = Route.momentane_position_strecke(zurueckgelegte_distanz)
             geplante_abfahrt = uhrzeit_vor_umlauf + datetime.timedelta(
                 minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
+            min_haltezeit = Route.strecke['Haltezeit [s]'][zeile]
 
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 20 Sekunden
             if uhrzeit < geplante_abfahrt:
                 zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
-                haltezeit = max(20, zeit_bis_geplante_abfahrt)
+                haltezeit = max(min_haltezeit, zeit_bis_geplante_abfahrt)
             else:
-                haltezeit = 20 # Mittelwert aus Primove-Daten
+                haltezeit = min_haltezeit
 
             for i in range(0, haltezeit):
                 stehen()
@@ -224,7 +225,6 @@ def fahren():
     uhrzeit += datetime.timedelta(seconds=zeit_intervall)
 
 
-# TODO: Korrektur überprüfen, while>>for
 # Im Falle von Bushaltestellen sowie Ampeln muss der Bus zum Stehen kommen.
 # Nachträglich wird ermittelt, welche Energiemenge bei der Bremsung vor der Haltestelle rekuperiert wurde.
 # Diese wird im Modell im Stillstand aufgenommen bis Zeit und Energieverbrauch korrigiert sind.
@@ -253,7 +253,7 @@ def anhalten():
 
     # 2) Energie, die bei der Bremsung rekuperiert worden wäre
     energieverbrauch_bremsen = 0  # zu bestimmen
-    while v_ist > 0:
+    for i in range(0, round(bremszeit)):
         beschleunigung = -bremsverzoegerung
         energieverbrauch_bremsen += energieverbrauch()
         v_ist += beschleunigung

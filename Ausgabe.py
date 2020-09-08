@@ -62,7 +62,7 @@ def formatierung(name_simulation, daten_uebersicht, daten_umlaeufe):
                           {'Parameter [Einheit]': 'Induktive Ladeleistung [kW]', 'Wert': DWPT.ladeleistung / 1000},
                           {'Parameter [Einheit]': 'Wirkungsgrad des statischen Ladens [-]', 'Wert': DWPT.wirkungsgrad_statisch},
                           {'Parameter [Einheit]': 'Wirkungsgrad des dynamischen Ladens [-]', 'Wert':DWPT.wirkungsgrad_dynamisch},
-                          {'Parameter [Einheit]': 'Batteriekapazität [kW]', 'Wert':  Batterie.kapazitaet},
+                          {'Parameter [Einheit]': 'Nutzbare Batteriekapazität [kW]', 'Wert':  Batterie.kapazitaet},
                           {'Parameter [Einheit]': 'Wirkungsgrad der Batterie [-]', 'Wert': Batterie.effizienz},
                           {'Parameter [Einheit]': 'Wirkungsgrad der Leistungselektronik [-]','Wert': Leistungselektronik.effizienz},
                           {'Parameter [Einheit]': 'Nennleistung des Elektromotors [kW]','Wert': Elektromotor.maximale_leistung / 1000},

@@ -123,6 +123,7 @@ def umlauf(fahrgaeste, aussentemperatur):
                 minutes=Route.strecke['Fahrplan [Minuten nach Start]'][zeile])
             min_haltezeit = Route.strecke['Haltezeit [s]'][zeile]
 
+
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 20 Sekunden
             if uhrzeit < geplante_abfahrt:
                 zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
@@ -130,7 +131,8 @@ def umlauf(fahrgaeste, aussentemperatur):
             else:
                 haltezeit = min_haltezeit
 
-            for i in range(0, haltezeit):
+
+            for i in range(0, int(haltezeit)):
                 stehen()
 
             # Nach dem Halt fährt der Bus wieder los

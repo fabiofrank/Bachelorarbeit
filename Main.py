@@ -20,7 +20,7 @@ strecke = 'Inputdateien/Input_Balingen.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
-#               1) Route in Google Maps kontruieren
+#               1) Route in Google Maps konstruieren
 #               2) https://www.gpsvisualizer.com/convert_input
 #                   - Output format: plain text
 #                   - URL aus Google Maps angeben

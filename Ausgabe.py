@@ -73,7 +73,8 @@ def formatierung(name_simulation, daten_uebersicht, daten_umlaeufe):
                           {'Parameter [Einheit]': 'Frontfläche des Fahrzeugs [m²]', 'Wert': Fahrzeug.stirnflaeche},
                           {'Parameter [Einheit]': 'Rollwiderstandsbeiwert [-]', 'Wert': Fahrzeug.f_roll},
                           {'Parameter [Einheit]': 'Luftwiderstandsbeiwert [-]', 'Wert': Fahrzeug.c_w},
-                          {'Parameter [Einheit]': 'Konstante Leistung der Nebenverbraucher (ohne Klimatisierung) [kW]', 'Wert': Nebenverbraucher.leistung_sonstiges / 1000}]
+                          {'Parameter [Einheit]': 'Konstante Leistung der Nebenverbraucher (ohne Klimatisierung) [kW]', 'Wert': Nebenverbraucher.leistung_sonstiges / 1000},
+                          {'Parameter [Einheit]': 'Haltezeit an Ampeln [s]', 'Wert': Betrieb.haltezeit_ampel}]
 
         uebersicht_parameter = pd.DataFrame(parameterwerte)
         uebersicht_parameter.to_excel(writer, sheet_name='Parameter', index=False)

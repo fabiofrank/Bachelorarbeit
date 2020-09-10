@@ -33,6 +33,7 @@ leistung_batterie: float
 energieverbrauch_im_intervall: float
 kumulierter_energieverbrauch: float
 liste: list
+haltezeit_ampel: int
 
 
 # (Lade-)Pause an Start-/Zielhaltestelle
@@ -44,7 +45,7 @@ def pause(ende, aussentemperatur):
     temperatur = aussentemperatur
     soc_vor_pause = soc
     uhrzeit_vor_pause = uhrzeit
-    uhrzeit_nach_pause = datetime.datetime.strptime(ende, '%H:%M')
+    uhrzeit_nach_pause = ende
     liste = []
     kumulierter_energieverbrauch = 0.0  # in Joule
     ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * DWPT.wirkungsgrad_statisch  # in Watt
@@ -91,7 +92,7 @@ def pause(ende, aussentemperatur):
 # einzelner Umlauf des Busses
 def umlauf(fahrgaeste, aussentemperatur):
     global soc, kumulierter_energieverbrauch, uhrzeit, t, zurueckgelegte_distanz, status, v_ist, v_soll, steigung, \
-        beschleunigung, leistung_batterie, liste, ladeleistung, temperatur, soc_vor_umlauf, uhrzeit_vor_umlauf
+        beschleunigung, leistung_batterie, liste, ladeleistung, temperatur, soc_vor_umlauf, uhrzeit_vor_umlauf, haltezeit_ampel
     print(datetime.datetime.strftime(uhrzeit, '%H:%M'), ': Umlauf gestartet.')
     Fahrzeug.anzahl_fahrgaeste = fahrgaeste
     temperatur = aussentemperatur
@@ -109,8 +110,6 @@ def umlauf(fahrgaeste, aussentemperatur):
 
     # Schleife, die läuft bis Umlauf beendet
     while zurueckgelegte_distanz < streckenlaenge:
-        # in Abhängigkeit der bereits zurückgelegten Distanz werden aktuelle Steigung sowie DWPT-Ladeleistung ermittelt
-        ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
 
         # Erreicht der Bus eine Haltestelle, so hält er an, steht für 30 Sekunden und fährt wieder los
         if Route.haltestelle(zurueckgelegte_distanz):
@@ -127,12 +126,12 @@ def umlauf(fahrgaeste, aussentemperatur):
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 20 Sekunden
             if uhrzeit < geplante_abfahrt:
                 zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
-                haltezeit = max(min_haltezeit, zeit_bis_geplante_abfahrt)
+                haltezeit_ampel = max(min_haltezeit, zeit_bis_geplante_abfahrt)
             else:
-                haltezeit = min_haltezeit
+                haltezeit_ampel = min_haltezeit
 
 
-            for i in range(0, int(haltezeit)):
+            for i in range(0, int(haltezeit_ampel)):
                 stehen()
 
             # Nach dem Halt fährt der Bus wieder los
@@ -141,14 +140,13 @@ def umlauf(fahrgaeste, aussentemperatur):
             while zurueckgelegte_distanz < 1000 * Route.strecke['zurückgelegte Distanz [km]'][zeile + 1]:
                 fahren()
 
-        # Erreicht der Bus eine Ampel, so hält er an und steht 20 s lang und fährt wieder los
+        # Erreicht der Bus eine Ampel, so hält er an und steht 15 s lang und fährt wieder los
         elif Route.ampel(zurueckgelegte_distanz):
             anhalten()
             status = 'Halten: Ampel'
 
-            haltezeit = 15  # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
-            anzahl_intervalle = int(haltezeit / zeit_intervall)
-            ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
+            haltezeit_ampel = 20 # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
+            anzahl_intervalle = int(haltezeit_ampel / zeit_intervall)
 
             for i in range(0, anzahl_intervalle):
                 stehen()
@@ -178,7 +176,7 @@ def energieverbrauch():
     fahrwiderstaende = Fahrzeug.fahrwiderstaende(v_ist, beschleunigung, steigung)
     leistung_em = Elektromotor.leistung(fahrwiderstaende, v_ist)
     leistung_nv = Nebenverbraucher.leistung(temperatur)
-    ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz)
+    ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz, 'dynamisch')
     benoetigte_leistung = leistung_em + leistung_nv - ladeleistung
 
     leistung_batterie = Batterie.leistung(benoetigte_leistung)
@@ -294,6 +292,7 @@ def stehen():
     # Der Elektromotor dreht nicht, lediglich die Nebenverbraucher benötigen Leistung
     leistung_em = 0.0
     leistung_nv = Nebenverbraucher.leistung(temperatur)
+    ladeleistung = Route.dwpt_ladeleistung(zurueckgelegte_distanz, 'statisch')
     benoetigte_leistung = leistung_nv - ladeleistung
     leistung_batterie = Batterie.leistung(benoetigte_leistung)
 

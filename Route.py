@@ -57,10 +57,15 @@ def v_soll(distanz):
 
 
 # Ist DWPT-Marker in Route gesetzt, so wird die feste Ladeleistung von 25 kW zurückgegeben
-def dwpt_ladeleistung(distanz_in_m):
+def dwpt_ladeleistung(distanz_in_m, dynamisch_oder_statisch):
+    if dynamisch_oder_statisch == 'statisch':
+        wirkungsgrad = DWPT.wirkungsgrad_dynamisch
+    elif dynamisch_oder_statisch == 'dynamisch':
+        wirkungsgrad = DWPT. wirkungsgrad_statisch
+
     zeile = momentane_position_strecke(distanz_in_m)
     if strecke['DWPT-Abschnitt?'][zeile] == 1:
-        ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * DWPT.wirkungsgrad_dynamisch  # Watt
+        ladeleistung = DWPT.anzahl_spulen * DWPT.ladeleistung * wirkungsgrad # Watt
     else:
         ladeleistung = 0.0
     return ladeleistung

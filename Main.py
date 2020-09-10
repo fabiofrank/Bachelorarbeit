@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'Balingen_3Haltestellen_ohneDWPT'
+name_simulation = 'EinzelnerUmlauf_OhneHaltestellen_Ampelzeit20s'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -37,18 +37,26 @@ Route.hoehenprofil_einlesen(hoehenprofil)
 Route.strecke_einlesen(strecke)
 
 #######################################################################################################################
-# SCHRITT 3: UHRZEIT DES BETRIEBSSTARTS ANGEBEN (hh:mm)
+# SCHRITT 3: BETRIEBSSTART UND -ENDE ANGEBEN (hh:mm) SOWIE DEN TAKT (min)
 
-uhrzeit = '08:30'  # Format hh:mm
-Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit, '%H:%M')
+uhrzeit_start = '08:00'  # Format hh:mm
+uhrzeit_ende = '20:00'
+takt = 20 # 20-Minuten-Takt
+
+Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit_start, '%H:%M')
+datetime_start = datetime.datetime.strptime(uhrzeit_start, '%H:%M')
 
 #######################################################################################################################
 # SCHRITT 4: UMLÄUFE UND LADEPAUSEN ANEINANDERREIHEN
 # Betrieb.umlauf(fahrgaeste, aussentemperatur)
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
-Betrieb.pause(ende='09:00', aussentemperatur=20)
-Betrieb.umlauf(fahrgaeste=90, aussentemperatur=20)
 
+Betrieb.umlauf(90, 40)
+Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 40)
+# while Betrieb.uhrzeit < datetime.datetime.strptime(uhrzeit_ende, '%H:%M'):
+#     Betrieb.umlauf(fahrgaeste=90, aussentemperatur=40)
+#     datetime_start += datetime.timedelta(minutes=takt)
+#     Betrieb.pause(ende=datetime_start, aussentemperatur=40)
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument

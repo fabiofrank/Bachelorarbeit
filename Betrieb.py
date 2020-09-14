@@ -126,12 +126,12 @@ def umlauf(fahrgaeste, aussentemperatur):
             # Der Bus steht bis er wieder im Fahrplan ist, aber mindestens 20 Sekunden
             if uhrzeit < geplante_abfahrt:
                 zeit_bis_geplante_abfahrt = (geplante_abfahrt - uhrzeit).seconds
-                haltezeit_ampel = max(min_haltezeit, zeit_bis_geplante_abfahrt)
+                haltezeit = max(min_haltezeit, zeit_bis_geplante_abfahrt)
             else:
-                haltezeit_ampel = min_haltezeit
+                haltezeit = min_haltezeit
 
 
-            for i in range(0, int(haltezeit_ampel)):
+            for i in range(0, int(haltezeit)):
                 stehen()
 
             # Nach dem Halt fährt der Bus wieder los

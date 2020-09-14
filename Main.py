@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'EinzelnerUmlauf_3HaltestelleninklDWPT_DWPTStreckeanHBF'
+name_simulation = 'Betriebstag_3HaltestellenohneDWPT_ohneLadepausen'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'EinzelnerUmlauf_3HaltestelleninklDWPT_DWPTStreckeanHBF'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input_Balingen_alternativ.xlsx'
+strecke = 'Inputdateien/Input_Balingen.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -51,12 +51,13 @@ datetime_start = datetime.datetime.strptime(uhrzeit_start, '%H:%M')
 # Betrieb.umlauf(fahrgaeste, aussentemperatur)
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
 
-Betrieb.umlauf(90, 40)
-Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 40)
-# while Betrieb.uhrzeit < datetime.datetime.strptime(uhrzeit_ende, '%H:%M'):
-#     Betrieb.umlauf(fahrgaeste=90, aussentemperatur=40)
-#     datetime_start += datetime.timedelta(minutes=takt)
-#     Betrieb.pause(ende=datetime_start, aussentemperatur=40)
+#Betrieb.umlauf(90, 40)
+#Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 40)
+
+while Betrieb.uhrzeit < datetime.datetime.strptime(uhrzeit_ende, '%H:%M'):
+    Betrieb.umlauf(fahrgaeste=90, aussentemperatur=40)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=40)
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument

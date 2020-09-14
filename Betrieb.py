@@ -62,6 +62,8 @@ def pause(ende, aussentemperatur):
             # Der SoC von 100% nicht überschritten werden
             if (Batterie.inhalt * 3600000) - theoretische_energieaufnahme > (Batterie.kapazitaet * 3600000):
                 energieaufnahme = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+            elif (Batterie.inhalt * 3600000) - theoretische_energieaufnahme < 0:
+                energieaufnahme = 0.0
             else:
                 energieaufnahme = theoretische_energieaufnahme
 
@@ -187,6 +189,8 @@ def energieverbrauch():
     # Sonderfall: Im Falle von Energieaufnahme darf der SoC von 100% nicht überschritten werden
     if (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall > (Batterie.kapazitaet * 3600000):
         realer_energieverbrauch_im_intervall = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+    elif (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall < 0:
+        realer_energieverbrauch_im_intervall = 0.0
     else:
         realer_energieverbrauch_im_intervall = theoretischer_energieverbrauch_im_intervall
 
@@ -302,6 +306,8 @@ def stehen():
 
     if (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall > (Batterie.kapazitaet * 3600000):
         energieverbrauch_im_intervall = (Batterie.inhalt - Batterie.kapazitaet) * 3600000
+    elif (Batterie.inhalt * 3600000) - theoretischer_energieverbrauch_im_intervall < 0:
+        energieverbrauch_im_intervall = 0.0
     else:
         energieverbrauch_im_intervall = theoretischer_energieverbrauch_im_intervall
 

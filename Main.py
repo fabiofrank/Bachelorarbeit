@@ -16,7 +16,7 @@ name_simulation = 'Betriebstag_3HaltestellenohneDWPT_ohneLadepausen'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input_Balingen.xlsx'
+strecke = 'Inputdateien/Input_Balingen_Linie24.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -30,7 +30,7 @@ strecke = 'Inputdateien/Input_Balingen.xlsx'
 #                   - Add DEM elevation data: best available source
 #               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben
 
-hoehenprofil = 'Inputdateien/Hoehenprofil_Balingen.csv'
+hoehenprofil = 'Inputdateien/Hoehenprofil_Linie24.csv'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)

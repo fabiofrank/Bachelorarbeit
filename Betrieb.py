@@ -147,7 +147,7 @@ def umlauf(fahrgaeste, aussentemperatur):
             anhalten()
             status = 'Halten: Ampel'
 
-            haltezeit_ampel = 15 # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
+            haltezeit_ampel = 20 # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
             anzahl_intervalle = int(haltezeit_ampel / zeit_intervall)
 
             for i in range(0, anzahl_intervalle):

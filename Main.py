@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'EinzelnerUmlauf_Linie24'
+name_simulation = 'DWPT-Ausbau_beidseitig_Hbf'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'EinzelnerUmlauf_Linie24'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input_Balingen_Linie24.xlsx'
+strecke = 'Inputdateien/Input_Balingen_Gartenschau_abZOB.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -30,7 +30,7 @@ strecke = 'Inputdateien/Input_Balingen_Linie24.xlsx'
 #                   - Add DEM elevation data: best available source
 #               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben
 
-hoehenprofil = 'Inputdateien/Hoehenprofil_Linie24.csv'
+hoehenprofil = 'Inputdateien/Hoehenprofil_Balingen_Gartenschau_abZOB.csv'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)
@@ -39,7 +39,7 @@ Route.strecke_einlesen(strecke)
 #######################################################################################################################
 # SCHRITT 3: BETRIEBSSTART UND -ENDE ANGEBEN (hh:mm) SOWIE DEN TAKT (min)
 
-uhrzeit_start = '09:18'  # Format hh:mm
+uhrzeit_start = '09:00'  # Format hh:mm
 uhrzeit_ende = '20:00'
 takt = 20 # 20-Minuten-Takt
 
@@ -55,7 +55,7 @@ Betrieb.umlauf(90, 40)
 Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 40)
 
 # while Betrieb.uhrzeit < datetime.datetime.strptime(uhrzeit_ende, '%H:%M'):
-#     Betrieb.umlauf(fahrgaeste=90, aussentemperatur=40)
+#     Betrieb.umlauf(fahrgaeste=45, aussentemperatur=40)
 #     datetime_start += datetime.timedelta(minutes=takt)
 #     Betrieb.pause(ende=datetime_start, aussentemperatur=40)
 #######################################################################################################################

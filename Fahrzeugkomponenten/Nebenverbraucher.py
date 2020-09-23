@@ -32,7 +32,7 @@ x_new = np.arange(-15, 40)
 y_new = heizleistung_funktion(x_new)
 
 #plt.plot(x_new, y_new)
-#plt.plot(aussentemperatur, heizleistung, 'ro')
+#plt.plot(temperatur, heizleistung, 'ro')
 #plt.show()
 
 def leistung(gegebene_temperatur):

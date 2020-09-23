@@ -5,7 +5,7 @@ from Fahrzeugkomponenten import Leistungselektronik
 # KONSTANTE PARAMETER, DIE FÜR DIE SIMULATION FESTGELEGT WERDEN MÜSSEN
 
 # Nutzbare Kapazität der Batterie in kWh
-kapazitaet = 174 * 0.8
+kapazitaet = 174
 
 # Effizienz der Batterie
 effizienz = 0.9 # nach Absprache mit Markus Tesar 26.08.2020

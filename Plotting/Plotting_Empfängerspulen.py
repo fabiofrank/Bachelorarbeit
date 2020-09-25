@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-fig, ax = plt.subplots(1, 1)
+import datetime
+import numpy
 
 datei1 = r'C:\Users\fabio\PycharmProjects\Bachelorarbeit_Git\Outputdateien\Balingen\Linie 24\Empfängerspulen\Linie24_2Receiver.xlsx'
 daten1 = pd.read_excel(datei1, sheet_name='Übersicht Betriebstag')
@@ -9,7 +9,7 @@ uhrzeit = daten1['Uhrzeit zu Beginn'].to_numpy()
 soc1 = daten1['SoC zu Beginn [%]'].to_numpy()
 for i in range(-28, 0):
     soc1[i] = 0
-plt.plot(uhrzeit, soc1, label='2 Empfängerspulen am Fahrzeug')
+plt.plot_date(uhrzeit, soc1, fmt='o-', xdate=True, label='2 Empfängerspulen am Fahrzeug')
 
 datei2= r'C:\Users\fabio\PycharmProjects\Bachelorarbeit_Git\Outputdateien\Balingen\Linie 24\Empfängerspulen\Linie24_3Receiver.xlsx'
 daten2 = pd.read_excel(datei2, sheet_name='Übersicht Betriebstag')
@@ -34,6 +34,7 @@ soc5 = daten5['SoC zu Beginn [%]'].to_numpy()
 plt.plot(uhrzeit, soc5, label='6 Empfängerspulen am Fahrzeug')
 
 plt.xticks(rotation=45)
+
 ax.set_xlabel(r'$Uhrzeit \longrightarrow$', color='black')
 ax.set_ylabel(r'$SoC$ / % $\longrightarrow$')
 plt.title('Linie 24 - Variation der DWPT-Receiverzahl: 10,5 km Umlauf, davon 2,4 km DWPT-unterstützt / 174-kWh-Batterie (netto) / 15 Fahrgäste / 20 °C Außentemperatur')

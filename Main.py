@@ -58,23 +58,25 @@ datetime_mittagspause_ende = datetime.datetime.strptime(mittagspause_ende, '%H:%
 
 # Betrieb.umlauf(50, 35)
 # Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 35)
+Betrieb.umlauf(50, 20)
 
-aussentemperatur = 35
-fahrgaeste = 15
 
-while Betrieb.uhrzeit < datetime_mittagspause_start:
-    Betrieb.umlauf(fahrgaeste, aussentemperatur)
-    datetime_start += datetime.timedelta(minutes=takt)
-    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
-
-#Betrieb.pause(ende=datetime_mittagspause_ende, aussentemperatur=aussentemperatur)
-#datetime_start += datetime.timedelta(minutes=takt)
-#Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
-
-while Betrieb.uhrzeit < datetime_ende:
-    Betrieb.umlauf(fahrgaeste, aussentemperatur)
-    datetime_start += datetime.timedelta(minutes=takt)
-    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+# aussentemperatur = 20
+# fahrgaeste = 15
+#
+# while Betrieb.uhrzeit < datetime_mittagspause_start:
+#     Betrieb.umlauf(fahrgaeste, aussentemperatur)
+#     datetime_start += datetime.timedelta(minutes=takt)
+#     Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+#
+# #Betrieb.pause(ende=datetime_mittagspause_ende, aussentemperatur=aussentemperatur)
+# #datetime_start += datetime.timedelta(minutes=takt)
+# #Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+#
+# while Betrieb.uhrzeit < datetime_ende:
+#     Betrieb.umlauf(fahrgaeste, aussentemperatur)
+#     datetime_start += datetime.timedelta(minutes=takt)
+#     Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
 #######################################################################################################################
 
 # Output als formatierte Tabelle in Excel-Dokument

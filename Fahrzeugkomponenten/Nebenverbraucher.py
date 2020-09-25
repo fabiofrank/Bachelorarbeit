@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 #######################################################################################################################
 # KONSTANTE LEISTUNG DER SONSTIGEN NEBENVERBRAUCHER (OHNE KLIMATISIERUNG/HEIZUNG) IN WATT
 
-leistung_sonstiges = 6000 # Watt # TODO: Quelle
+leistung_sonstiges = 6000 # Watt # Quelle: Berthold (2019), S. 56
 
 #######################################################################################################################
 

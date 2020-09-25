@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'Gartenschau_inklMessegelände_50Fahrgaeste_35Grad'
+name_simulation = 'Linie24_6Receiver'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'Gartenschau_inklMessegelände_50Fahrgaeste_35Grad'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input_Gartenschau_realeUmsetzung_inklMessegelaende.xlsx'
+strecke = 'Inputdateien/Input_Basisszenario.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -30,7 +30,7 @@ strecke = 'Inputdateien/Input_Gartenschau_realeUmsetzung_inklMessegelaende.xlsx'
 #                   - Add DEM elevation data: best available source
 #               3) In angegebenem Pfad ablegen oder Pfad zur CSV-Datei hier angeben
 
-hoehenprofil = 'Inputdateien/Hoehenprofil_Balingen_Gartenschau_abZOB.csv'
+hoehenprofil = 'Inputdateien/Hoehenprofil_Linie24.csv'
 
 # Die Route des Umlaufs wird eingelesen
 Route.hoehenprofil_einlesen(hoehenprofil)
@@ -39,11 +39,11 @@ Route.strecke_einlesen(strecke)
 #######################################################################################################################
 # SCHRITT 3: BETRIEBSSTART UND -ENDE ANGEBEN (hh:mm) SOWIE DEN TAKT (min)
 
-uhrzeit_start = '08:00'  # Format hh:mm
-uhrzeit_ende = '20:00'
+uhrzeit_start = '07:18'  # Format hh:mm
+uhrzeit_ende = '20:48'
 mittagspause_start = '12:15'
 mittagspause_ende = '12:45'
-takt = 20 # 30-Minuten-Takt
+takt = 30 # 30-Minuten-Takt
 
 Betrieb.uhrzeit = datetime.datetime.strptime(uhrzeit_start, '%H:%M')
 datetime_start = datetime.datetime.strptime(uhrzeit_start, '%H:%M')
@@ -56,11 +56,11 @@ datetime_mittagspause_ende = datetime.datetime.strptime(mittagspause_ende, '%H:%
 # Betrieb.umlauf(fahrgaeste, aussentemperatur)
 # Betrieb.pause(ende='hh:mm') mit Angabe, wann die Ladepause beendet ist (und der nächste Umlauf beginnt)
 
-# Betrieb.umlauf(90, 40)
-# Betrieb.pause(datetime.datetime.strptime('07:48', '%H:%M'), 40)
+# Betrieb.umlauf(50, 35)
+# Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 35)
 
 aussentemperatur = 35
-fahrgaeste = 50
+fahrgaeste = 15
 
 while Betrieb.uhrzeit < datetime_mittagspause_start:
     Betrieb.umlauf(fahrgaeste, aussentemperatur)

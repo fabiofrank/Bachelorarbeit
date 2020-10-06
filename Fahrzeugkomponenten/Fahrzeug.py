@@ -14,7 +14,7 @@ stirnflaeche = 8.6649
 
 # Mittleres Fahrgastgewicht in kg, abhängig von Kunden des Busbetriebs
 masse_je_fahrgast = 77.0  # Mittleres Körpergewicht von Erwerbstätigen in Deutschland = 77.8 kg
-                          # Mittleres Körpergewicht eines Erwachsenen in Deutschland = 77,0 kg
+                          # Mittleres Körpergewicht eines Erwachsenen in Deutschland = 77.0 kg
 
 # Rollwiderstandskoeffizient[ohne Einheit], konstant angenommen
 f_roll = 0.015

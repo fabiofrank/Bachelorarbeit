@@ -6,7 +6,7 @@ import Ausgabe
 
 #######################################################################################################################
 # SCHRITT 1: NAME DER SIMULATION FESTLEGEN
-name_simulation = 'Linie24_6Receiver'
+name_simulation = 'Test'
 
 #######################################################################################################################
 # SCHRITT 2: FESTE PARAMETER DES SIMULIERTEN FAHRZEUGS FESTLEGEN
@@ -16,7 +16,7 @@ name_simulation = 'Linie24_6Receiver'
 #######################################################################################################################
 # SCHRITT 3: DIE STRECKENCHARAKTERISTIK DURCH AUSFÜLLEN DER INPUTDATEI IN EXCEL FESTLEGEN
 
-strecke = 'Inputdateien/Input_Basisszenario.xlsx'
+strecke = 'Inputdateien/Input_HVZ.xlsx'
 
 #######################################################################################################################
 # SCHRITT 4: MITHILFE VON GOOGLE MAPS UND GPS-VISUALIZER EINE CSV-DATEI MIT STEIGUNGSANGABEN GENERIEREN
@@ -58,20 +58,70 @@ datetime_mittagspause_ende = datetime.datetime.strptime(mittagspause_ende, '%H:%
 
 # Betrieb.umlauf(50, 35)
 # Betrieb.pause(datetime.datetime.strptime('08:20', '%H:%M'), 35)
-Betrieb.umlauf(50, 20)
 
 
-# aussentemperatur = 20
-# fahrgaeste = 15
-#
+aussentemperatur = 20
+fahrgaeste_NVZ = 15
+fahrgaeste_HVZ = 45
+
+while Betrieb.uhrzeit < datetime.datetime.strptime('09:00', '%H:%M'):
+    Betrieb.umlauf(fahrgaeste_HVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+strecke = 'Inputdateien/Input_Basisszenario.xlsx'
+Route.strecke_einlesen(strecke)
+while Betrieb.uhrzeit < datetime.datetime.strptime('11:30', '%H:%M'):
+    Betrieb.umlauf(fahrgaeste_NVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+strecke = 'Inputdateien/Input_HVZ.xlsx'
+Route.strecke_einlesen(strecke)
+while Betrieb.uhrzeit < datetime_mittagspause_start:
+    Betrieb.umlauf(fahrgaeste_HVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+Betrieb.pause(ende=datetime_mittagspause_ende, aussentemperatur=aussentemperatur)
+datetime_start += datetime.timedelta(minutes=takt)
+Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+while Betrieb.uhrzeit < datetime.datetime.strptime('13:30', '%H:%M'):
+    Betrieb.umlauf(fahrgaeste_HVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+strecke = 'Inputdateien/Input_Basisszenario.xlsx'
+Route.strecke_einlesen(strecke)
+while Betrieb.uhrzeit < datetime.datetime.strptime('15:30', '%H:%M'):
+    Betrieb.umlauf(fahrgaeste_NVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+strecke = 'Inputdateien/Input_HVZ.xlsx'
+Route.strecke_einlesen(strecke)
+while Betrieb.uhrzeit < datetime.datetime.strptime('17:30', '%H:%M'):
+    Betrieb.umlauf(fahrgaeste_HVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+strecke = 'Inputdateien/Input_Basisszenario.xlsx'
+Route.strecke_einlesen(strecke)
+while Betrieb.uhrzeit < datetime_ende:
+    Betrieb.umlauf(fahrgaeste_NVZ, aussentemperatur)
+    datetime_start += datetime.timedelta(minutes=takt)
+    Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+
+########################################################################################
 # while Betrieb.uhrzeit < datetime_mittagspause_start:
 #     Betrieb.umlauf(fahrgaeste, aussentemperatur)
 #     datetime_start += datetime.timedelta(minutes=takt)
 #     Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
 #
-# #Betrieb.pause(ende=datetime_mittagspause_ende, aussentemperatur=aussentemperatur)
-# #datetime_start += datetime.timedelta(minutes=takt)
-# #Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
+# Betrieb.pause(ende=datetime_mittagspause_ende, aussentemperatur=aussentemperatur)
+# datetime_start += datetime.timedelta(minutes=takt)
+# Betrieb.pause(ende=datetime_start, aussentemperatur=aussentemperatur)
 #
 # while Betrieb.uhrzeit < datetime_ende:
 #     Betrieb.umlauf(fahrgaeste, aussentemperatur)

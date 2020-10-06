@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.interpolate import interp1d
 from scipy import constants
+from matplotlib import pyplot as plt
+import matplotlib
 
 # Wahl der Beschleunigung und Verzögerung analog zu Sinhuber, Rohlfs und Sauer (2012):
 # "Study on power and energy demand for sizing the energy storage systems for electrified local public transport buses"
@@ -19,6 +21,34 @@ beschleunigung_SORT = geschwindigkeit_SORT ** 2 / (2 * distanz_SORT)  # in m/s²
 
 # lineare Interpolation der SORT-Beschleunigungswerte (in Abhängigkeit der Geschwindigkeit)
 beschleunigung_interpoliert = interp1d(geschwindigkeit_SORT, beschleunigung_SORT)
+
+#Plot
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    #'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+    'pgf.preamble': [
+        r"\usepackage[latin1]{inputenc}",    # use utf8 fonts
+        r"\usepackage[T1]{fontenc}",        # plots will be generated
+        r"\usepackage[detect-all,locale=DE]{siunitx}",
+        ]
+})
+fig, ax = plt.subplots(1, 1)
+cmap = plt.get_cmap("tab10")
+x1 = np.arange(0, 21)
+x2 = np.arange(20, 60)
+y1 = np.full(21, beschleunigung_interpoliert(20 / 3.6))
+y2 = beschleunigung_interpoliert(x2 / 3.6)
+plt.plot(x1, y1)
+plt.plot(x2, y2, color=cmap(0))
+ax.set_xlabel(r'$v_{Ist}$ / \si{\kilo\metre\per\hour}  $\longrightarrow$')
+ax.set_ylabel(r'$a$ / \si{\metre\per\square\second} $\longrightarrow$')
+plt.grid()
+fig.set_size_inches(7, 4)
+fig.savefig(r'C:\Users\fabio\Studium\Bachelorarbeit\BA Latex\Latex_Bachelorarbeit\Bilder\Beschleunigung_interpoliert.pgf')
+#plt.show()
 
 
 # geschwindigkeitsabhängige Wahl der Beschleunigung

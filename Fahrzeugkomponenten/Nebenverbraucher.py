@@ -18,22 +18,29 @@ daten_winter = pd.read_excel(inputdatei, sheet_name='Wintertag')
 
 # Winterdaten werden halbiert, da im betrachteten Bus mit einer deutlich effizienteren Heizug gearbeitet wird
 # Symmetrie Sommer-Winter wird damit hergestellt
+daten_ohneKorrektur = pd.concat([daten_sommer, daten_winter, daten_herbst]).sort_values(by='Außentemperatur [°C]')
+
 daten_winter['Heizleistung Mittelwert [kW]'] = 0.5 * daten_winter['Heizleistung Mittelwert [kW]']
 daten_kumuliert = pd.concat([daten_sommer, daten_winter, daten_herbst])
 daten_geordnet = daten_kumuliert.sort_values(by='Außentemperatur [°C]')
 
 temperatur = daten_geordnet['Außentemperatur [°C]'].to_numpy()
 heizleistung = daten_geordnet['Heizleistung Mittelwert [kW]'].to_numpy()
+heizleistung_ohneKorrektur = daten_ohneKorrektur['Heizleistung Mittelwert [kW]'].to_numpy()
 
 fit = np.polyfit(temperatur, heizleistung, 2)
 heizleistung_funktion = np.poly1d(fit)
+heizleistung_funktion_ohneKorrektur = np.poly1d(np.polyfit(temperatur, heizleistung_ohneKorrektur, 2))
 
-x_new = np.arange(-15, 40)
-y_new = heizleistung_funktion(x_new)
-
-#plt.plot(x_new, y_new)
-#plt.plot(temperatur, heizleistung, 'ro')
-#plt.show()
+# x_new = np.arange(-15, 40)
+# y_new = heizleistung_funktion(x_new)
+#
+# plt.plot(x_new, y_new)
+# plt.plot(x_new, heizleistung_funktion_ohneKorrektur(x_new))
+# plt.plot(temperatur, heizleistung_ohneKorrektur, 'ro')
+# plt.plot(temperatur, heizleistung, 'ro')
+#
+# plt.show()
 
 def leistung(gegebene_temperatur):
     global leistung_sonstiges

@@ -56,6 +56,8 @@ def beschleunigung(v_ist, v_soll):
     if v_ist < v_soll:
         if v_ist <= 20 / 3.6:
             gewaehlte_beschleunigung = float(beschleunigung_interpoliert(20 / 3.6))
+        elif v_ist >= 60 / 3.6:
+            gewaehlte_beschleunigung = float(beschleunigung_interpoliert(60 / 3.6))
         else:
             gewaehlte_beschleunigung = float(beschleunigung_interpoliert(v_ist))
 

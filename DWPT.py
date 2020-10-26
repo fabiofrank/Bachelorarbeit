@@ -10,5 +10,3 @@ ladeleistung = 25000 # Watt
 
 # ANZAHL DER DWPT-RECEIVER AM FAHRZEUG
 anzahl_spulen = 4
-
-

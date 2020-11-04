@@ -1,7 +1,0 @@
-﻿type,latitude,longitude,altitude (m),slope (%),distance (km),distance_interval (m),name,desc
-W,48.278342400,8.850707000,515.4,,,,"48.2783424,8.850707","Balingen(Württ), 72336 Balingen, Deutschland"
-W,48.278342300,8.850724900,515.4,,,,"48.2783423,8.8507249","Balingen(Württ), 72336 Balingen, Deutschland"
-
-type,latitude,longitude,altitude (m),slope (%),distance (km),distance_interval (m),name,desc
-T,48.278340000,8.850720000,515.4,,0.000,,Balingen(Württ) - Balingen(Württ),"4.5 km, 0:11"
-

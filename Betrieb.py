@@ -33,7 +33,7 @@ leistung_batterie: float
 energieverbrauch_im_intervall: float
 kumulierter_energieverbrauch: float
 liste: list
-haltezeit_ampel: int
+haltezeit_ampel = 15 # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
 
 
 # (Lade-)Pause an Start-/Zielhaltestelle
@@ -147,7 +147,6 @@ def umlauf(fahrgaeste, aussentemperatur):
             anhalten()
             status = 'Halten: Ampel'
 
-            haltezeit_ampel = 15 # 15 Sekunden, übernommen von Rogge, Wollny und Sauer (2015)
             anzahl_intervalle = int(haltezeit_ampel / zeit_intervall)
 
             for i in range(0, anzahl_intervalle):

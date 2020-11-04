@@ -6,7 +6,6 @@ from Fahrzeugkomponenten import Leistungselektronik
 
 # Nutzbare Kapazität der Batterie in kWh
 kapazitaet = 174
-
 # Effizienz der Batterie
 effizienz = 0.9 # nach Absprache mit Markus Tesar 26.08.2020
 
